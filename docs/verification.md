@@ -129,3 +129,20 @@ Stop-Process -Id (Get-Content .factory/monitor.pid)
 
 Start another monitor later with `python factory.py serve` and stop it with
 Ctrl+C. No builder or background watcher was left running.
+
+## Linux descendant-cleanup race — 2026-10-18
+
+The GitHub Checks workflow failed its existing failed-parent cleanup assertion.
+On Ubuntu, the same scenario reproduced a child still running when cleanup
+returned; it stopped 1.3 ms later. Sending SIGKILL had returned before the kernel
+finished terminating the child.
+
+Unix cleanup now reaps the direct parent and waits up to ten seconds for live
+members of its process group to stop. Linux zombie/dead entries are excluded
+because they cannot execute work. A cleanup timeout raises an error and keeps
+the process marker for inspection. The Windows Job Object path is unchanged.
+
+Verification: the unchanged quick verification passed on Ubuntu and Windows;
+the targeted scenario had no failures in 50 Ubuntu repetitions after the fix.
+Python compilation and Git whitespace checks passed. No new automated tests or
+dependencies were added. GitHub has not yet verified this local fix.

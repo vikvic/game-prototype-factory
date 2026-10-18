@@ -2,6 +2,29 @@
 import os
 import signal
 import time
+from pathlib import Path
+
+
+def group_alive(pgid: int) -> bool:
+    proc = Path("/proc")
+    if proc.is_dir():
+        # Killed Linux orphans may remain as zombies until init reaps them.
+        # Their process group still exists, but they cannot execute any work.
+        for entry in proc.iterdir():
+            if not entry.name.isdecimal():
+                continue
+            try:
+                fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+            except (FileNotFoundError, ProcessLookupError):
+                continue
+            if int(fields[2]) == pgid and fields[0] not in {"Z", "X"}:
+                return True
+        return False
+    try:
+        os.killpg(pgid, 0)
+        return True
+    except ProcessLookupError:
+        return False
 
 
 class ProcessOwner:
@@ -83,3 +106,11 @@ class ProcessOwner:
                 pass
         if process is not None:
             process.wait(timeout=10)
+        if os.name != "nt" and process is not None:
+            # SIGKILL delivery is asynchronous. Reap the parent first, then wait
+            # for its surviving group members before clearing the process marker.
+            deadline = time.monotonic() + 10
+            while group_alive(process.pid):
+                if time.monotonic() >= deadline:
+                    raise ValueError("Descendant cleanup did not complete; process marker retained")
+                time.sleep(0.02)
