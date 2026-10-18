@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101728"><title>Neon Salvage · Three.js Starter</title></head>
+  <body>
+    <main>
+      <header><div><p class="eyebrow">FACTORY / THREE.JS STARTER</p><h1>Neon Salvage</h1></div><button id="restart" type="button">Restart <kbd>R</kbd></button></header>
+      <section class="stats" aria-label="Game status"><div><span>SALVAGE</span><strong id="score">0 / 12</strong></div><div><span>TIME LEFT</span><strong id="time">45s</strong></div><p id="status" role="status">Collect all salvage. Avoid the patrolling drone.</p></section>
+      <canvas id="game" aria-label="Move the cube around a 3D arena and collect salvage" tabindex="0"></canvas>
+      <footer><p><b>MOVE</b> WASD / arrows · or hold and drag on the floor</p><p>WebGL renderer · no external assets</p></footer>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

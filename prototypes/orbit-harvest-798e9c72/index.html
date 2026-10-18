@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101728"><title>Signal Garden · Canvas Starter</title></head>
+  <body>
+    <main>
+      <header><div><p class="eyebrow">FACTORY / CANVAS STARTER</p><h1>Signal Garden</h1></div><button id="restart" type="button">Restart <kbd>R</kbd></button></header>
+      <section class="stats" aria-label="Game status"><div><span>ENERGY</span><strong id="score">0 / 12</strong></div><div><span>TIME LEFT</span><strong id="time">45s</strong></div><p id="status" role="status">Collect 12 signals. Avoid the coral drone.</p></section>
+      <canvas id="game" width="900" height="600" aria-label="Move to collect glowing signals and avoid the drone" tabindex="0"></canvas>
+      <footer><p><b>MOVE</b> WASD / arrows · or hold and drag on the arena</p><p>One mechanic. One quick playtest.</p></footer>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
