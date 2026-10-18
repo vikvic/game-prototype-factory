@@ -1,0 +1,31 @@
+name: Checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Python syntax and queue verification
+        run: |
+          python -m compileall -q prototype_factory tools factory.py
+          python tools/verify.py --quick
+      - name: Canvas starter
+        working-directory: templates/canvas
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
+      - name: Three.js starter
+        working-directory: templates/three
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
