@@ -1,0 +1,19 @@
+[builder]
+provider = "codex"
+executable = "codex"
+# Let Codex select its supported built-in default. No global config is changed.
+model = ""
+# The following two limits are Claude-only. Codex is bounded by timeout_seconds.
+max_budget_usd = 3.0
+max_turns = 40
+timeout_seconds = 1200
+install_timeout_seconds = 300
+build_timeout_seconds = 180
+
+[worker]
+poll_seconds = 10
+
+[deploy]
+# Set after you have created a GitHub repository and enabled Pages via Actions.
+repository = ""
+pages_url = ""
