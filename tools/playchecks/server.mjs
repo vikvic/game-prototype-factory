@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile, realpath, stat } from 'node:fs/promises';
-import { resolve, relative, extname, sep } from 'node:path';
+import { resolve, relative, extname, sep, isAbsolute } from 'node:path';
 const mime = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.json':'application/json', '.png':'image/png', '.svg':'image/svg+xml', '.jpg':'image/jpeg', '.webp':'image/webp', '.woff2':'font/woff2', '.wasm':'application/wasm', '.mp3':'audio/mpeg', '.ogg':'audio/ogg'};
 export async function serve(mounts) {
   const normalized = await Promise.all(mounts.map(async m => ({...m, root: await realpath(m.root)})));
@@ -11,11 +11,11 @@ export async function serve(mounts) {
       if (!mount || path.includes('\\') || path.includes('\0')) throw Error('Invalid path');
       let target = resolve(mount.root, path.slice(mount.prefix.length) || 'index.html');
       let rel = relative(mount.root, target);
-      if (rel.startsWith('..'+sep) || rel==='..' || resolve(mount.root,rel)!==target) throw Error('Traversal');
+      if (isAbsolute(rel) || rel.startsWith('..'+sep) || rel==='..' || resolve(mount.root,rel)!==target) throw Error('Traversal');
       if ((await stat(target)).isDirectory()) target = resolve(target,'index.html');
       const actual = await realpath(target);
       rel = relative(mount.root,actual);
-      if (rel.startsWith('..'+sep) || rel==='..') throw Error('Linked traversal');
+      if (isAbsolute(rel) || rel.startsWith('..'+sep) || rel==='..') throw Error('Linked traversal');
       res.setHeader('content-type',mime[extname(target)] || 'application/octet-stream');
       res.setHeader('cache-control','no-store'); res.end(await readFile(actual));
     } catch { res.writeHead(404,{'content-type':'text/plain'});res.end('Required file not found'); }
