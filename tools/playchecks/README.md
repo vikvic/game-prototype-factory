@@ -23,7 +23,10 @@ factory/store root. It uses existing process-tree supervision and binds success
 to an unchanged `project_fingerprint` of allowlisted source/config/report files
 and an unchanged `build_fingerprint` of the served production artifacts.
 The coordinator must build this same source immediately before verification.
-Linked source paths are rejected. Unknown games raise `MissingCoverage` and
+Linked source paths are rejected before descending (including Windows junctions).
+Source fingerprints sort case-preserved relative POSIX names and normalize UTF-8
+web source/config/report text from CRLF or CR to LF. Binary assets remain byte-exact.
+The local build-artifact fingerprint intentionally hashes exact served bytes. Unknown games raise `MissingCoverage` and
 cannot be published automatically. Gallery mode skips only explicit demo=true
 metadata; direct project checks still require a trusted scenario.
 
@@ -35,7 +38,9 @@ requested viewport, Canvas aspect/backing-buffer bounds, native touch, real
 score/economy outcomes, and restart. Dense plate cells use manual placement plus
 Auto-place instead of the 44px button rule. First touch case in each engine also
 checks modal Help and portrait pause, preserved round state, short-height resize
-and real input after restoring landscape. Desktop scenarios check actual keyboard
+and real input after restoring landscape. Tunnel repeats pause/rotation during
+an active wave after observing a real enemy-count decrease, preserving remaining
+enemies, health, credits and phase. Cosmetic animations may continue while paused. Desktop scenarios check actual keyboard
 outcomes and pointer interaction. Screenshots and phase evidence are retained.
 
 The four trusted IDs are buffet-dash-24812a73, tunnel-frontier-e2df699d,

@@ -8,6 +8,7 @@ from .config import executable
 from .export import ROOT_FILES, SOURCE_DIRS, linked
 
 TOOL_ROOT = Path(__file__).resolve().parent.parent
+TEXT_SUFFIXES = {".html", ".json", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".scss", ".sass", ".less", ".md", ".txt", ".svg", ".xml", ".yaml", ".yml", ".toml", ".csv", ".glsl", ".vert", ".frag", ".wgsl", ".map"}
 KNOWN_GAMES = {"buffet-dash-24812a73", "tunnel-frontier-e2df699d", "canvas-starter", "three-starter"}
 
 
@@ -15,17 +16,43 @@ class MissingCoverage(ValueError):
     """No trusted core-loop scenario exists for this game."""
 
 
+def _unlinked_files(directory: Path):
+    # Check before descending: pathlib recursive glob may follow Windows junctions.
+    for path in directory.iterdir():
+        if linked(path):
+            raise ValueError(f"Linked path is forbidden: {path}")
+        if path.is_dir():
+            yield from _unlinked_files(path)
+        elif path.is_file():
+            yield path
+
+
+def _identity_content(path: Path) -> bytes:
+    content = path.read_bytes()
+    if path.suffix.lower() in TEXT_SUFFIXES or path.name == ".gitignore":
+        try:
+            return content.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
+        except UnicodeDecodeError:
+            pass
+    return content
+
+
 def project_fingerprint(project: Path) -> str:
+    """Hash case-preserved POSIX names and LF-normalized UTF-8 source text.
+
+    Common web text extensions and .gitignore normalize CRLF/CR; all other
+    assets and non-UTF-8 inputs remain byte-exact across Windows/Linux.
+    """
     project = Path(project).absolute()
     if linked(project) or not project.is_dir():
         raise ValueError(f"Expected an unlinked project directory: {project}")
-    paths = [project / name for name in ROOT_FILES if (project / name).exists() or (project / name).is_symlink()]
+    paths = [project / name for name in ROOT_FILES if (project / name).exists() or linked(project / name)]
     for name in SOURCE_DIRS:
         directory = project / name
         if linked(directory):
             raise ValueError(f"Linked source path is forbidden: {directory}")
         if directory.is_dir():
-            paths.extend(directory.rglob("*"))
+            paths.extend(_unlinked_files(directory))
     selected = []
     for path in paths:
         if linked(path) or not path.resolve().is_relative_to(project.resolve()):
@@ -37,7 +64,7 @@ def project_fingerprint(project: Path) -> str:
             selected.append((relative.as_posix(), path))
     digest = hashlib.sha256()
     for relative, path in sorted(selected):
-        digest.update(relative.encode("utf-8") + b"\0" + path.read_bytes() + b"\0")
+        digest.update(relative.encode("utf-8") + b"\0" + _identity_content(path) + b"\0")
     return digest.hexdigest()
 
 
@@ -96,9 +123,7 @@ def _dist_fingerprint(project: Path) -> str:
     if linked(dist) or not (dist / "index.html").is_file():
         raise ValueError("Expected an unlinked production dist with index.html")
     digest = hashlib.sha256()
-    for path in sorted(dist.rglob("*")):
-        if linked(path):
-            raise ValueError(f"Linked build artifact is forbidden: {path}")
-        if path.is_file():
-            digest.update(path.relative_to(dist).as_posix().encode("utf-8") + b"\0" + path.read_bytes() + b"\0")
+    files = sorted((path.relative_to(dist).as_posix(), path) for path in _unlinked_files(dist))
+    for relative, path in files:
+        digest.update(relative.encode("utf-8") + b"\0" + path.read_bytes() + b"\0")
     return digest.hexdigest()

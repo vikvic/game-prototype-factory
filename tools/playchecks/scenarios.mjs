@@ -42,9 +42,10 @@ async function tunnel(page,{touch,rotate,record}) {
   await click('#turret');
   for(const [x,y]of [[4,3],[5,4],[9,5]]){const before=await value(page,'#credits');await tile(x,y);if(touch)await click('#confirm');invariant(await value(page,'#credits')<before,'Turret placement did not spend resources');}
   await geometry(page);await record('ore-nest-turrets',{credits:await text(page,'#credits'),nests:await text(page,'#nests')});
-  if(rotate)await pauseAndRotate(page,'tunnel',touch,record);
+  if(rotate){await pauseAndRotate(page,'tunnel-plan',touch,record);await tile(4,3);invariant((await text(page,'#hover')).startsWith('Tile 5, 4'),'Post-rotation touch coordinates selected wrong tile');}
   const stage=await text(page,'#stage');await click('#start');
   invariant(await page.locator('#game').getAttribute('data-phase')==='wave','Start did not enter combat');
+  if(rotate){const incoming=await value(page,'#count');await wait(page,n=>parseFloat(document.querySelector('#count').textContent)<n,incoming,10000);invariant(await page.locator('#game').getAttribute('data-phase')==='wave','Combat ended before pause coverage');await pauseAndRotate(page,'tunnel-combat',touch,record);}
   await wait(page,()=>document.querySelector('#game').dataset.phase==='plan'||['lost','won'].includes(document.querySelector('#game').dataset.phase),undefined,40000);
   invariant(await page.locator('#game').getAttribute('data-phase')==='plan'&&(await text(page,'#stage'))!==stage,'Combat did not progress to another planning wave');
   invariant(await value(page,'#health')>0,'Core failed during combat');

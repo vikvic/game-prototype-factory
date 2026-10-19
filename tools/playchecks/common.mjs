@@ -38,7 +38,7 @@ export async function geometry(page) {
   invariant(!result.failures.length,result.failures.join('; ')); return result;
 }
 export async function pauseAndRotate(page, game, touch, record) {
-  const state = async()=>page.evaluate(()=>Object.fromEntries(['score','value','space','credits','nests','health','stage','selected'].map(id=>[id,document.getElementById(id)?.textContent??null])));
+  const state = async()=>page.evaluate(()=>Object.fromEntries(['score','value','space','credits','nests','health','stage','selected','count'].map(id=>[id,document.getElementById(id)?.textContent??null])));
   const before=await state();
   await action(page,'#help',touch); await page.locator('#help-dialog').waitFor({state:'visible'});
   await page.waitForTimeout(120);
@@ -54,5 +54,5 @@ export async function pauseAndRotate(page, game, touch, record) {
   if(portraitTime!==null)invariant(await text(page,'#time')===portraitTime,'Portrait did not pause timer');
   await page.setViewportSize({width:667,height:280});await page.waitForTimeout(120);await geometry(page);
   await page.setViewportSize(original);await page.waitForTimeout(120);await geometry(page);
-  await record('help-rotation-state-preserved',{state:before,game});
+  await record(`help-rotation-state-preserved-${game}`,{state:before,game});
 }
