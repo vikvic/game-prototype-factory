@@ -1,4 +1,5 @@
 import './style.css';
+import { mountShell } from './shell';
 
 type Tile = 'dirt' | 'ore' | 'floor' | 'nest' | 'core';
 type Point = { x: number; y: number };
@@ -22,6 +23,7 @@ let phase: 'plan' | 'wave' | 'won' | 'lost' = 'plan';
 let tool: 'dig' | 'turret' = 'dig';
 let hover: Point | null = null;
 let spawnTimer = 0, remainingSpawns = 0, spawnIndex = 0, last = performance.now(), accumulator = 0;
+const paused=mountShell(W/H,()=>{last=performance.now();accumulator=0;});
 const inside = (p: Point) => p.x >= 0 && p.y >= 0 && p.x < COLS && p.y < ROWS;
 const neighbors = (p: Point) => [{ x: p.x + 1, y: p.y }, { x: p.x - 1, y: p.y }, { x: p.x, y: p.y + 1 }, { x: p.x, y: p.y - 1 }].filter(inside);
 const same = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
@@ -133,6 +135,10 @@ function pathFrom(p: Point): Point[] {
 }
 
 function updateUI() {
+  canvas.dataset.phase=phase;
+  button('confirm').disabled=phase!=='plan'||!hover||!valid(hover);
+  button('confirm').textContent=hover?`Confirm ${tool}`:'Tap map to select';
+  for(const direction of ['left','right','up','down']) button(`tile-${direction}`).disabled=phase!=='plan';
   el('stage').textContent = phase === 'plan' ? `PLAN ${wave + 1} / 4` : phase === 'won' ? 'SECURED' : phase === 'lost' ? 'CORE LOST' : `WAVE ${wave} / 4`;
   el('health').textContent = `${health}%`;
   el('health').style.color = health <= 30 ? '#ff8278' : '#81e1c5';
@@ -148,7 +154,7 @@ function updateUI() {
     button(name).setAttribute('aria-pressed', String(tool === name));
   }
   el('hover').textContent = feedback(hover);
-  el('selected').textContent = phase === 'plan' ? `${tool === 'dig' ? 'DIG' : 'TURRET'} SELECTED` : phase === 'wave' ? 'COMBAT · BUILD LOCKED' : 'RUN COMPLETE';
+  el('selected').textContent = phase === 'plan' ? `${tool === 'dig' ? 'DIG' : 'TURRET'} · ${hover?`tile ${hover.x+1}, ${hover.y+1}`:'tap map to select'}` : phase === 'wave' ? 'COMBAT · BUILD LOCKED' : 'RUN COMPLETE';
 }
 
 function tick(dt: number) {
@@ -273,9 +279,12 @@ function pointer(event: PointerEvent): Point {
   const rect = canvas.getBoundingClientRect();
   return { x: Math.max(0, Math.min(COLS - 1, Math.floor((event.clientX - rect.left) / rect.width * COLS))), y: Math.max(0, Math.min(ROWS - 1, Math.floor((event.clientY - rect.top) / rect.height * ROWS))) };
 }
-canvas.addEventListener('pointermove', event => { hover = pointer(event); el('hover').textContent = feedback(hover); });
-canvas.addEventListener('pointerleave', () => { hover = null; el('hover').textContent = feedback(null); });
-canvas.addEventListener('pointerdown', event => { event.preventDefault(); canvas.focus({ preventScroll: true }); useTile(pointer(event)); });
+canvas.addEventListener('pointermove', event => { if(event.pointerType!=='mouse'||event.buttons||paused())return; hover = pointer(event); updateUI(); });
+// Keep the inspected tile selected after the finger leaves the map.
+
+canvas.addEventListener('pointerdown', event => { if(paused())return;event.preventDefault(); canvas.focus({ preventScroll: true }); hover=pointer(event);if(event.pointerType==='mouse')useTile(hover);else updateUI(); });
+function moveCursor(dx:number,dy:number){if(phase!=='plan'||paused())return;const p=hover??core;hover={x:Math.max(0,Math.min(COLS-1,p.x+dx)),y:Math.max(0,Math.min(ROWS-1,p.y+dy))};updateUI();}
+button('tile-left').onclick=()=>moveCursor(-1,0);button('tile-right').onclick=()=>moveCursor(1,0);button('tile-up').onclick=()=>moveCursor(0,-1);button('tile-down').onclick=()=>moveCursor(0,1);button('confirm').onclick=()=>{if(hover)useTile(hover);};
 function select(next: 'dig' | 'turret') { if (phase === 'plan') { tool = next; updateUI(); } }
 button('dig').addEventListener('click', () => select('dig'));
 button('turret').addEventListener('click', () => select('turret'));
@@ -286,7 +295,7 @@ button('repair').addEventListener('click', () => {
   credits -= 25; health = Math.min(100, health + 30); say('Core repaired: +30 integrity, up to 100%.'); updateUI();
 });
 window.addEventListener('keydown', event => {
-  if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (paused() || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
   const key = event.key.toLowerCase();
   if (key === 'r') reset();
   if (key === '1' || key === 'd') select('dig');
@@ -301,7 +310,7 @@ window.addEventListener('keydown', event => {
   }
 });
 function frame(now: number) {
-  accumulator += document.hidden ? 0 : Math.min((now - last) / 1000, 0.1); last = now;
+  accumulator += document.hidden || paused() ? 0 : Math.min((now - last) / 1000, 0.1); last = now;
   while (accumulator >= 1 / 60) { tick(1 / 60); accumulator -= 1 / 60; }
   draw(now); requestAnimationFrame(frame);
 }

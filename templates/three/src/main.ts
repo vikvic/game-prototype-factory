@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import './style.css';
+import { mountShell } from './shell';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#game')!;
 const scoreText = document.querySelector<HTMLElement>('#score')!;
@@ -33,6 +34,7 @@ const keys = new Set<string>(), ray = new THREE.Raycaster(), point = new THREE.V
 const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 let pointerTarget: THREE.Vector3 | null = null;
 let score = 0, remaining = 45, ended = false, elapsed = 0, last = performance.now();
+const paused=mountShell(3/2,()=>{keys.clear();pointerTarget=null;last=performance.now();});
 function reset() {
   player.position.set(0, 0.4, 0); drone.position.set(6, 0.65, 0);
   salvage.forEach(gem => gem.visible = true); score = 0; remaining = 45; elapsed = 0; ended = false; pointerTarget = null;
@@ -43,18 +45,18 @@ function pointer(event: PointerEvent) {
   point.set((event.clientX - bounds.left) / bounds.width * 2 - 1, -(event.clientY - bounds.top) / bounds.height * 2 + 1);
   ray.setFromCamera(point, camera); pointerTarget = ray.ray.intersectPlane(plane, new THREE.Vector3());
 }
-canvas.addEventListener('pointerdown', event => { canvas.focus(); canvas.setPointerCapture(event.pointerId); pointer(event); });
+canvas.addEventListener('pointerdown', event => { if(paused())return;canvas.focus({preventScroll:true}); canvas.setPointerCapture(event.pointerId); pointer(event); });
 canvas.addEventListener('pointermove', event => { if (canvas.hasPointerCapture(event.pointerId)) pointer(event); });
 canvas.addEventListener('pointerup', () => pointerTarget = null);
 canvas.addEventListener('pointercancel', () => pointerTarget = null);
-window.addEventListener('keydown', event => { const key = event.key.toLowerCase(); if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(key)) { event.preventDefault(); keys.add(key); } if (key === 'r') reset(); });
+window.addEventListener('keydown', event => { if(paused())return;const key = event.key.toLowerCase(); if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(key)) { event.preventDefault(); keys.add(key); } if (key === 'r') reset(); });
 window.addEventListener('keyup', event => keys.delete(event.key.toLowerCase()));
 window.addEventListener('blur', () => { keys.clear(); pointerTarget = null; });
 document.querySelector('#restart')!.addEventListener('click', reset);
 const size = new THREE.Vector2();
 function frame(now: number) {
   const dt = Math.min((now - last) / 1000, 0.04); last = now;
-  if (!ended && !document.hidden) {
+  if (!ended && !document.hidden && !paused()) {
     remaining = Math.max(0, remaining - dt); elapsed += dt;
     let dx = Number(keys.has('d') || keys.has('arrowright')) - Number(keys.has('a') || keys.has('arrowleft'));
     let dz = Number(keys.has('s') || keys.has('arrowdown')) - Number(keys.has('w') || keys.has('arrowup'));

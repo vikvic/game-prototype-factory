@@ -1,31 +1,14 @@
 <!doctype html>
 <html lang="en">
-  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0c161b"><title>Tunnel Frontier</title></head>
+  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c161b"><title>Tunnel Frontier</title></head>
   <body>
-    <main>
-      <header><div><p class="eyebrow">SUBSURFACE DEFENSE / SECTOR 04</p><h1>Tunnel Frontier</h1></div><button id="restart" type="button">Restart <kbd>R</kbd></button></header>
-      <p class="goal">Protect the core for four waves. Dig for ore. Every opened nest becomes a permanent enemy route.</p>
-      <section class="stats" aria-label="Game status">
+    <main><header><h1>Tunnel Frontier</h1><section class="stats" aria-label="Game status">
         <div><span>EXPEDITION</span><strong id="stage"></strong></div><div><span>CORE INTEGRITY</span><strong id="health"></strong></div><div><span>CREDITS</span><strong id="credits"></strong></div><div><span>ACTIVE NESTS</span><strong id="nests"></strong></div><div><span id="count-label">NEXT WAVE</span><strong id="count"></strong></div>
-      </section>
-      <div class="layout">
-        <section class="map-wrap" aria-label="Excavation map">
-          <canvas id="game" width="760" height="520" style="height:auto" tabindex="0" aria-label="Tunnel defense grid. Click tiles to dig or build. Arrow keys move tile cursor; Enter acts on the tile.">This game requires Canvas support.</canvas>
-          <div class="legend" aria-label="Map legend"><span><i class="swatch earth"></i>Earth</span><span><i class="swatch ore"></i>Ore +30</span><span><i class="swatch tunnel"></i>Tunnel</span><span><i class="swatch nest"></i>Dormant</span><span><i class="swatch active"></i>Active nest</span><span><i class="swatch core"></i>Core</span></div>
-          <p id="hover"></p>
-        </section>
-        <aside class="panel" aria-label="Build controls">
-          <h2 id="selected">TURRET SELECTED</h2>
-          <button class="tool" id="dig" type="button" aria-pressed="false"><span>1 · Dig</span><small>Free / ore +30</small></button>
-          <button class="tool" id="turret" type="button" aria-pressed="true"><span>2 · Turret</span><small>45 credits</small></button>
-          <p class="rule">Dig from tunnel edges, never diagonally. Turrets fire automatically and <strong>do not block paths</strong>. Build only between waves.</p>
-          <button id="repair" type="button">Repair +30% · 25 credits</button>
-          <button id="start" class="primary" type="button">Start wave 1 →</button>
-          <p id="status" role="status" aria-live="polite"></p>
-        </aside>
-      </div>
-      <footer><p><kbd>1 / D</kbd> Dig · <kbd>2 / T</kbd> Turret · Click / tap a tile<br><kbd>N</kbd> Start wave · <kbd>R</kbd> Restart · On map: <kbd>arrows + Enter</kbd></p><p>Ore: +30 credits · Wave cleared: +25 credits<br>Opening a nest increases every remaining wave.</p></footer>
-    </main>
+      </section><div class="header-actions"><button id="help" type="button" aria-haspopup="dialog">Help</button><button id="restart" type="button">Restart</button></div></header>
+
+
+
+      <div class="layout"><section class="map-wrap" aria-label="Excavation map"><div class="arena"><canvas id="game" width="760" height="520" tabindex="0" aria-label="Tunnel defense grid. Tap a tile to select, use arrow buttons to adjust, then Confirm. Mouse click acts directly. Arrow keys move tile cursor; Enter acts on the tile.">This game requires Canvas support.</canvas></div><p id="hover" aria-live="polite"></p><p id="status" role="status" aria-live="polite"></p></section><aside class="panel" aria-label="Build controls"><h2 id="selected">TURRET SELECTED</h2><div class="tools"><button id="dig" class="tool" type="button" aria-pressed="false">Dig <small>Free / ore +30</small></button><button id="turret" class="tool" type="button" aria-pressed="true">Turret <small>45 · range 3.1</small></button><button id="confirm" class="primary" type="button">Confirm tile</button></div><div class="tile-controls" aria-label="Selected tile controls"><button id="tile-left" type="button" aria-label="Select tile to left">←</button><button id="tile-up" type="button" aria-label="Select tile above">↑</button><button id="tile-down" type="button" aria-label="Select tile below">↓</button><button id="tile-right" type="button" aria-label="Select tile to right">→</button></div><div class="round-actions"><button id="repair" type="button">Repair +30% · 25 credits</button><button id="start" class="primary" type="button">Start wave 1 →</button></div></aside></div></main><div class="rotate-notice" role="status"><p><strong>Rotate to landscape</strong>Your round is paused. Turn your device sideways to see the arena and all controls together.</p></div><dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">How to play · paused</h2><p>Protect the core for four waves. Earth is brown, ore is gold, tunnels are blue, dormant nests purple, active nests red, and the core mint. Ore gives +30 credits, clearing a wave gives +25. Opening any dormant nest adds enemies to every remaining wave.</p><p>Touch: tap a tile to select and inspect it, adjust with the four arrow buttons, then Confirm tile. The outlined tile and coordinates show exactly what will be affected. Dig from connected tunnel edges, never diagonally. Turrets cost 45 credits, fire automatically within 3.1 tiles and do not block paths. Repair restores 30% for 25 credits. Build and repair only between waves.</p><p>Mouse: click a tile to act directly. Keyboard: 1 / D selects Dig, 2 / T selects Turret, N starts a wave, R restarts. Focus the map and use arrows + Enter to select and confirm.</p><p>The round pauses while Help is open or portrait guidance is shown. Close Help to resume the same state.</p><button id="help-close" class="primary" type="button">Close Help · resume</button></dialog>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

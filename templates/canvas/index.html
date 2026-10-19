@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
-  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101728"><title>Signal Garden · Canvas Starter</title></head>
+  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101728"><title>Signal Garden · Canvas Starter</title></head>
   <body>
-    <main>
-      <header><div><p class="eyebrow">FACTORY / CANVAS STARTER</p><h1>Signal Garden</h1></div><button id="restart" type="button">Restart <kbd>R</kbd></button></header>
-      <section class="stats" aria-label="Game status"><div><span>ENERGY</span><strong id="score">0 / 12</strong></div><div><span>TIME LEFT</span><strong id="time">45s</strong></div><p id="status" role="status">Collect 12 signals. Avoid the coral drone.</p></section>
-      <canvas id="game" width="900" height="600" aria-label="Move to collect glowing signals and avoid the drone" tabindex="0"></canvas>
-      <footer><p><b>MOVE</b> WASD / arrows · or hold and drag on the arena</p><p>One mechanic. One quick playtest.</p></footer>
-    </main>
+    <main><header><h1>Signal Garden</h1><section class="stats" aria-label="Game status"><div><span>ENERGY</span><strong id="score">0 / 12</strong></div><div><span>TIME LEFT</span><strong id="time">45s</strong></div></section><div class="header-actions"><button id="help" type="button" aria-haspopup="dialog">Help</button><button id="restart" type="button">Restart</button></div></header>
+
+
+      <section class="starter-game"><div class="arena"><canvas id="game" width="900" height="600" aria-label="Move to collect glowing signals and avoid the drone" tabindex="0"></canvas></div><p id="status" role="status">Collect 12 signals. Avoid the coral drone.</p><p class="touch-hint">Hold and drag to move · Help pauses the round</p></section>
+
+    </main><div class="rotate-notice" role="status"><p><strong>Rotate to landscape</strong>Your round is paused. Turn your device sideways to see the arena and all controls together.</p></div><dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">How to play · paused</h2><p>Collect twelve golden pickups before the 45-second timer expires. Avoid the coral drone.</p><p>Hold and drag on the arena to move by touch or mouse. Keep holding until you reach the destination. Keyboard: WASD / arrows. Restart / R resets the run.</p><p>The round pauses while Help is open or portrait guidance is shown. Close Help to resume the same state.</p><button id="help-close" class="primary" type="button">Close Help · resume</button></dialog>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 import './style.css';
+import { mountShell } from './shell';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#game')!;
 const ctx = canvas.getContext('2d')!;
@@ -11,6 +12,7 @@ let player = { x: 450, y: 300 }, drone = { x: 90, y: 90 };
 let target: { x: number; y: number } | null = null;
 let signals: { x: number; y: number; phase: number }[] = [];
 let score = 0, remaining = 45, ended = false, last = performance.now();
+const paused=mountShell(3/2,()=>{keys.clear();target=null;last=performance.now();});
 const distance = (a: { x: number; y: number }, b: { x: number; y: number }) => Math.hypot(a.x - b.x, a.y - b.y);
 
 function reset() {
@@ -30,12 +32,12 @@ function pointer(event: PointerEvent) {
   const bounds = canvas.getBoundingClientRect();
   target = { x: (event.clientX - bounds.left) / bounds.width * W, y: (event.clientY - bounds.top) / bounds.height * H };
 }
-canvas.addEventListener('pointerdown', event => { canvas.focus(); canvas.setPointerCapture(event.pointerId); pointer(event); });
+canvas.addEventListener('pointerdown', event => { if(paused())return;canvas.focus({preventScroll:true}); canvas.setPointerCapture(event.pointerId); pointer(event); });
 canvas.addEventListener('pointermove', event => { if (canvas.hasPointerCapture(event.pointerId)) pointer(event); });
 canvas.addEventListener('pointerup', () => { target = null; });
 canvas.addEventListener('pointercancel', () => { target = null; });
 window.addEventListener('keydown', event => {
-  const key = event.key.toLowerCase();
+  if(paused())return;const key = event.key.toLowerCase();
   if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(key)) { event.preventDefault(); keys.add(key); }
   if (key === 'r') reset();
 });
@@ -49,7 +51,7 @@ function glow(x: number, y: number, radius: number, color: string) {
 }
 function frame(now: number) {
   const dt = Math.min((now - last) / 1000, 0.04); last = now;
-  if (!ended && !document.hidden) {
+  if (!ended && !document.hidden && !paused()) {
     remaining = Math.max(0, remaining - dt);
     let dx = Number(keys.has('d') || keys.has('arrowright')) - Number(keys.has('a') || keys.has('arrowleft'));
     let dy = Number(keys.has('s') || keys.has('arrowdown')) - Number(keys.has('w') || keys.has('arrowup'));
