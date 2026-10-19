@@ -1,0 +1,1 @@
+{"name":"prototype-factory-verification","private":true,"type":"module","scripts":{"playcheck":"node tools/playcheck.mjs","browsers:install":"playwright install chromium webkit"},"devDependencies":{"playwright":"1.64.1"}}
