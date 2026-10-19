@@ -34,7 +34,7 @@ function pointer(event: PointerEvent) {
 }
 canvas.addEventListener('pointerdown', event => { if(paused())return;canvas.focus({preventScroll:true}); canvas.setPointerCapture(event.pointerId); pointer(event); });
 canvas.addEventListener('pointermove', event => { if (canvas.hasPointerCapture(event.pointerId)) pointer(event); });
-canvas.addEventListener('pointerup', () => { target = null; });
+canvas.addEventListener('pointerup', event => { if (event.pointerType !== 'touch') target = null; });
 canvas.addEventListener('pointercancel', () => { target = null; });
 window.addEventListener('keydown', event => {
   if(paused())return;const key = event.key.toLowerCase();

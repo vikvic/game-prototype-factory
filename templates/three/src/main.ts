@@ -47,7 +47,7 @@ function pointer(event: PointerEvent) {
 }
 canvas.addEventListener('pointerdown', event => { if(paused())return;canvas.focus({preventScroll:true}); canvas.setPointerCapture(event.pointerId); pointer(event); });
 canvas.addEventListener('pointermove', event => { if (canvas.hasPointerCapture(event.pointerId)) pointer(event); });
-canvas.addEventListener('pointerup', () => pointerTarget = null);
+canvas.addEventListener('pointerup', event => { if (event.pointerType !== 'touch') pointerTarget = null; });
 canvas.addEventListener('pointercancel', () => pointerTarget = null);
 window.addEventListener('keydown', event => { if(paused())return;const key = event.key.toLowerCase(); if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(key)) { event.preventDefault(); keys.add(key); } if (key === 'r') reset(); });
 window.addEventListener('keyup', event => keys.delete(event.key.toLowerCase()));

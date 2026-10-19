@@ -2,8 +2,8 @@
 
 This is a playable template, not an implementation of an ingested idea.
 
-Move with WASD/arrows or hold and drag on the floor. Collect twelve gold gems
-before forty-five seconds expire. Avoid the patrolling coral drone. Restart
+Move with WASD/arrows, tap or drag by touch, or hold and drag by mouse on the
+floor. Collect twelve gold gems before forty-five seconds expire. Avoid the patrolling coral drone. Restart
 with R or the button. Supports keyboard, pointer, touch and responsive resize.
 
 Evaluate route planning, collision readability, and the overhead 3D camera.
@@ -17,6 +17,8 @@ The height-bounded layout targets 568x320, 667x375, 844x390, 667x280 and desktop
 
 Shared controls: #help opens #help-dialog; #help-close closes it. Escape closes the dialog through native browser behavior. #restart starts a fresh run. No gameplay tuning, dependency versions, scripts or relative Vite base changed. This retrofit does not certify older exported starter copies.
 
-Touch: hold and drag on #game to move toward the held point; release/cancel stops the destination. Score #score and timer #time stay visible, #status reports outcomes, and #restart resets the run. The Three.js floor raycast and Canvas coordinates use the same fitted Canvas bounds. The starters retain their existing 45-second / twelve-pickup rules.
+Touch: tap a destination or drag on #game; the destination remains after lifting a finger. Mouse: hold and drag; release stops movement. Pointer cancel, Help, portrait guidance and loss of focus clear the destination. Score #score and timer #time stay visible, #status reports outcomes, and #restart resets the run. The Three.js floor raycast and Canvas coordinates use the same fitted Canvas bounds. The starters retain their existing 45-second / twelve-pickup rules.
 
 Verified 2026-10-19: existing strict TypeScript / production build passed. Scratch Chromium and WebKit emulation covered all five declared viewport sizes with no button clipping/overlap, action-target failures, document overflow or uncaught page errors; screenshots were retained locally. Help/portrait pause was checked at the smallest size for the timed starters and Buffet. A real touch smoke at 568x320 covered Buffet rotation/manual packing/19 points banked/restart and Tunnel ore selection/confirmation/cursor correction/second nest/three turrets/wave-1 clear/restart. Full trusted touch-gameplay scenarios remain a subsequent verification gate. No physical-device verification is claimed here; human readability, comfort and balance remain playtest questions.
+
+Trusted factory verification (2026-10-19): native touch movement, collection and restart passed at four landscape sizes in Chromium and WebKit emulation, plus desktop Chromium keyboard and mouse. Help/portrait preserve a nonzero score and the timer; collection still works after resizing. These checks cover collection and restart, not a guaranteed twelve-pickup victory. No physical-device verification is claimed.
