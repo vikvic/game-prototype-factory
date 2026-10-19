@@ -6,7 +6,7 @@ Repository: C:\Users\vic\Documents\GitHub\game-prototype-factory
 
 ## Intent and agreed requirements
 
-The user plays a prototype, sends a list of design changes in this chat, and expects the system to implement those changes, diagnose and repair technical problems, commit and push the result, and deploy it through GitHub Actions. Examples include changing numbers, movement speed, and other design parameters. A second approval for every routine game revision is not part of the requested loop.
+The user plays a prototype, sends a list of design changes in this chat, and expects the system to implement those changes, diagnose and repair technical problems, commit and push the result, and deploy it through GitHub Actions. Examples include changing numbers, movement speed, and other design parameters. The builder should apply game-design judgment to tuning values and related parameters to achieve the intended player experience. A second approval for every routine game revision is not part of the requested loop.
 
 The user also reports that the previously delivered games are unusable on mobile. Mobile landscape must become a required acceptance target. Buffet Dash's plate and action controls currently live outside the visible gameplay area on a phone; both gameplay and the controls needed to complete a round must fit together.
 
@@ -32,9 +32,9 @@ Two alternatives remain possible: manually operate each game as its own coding p
 
 ## User-visible loop
 
-1. The user names a game and sends free-form feedback in chat, including exact requested values where relevant.
+1. The user names a game and sends free-form feedback in chat, including suggested tuning values and any values that must remain exact.
 2. The assistant saves the feedback as a local Markdown request, names its target game and current source revision, and queues an iteration. Once accepted, the running worker can finish it without further chat turns.
-3. The worker copies that exact version into an isolated attempt, applies the feedback using the configured Codex or Claude adapter, and records changed files and a concise explanation.
+3. The worker copies that exact version into an isolated attempt and applies the feedback using the configured Codex or Claude adapter. It uses game-design judgment to choose tuning values and any closely related adjustments needed for the intended experience, respects explicitly fixed values, and records the actual changes and rationale.
 4. The coordinator builds it, launches it locally, checks browser errors and landscape layout, and exercises the game's specified core interactions using touch.
 5. On a concrete failure, the worker supplies the error, failed step, and evidence to a fresh repair invocation against the same candidate. It repeats the failed checks and any affected checks.
 6. After all required checks pass, the coordinator commits only this iteration's intended changes and pushes them to the configured factory repository/main branch. Actions verifies and deploys the gallery.
@@ -53,6 +53,17 @@ The host must be awake and the worker running for unattended work. A normal Chat
 - A feedback request receives a persistent identifier. Re-ingesting the identical request does not launch or publish a second iteration. New requests for the same game run serially; do not silently cancel earlier requested changes.
 - If an explicitly pinned parent is superseded before execution, record needs_input rather than silently changing its meaning. Chat intake normally selects the latest accepted version.
 - Changes to numeric tuning should be localized in a small per-game tuning module where practical. Do not build a general gameplay framework or migrate either game's engine as part of this work.
+
+## Game-design judgment during tuning
+
+- Translate feedback into a specific player-experience goal, such as less waiting, more responsive movement, clearer risk/reward, or more viable choices. Implement that goal within the requested mechanic and scope.
+- Treat suggested numbers as a starting hypothesis. Values explicitly described as exact, fixed, or otherwise mandatory are constraints. For example, "try 30% faster" allows tuning judgment; "set speed to exactly 240" requires that value. Record this interpretation in the feedback snapshot.
+- Inspect relevant relationships before choosing values: travel/serve/eat time and score efficiency for Buffet Dash; enemy travel time, turret damage rate, wave pressure, and resource income for Tunnel Frontier. Use calculations and observed behavior to check the intended effect rather than modifying a constant in isolation.
+- Make the smallest coherent adjustment that addresses the feedback. Related changes are allowed when necessary to preserve meaningful choices or avoid breaking the pacing, but unrelated mechanics, content, and progression remain outside scope.
+- For each tuning change, report the old value, the requested suggestion when supplied, the implemented value, and a short reason. Explain any departure from a suggested value and identify related adjustments; do not silently substitute numbers.
+- Distinguish a design hypothesis from playtest evidence. A passing build, automated gameplay flow, or calculated efficiency does not establish that the result is fun or balanced. Return a concrete question for the user's next play session.
+- Do not expand the automatic repair loop into indefinite balance optimization. Apply the requested tuning, verify technical behavior and relevant game invariants, then ship within the existing limits. Stop for input only when essential intent cannot be inferred or explicit constraints conflict.
+- Trustworthy gameplay checks should verify rules and the intended direction of change, not freeze every old tuning value. Update any affected expected values deliberately and record why; do not weaken the core-loop acceptance checks to make a revision pass.
 
 ## Queue, execution, and observability
 
@@ -161,7 +172,7 @@ Keep coherent implementation changes reviewable in separate commits. The eventua
 
 - Both current games complete their specified touch flows within the declared landscape viewports without leaving the gameplay view to find essential controls.
 - Desktop operation still works, and changing orientation preserves game state/input mapping.
-- A feedback request changes the existing version instead of regenerating a starter, while preserving requested values and unaffected behavior.
+- A feedback request changes the existing version instead of regenerating a starter, achieves the stated design intent, preserves explicitly fixed values and unaffected behavior, and explains the implemented tuning and any related adjustments.
 - A real failing build/browser step produces an automatic repair and recorded recheck; an unrepairable request stops after the stated bound.
 - One successful request results in a scoped Git commit, normal push, successful required CI gates, matching live version, verified game link, and notification where configured.
 - A resumed job reconciles commit/deploy state without publishing twice, and a failed release has a known recovery outcome.
@@ -170,7 +181,7 @@ Keep coherent implementation changes reviewable in separate commits. The eventua
 ## Explicitly deferred
 
 - A public writable dashboard, mobile companion app, inbound Discord bot, account system, or cloud-hosted model worker.
-- Autonomous assessment of whether a game is fun or balanced. The user retains that decision.
+- Final autonomous acceptance that a game is fun or balanced. The builder applies design judgment and reports hypotheses and evidence; the user retains the final playtest decision.
 - Promotion into independent game repositories, campaigns, progression, new assets, monetization, multiplayer, or engine replacement.
 - A claim that all physical mobile devices, every old job, or every old starter-demo export has been verified.
 
