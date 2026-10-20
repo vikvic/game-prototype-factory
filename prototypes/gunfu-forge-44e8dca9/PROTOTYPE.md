@@ -1,49 +1,43 @@
-# Gunfu Forge
+# Gunfu Forge — brawler revision (2026-10-20)
 
-## Hypothesis and playtest
-Appending movement and payload behaviors to familiar actions changes spacing and timing enough to create a recognizable fighting style. The core question: after choosing Backdash, do you deliberately fire to retreat and then line enemies up for Fan or Pierce, instead of simply holding fire?
+## Request
 
-Play four finite waves. Compare Backdash, Sidestep, and Reload Dash starts. Evaluate whether each changes positioning, whether nearest-target aim is predictable, and whether retaining movement while adding a payload feels like composition. Target duration is roughly two minutes including three choices; this is an estimate, not measured play evidence.
+Replace projectile shooting with close-range brawling. Use abstract icons for punches and kicks, make enemies stagger, and momentarily lock the player in place while attacking. Keep the existing round-to-round ability composition, game identity, URL and landscape controls.
 
-## Controls and touch loop
-- WASD / arrows: move. Space / J: shoot (hold repeats). R / K: reload.
-- Mouse or touch: drag the left pad; tap or hold Shoot; tap Reload. Movement and Shoot use separate captured pointer IDs, so two fingers work together. Reload is a native button activated on release.
-- Aim always targets the nearest live enemy; no pointer aiming is required.
-- Start begins training. Visible Restart immediately resets to round one. Help opens a native dialog; Close or Escape resumes.
-- Help, portrait guidance, hidden tabs, and window blur pause simulation and timers. Pause, pointer cancel, blur, and orientation changes clear held input. Resizing preserves state.
+## Current fighting loop
 
-## Composition
-Each action processes selected modifiers in explicit numeric order: movement (0), protection (1), payload (2/3), then base action. Reload Pulse is deferred until refill completes.
+- WASD / arrows or the movement pad moves. Space / J / Punch chains three punches. R / K / Kick commits to a heavier, longer-reaching strike. Tap or hold either action. Attacks face the nearest standing opponent, but only connect inside their local hit arc.
+- Gold vector fist and violet vector boot silhouettes show the action. Short attack cones, impact stars, enemy flinch/slide, knockdown silhouettes, a planted-feet underline, damage flash and restrained shake communicate state. No projectiles or ammunition remain, including enemy attacks.
+- Punch has startup, an active hit window and recovery totaling 0.32 seconds; the third punch totals 0.38 seconds and knocks down. Kick totals 0.54 seconds. Movement input is retained but cannot move the player until recovery ends. A short input buffer helps link attacks.
+- Hits interrupt enemy windups and apply hitstun. Kick pushes farther; finishers and Sweep knock enemies down. Getting up includes a brief protected interval. The player also staggers when hit and has a short hurt-immunity window. No contact damage.
+- Pink grunts and purple bruisers approach and use telegraphed melee attacks. At most two opponents can wind up attacks together; soft crowd separation keeps silhouettes readable.
+- Four finite rounds, three permanent fusion choices, win/loss, restart and Help remain. First rewards are Lunge + Punch, Punch + Backstep and Step-in + Kick. Later choices include Double Punch, Sweep Kick, Slam Kick and Guard Punch. Backstep happens after a connected attack and waits for Double's follow-up when both are selected, preserving both parts of the move.
 
-First offers: Backdash + Shoot, Sidestep + Shoot, Dash + Reload. Later offers come from remaining compatible effects, prioritizing Fan, Pierce, Pulse, Guard, and missing movement. Shoot's two movement options are mutually exclusive. No duplicates; the seven-effect pool leaves at least three valid offers at every intermission. Choices persist. A common route is Backdash → Fan → Pierce.
+## Design changes and rationale
 
-Backdash retreats 66 world units from initial aim. Sidestep moves 60 units to the left of aim. Reload Dash moves 108 units with movement input, otherwise away from aim. Dashes clamp to the arena. The intended enemy is selected before the dash; shot direction is then calculated from the new position to that same target. Base Shoot is stationary, with visual gun recoil.
+| Previous | Revision | Why |
+| --- | --- | --- |
+| Shoot + Reload, six-round magazine | Punch + Kick, chain indicator | Both actions now contribute to close combat; ammunition would interrupt this experiment. |
+| Mobile shooting while freely moving | Brief 0.32–0.54 s attack commitment | Position before swinging; retain responsive free movement between strikes. |
+| Ranged bullets | Punch reach 76 / Kick reach 112 world units, local cones | Kicks make space, punches reward getting close; neither attacks across the room. |
+| No enemy hitstun | Punch 0.32 s / Kick 0.58 s stagger | Hits interrupt attacks and create an opening for the next action. |
+| No knockdown | Finisher/Sweep 0.9 s down,0.35 s get-up protection | Add crowd control without indefinite ground trapping. |
+| Projectile impact flashes | Fist/boot icons and 40–65 ms hitstop | Make individual blows readable and give them weight. |
+| Six player health | Eight health, still+2 between rounds | Close-range commitment needs room to learn the new enemy timing. |
+| Waves 6/8/10/12 | Waves 4/5/6/7, max 4 active | Account for melee approach/recovery time while keeping a short complete run. |
 
-## Tuning and rationale
-- Fixed 960 × 480 arena; player moves 205 units/second. Rendering preserves aspect ratio and uses displayed dimensions for high-DPI backing resolution.
-- Six health, six ammunition, 0.32-second shot cooldown. Each bullet deals one damage. Fan emits three bullets at ±0.22 radians for one ammo; Pierce retains bullets through enemies.
-- Reload: 0.9 seconds, with free movement and no shooting. Guard covers only its first 0.3 seconds. Dash dodge lasts 0.12 seconds, shorter than the firing cooldown.
-- Pulse: one damage and 80-unit push within 145 units on refill.
-- One-second visible hurt immunity prevents hit spam. Contact alone does not damage. Damage causes a restrained three-world-unit shake for 0.17 seconds.
-- Waves contain 6, 8, 10, 12 opponents; at most five active. Spawn intervals are 2 seconds in round one and 1.6 seconds later. Spawn points are at least 285 units from the player.
-- Melee enemies have two health, rising to three in rounds three/four. Speed is 58–76 units/second. A 0.55-second locked warning precedes a 110-unit lunge; recovery is 1.25 seconds.
-- Ranged enemies begin in round two, approximately one per four spawns, with two health. Their 0.7-second warning locks direction before firing a 235-unit/second bolt; recovery is 1.8 seconds.
-- Each cleared wave restores up to two health; every new wave refills ammo. Finite opponents, no round timer, victory after wave four.
+Additional tuning: player speed 205; punch damage 1, finisher/kick 2; grunts 3 health then 4 in rounds 3/4, bruisers 5. Grunt windup 0.48 s, bruiser 0.72 s; player hurt immunity 0.95 s and stagger 0.25 s. Lunge 42, Step-in 64 and Backstep 40 world units. Double adds one close-range follow-up hit, Sweep widens the kick, Slam catches nearby foes only on a connected kick, Guard protects the first 0.14 s of punch startup.
 
-## UI and observability
-Required selectors are present: `canvas#game`, `#start`, `#shoot`, `#reload`, `#restart`, `#help`, `#help-close`, `dialog#help-dialog`, `#health`, `#ammo`, `#wave`, `#style`, `#status`, `#move-pad`, `#upgrades`, and three `button.upgrade` cards. Cards publish `data-modifier` and `data-slot`, with visible before → after text.
+## Assumptions and next playtest
 
-Canvas attributes expose actual phase, round, cumulative kills/shots/reloads/dashes, chosen modifier IDs, and player coordinates. These are observational outputs only; gameplay never reads them. No global mutable API or verification shortcuts.
+This retains the existing top-down arena and procedural geometric visuals. The focus is attack weight, positioning and composable moves. Grapples, throws, air combat, audio and persistent progression are outside this pass. Holding an action repeats attacks; deliberately release it to reposition. A chain counts linked swings, including whiffs, rather than a damage-only combo score.
 
-Layout budgets a 44px header, compact style/status strips, and the remaining arena height. Touch controls occupy dedicated side columns, with a 96px minimum movement pad and buttons at least 44px. Ready/upgrade/end panels replace combat controls. At short heights, cards use compact text across three columns. The canvas is letterboxed without stretching. Pointer movement uses actual pad bounds; canvas pointer aiming is intentionally absent.
+Evaluate whether Punch feels responsive while still committing, whether Kick has enough impact to justify its longer recovery, whether enemy stagger is legible on a phone, and whether Lunge/Backstep change your positioning decisions. Confidence in intended mechanics: high; final balance and physical-device ergonomics require human playtesting.
 
-## Assumptions and limitations
-- Entirely procedural visuals, no audio, external assets, requests, persistence, or dependencies added.
-- A dash is an instantaneous displacement with a fading trail, not a physics sweep; enemy lunges use swept collision against the player.
-- Enemy geometry may overlap. Fan can hit one close enemy with multiple projectiles. These are deliberate small-scope mechanics to evaluate.
-- Movement fusion may meet arena boundaries; choosing firing position is part of the experiment.
-- Auto-aim can switch as enemies cross; manual target locking is outside scope.
-- Keyboard and touch operate the same actions; upgrades support native keyboard focus. Combat itself is visual and is not screen-reader playable.
-- Portrait guidance requires landscape. Help remains accessible during landscape play.
-- Production TypeScript/Vite build passed. Trusted browser checks passed Chromium and WebKit at 568×320, 667×375, 844×390 and 667×280, plus Chromium desktop 1280×720. Checks played real first-wave combat, selected Backdash, fired the combined move, checked upgrade layout, pause/orientation preservation and restart. A desktop route won all four waves with Backdash + Fan + Pierce + Shoot (36 kills); native Chromium two-finger emulation verified movement + held shooting, cancellation and reload. The mobile HUD font was enlarged after the initial readability check. Evidence is local under .factory/gunfu-verification/ and .factory/gunfu-multitouch/. No physical-device claim.
-- Human difficulty, fun, touch ergonomics and run duration still need playtesting. The automated Backdash/Fan/Pierce route can win without sustained manual movement, so this first pass is deliberately forgiving; evaluate whether enemy pressure should discourage corner camping. Confidence in build and observed composition behavior: high; confidence in final balance and physical-device ergonomics: moderate.
+## Verification
+
+On 2026-10-20 the strict production build passed, all 9 Chromium/WebKit acceptance cases passed, the desktop route won four rounds, and the alternate Backstep + Double route registered a connected follow-up and disengagement. Native two-finger Chromium emulation verified both attack locks, movement recovery and cancellation. Review approved the fusion-order and telegraph fixes. Live release evidence is recorded separately after deployment; these checks do not establish physical-device ergonomics or human gameplay quality.
+
+Release evidence is kept locally under `.factory/brawler-*`. The existing strict TypeScript/Vite production build and factory-owned Chromium/WebKit browser workflow are used. The gate covers first-wave melee/finisher/upgrade/restart at all target sizes, keyboard attack commitment/recovery, a complete desktop campaign, and an alternate Backstep + Double route that must land its follow-up before disengaging. A separate native two-finger Chromium probe checks held movement against both attacks, recovery and cancellation. Enemy telegraph rendering and damage use the same angular constant. Observable Canvas data fields report actual punches/kicks/hits/staggers/knockdowns/follow-ups, attack lock, current style and player position; they do not control gameplay. No mutable gameplay hooks or general unit suite were added.
+
+Selectors: `#game`, `#punch`, `#kick`, `#combo`, `#health`, `#wave`, `#style`, `#move-pad`, `#start`, `#restart`, `#help`, `#help-dialog`, `#help-close` and `button.upgrade`. Landscape targets remain 568×320,667×375,844×390,667×280 and desktop 1280×720. Help, portrait, tab hiding and blur pause the same run and clear held inputs. Physical devices are not verified by desktop emulation.
