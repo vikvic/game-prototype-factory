@@ -9,7 +9,7 @@ from .export import ROOT_FILES, SOURCE_DIRS, linked
 
 TOOL_ROOT = Path(__file__).resolve().parent.parent
 TEXT_SUFFIXES = {".html", ".json", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".scss", ".sass", ".less", ".md", ".txt", ".svg", ".xml", ".yaml", ".yml", ".toml", ".csv", ".glsl", ".vert", ".frag", ".wgsl", ".map"}
-KNOWN_GAMES = {"buffet-dash-24812a73", "tunnel-frontier-e2df699d", "canvas-starter", "three-starter"}
+KNOWN_GAMES = {"gunfu-forge-44e8dca9", "buffet-dash-24812a73", "tunnel-frontier-e2df699d", "canvas-starter", "three-starter"}
 
 
 class MissingCoverage(ValueError):

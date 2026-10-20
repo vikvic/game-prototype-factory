@@ -1,3 +1,4 @@
+import {gunfu} from './gunfu.mjs';
 import {invariant,number,text,value,wait,tapMap,action,geometry,pauseAndRotate} from './common.mjs';
 
 async function buffet(page,{touch,rotate,record}) {
@@ -84,6 +85,7 @@ async function starter(page,{touch,rotate,record},three) {
   await record('restart',{score:await text(page,'#score')});
 }
 export const scenarios={
+  'gunfu-forge-44e8dca9':{name:'gunfu-composition-four-round-v1',run:gunfu},
   'buffet-dash-24812a73':{name:'buffet-touch-pack-bank-restart-v1',run:buffet},
   'tunnel-frontier-e2df699d':{name:'tunnel-mine-nest-combat-restart-v1',run:tunnel},
   'canvas-starter':{name:'canvas-movement-collection-restart-v1',run:(p,c)=>starter(p,c,false)},
