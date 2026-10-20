@@ -11,9 +11,21 @@ async function fight(page, touch, seconds=45) {
       return state;
     }
     const ammo=Number.parseInt(await page.locator('#ammo').textContent());
-    if(ammo===0 && Date.now()-lastReload>1400) {
-      await action(page,'#reload',touch);lastReload=Date.now();
-    } else if(ammo>0) await action(page,'#shoot',touch);
+    try {
+      let selector;
+      if(ammo===0 && Date.now()-lastReload>1400) {selector='#reload';lastReload=Date.now();}
+      else if(ammo>0) selector='#shoot';
+      if(selector) {
+        // A projectile can finish the round between the snapshot and native input.
+        const control=page.locator(selector);
+        if(touch)await control.tap({timeout:1000});else await control.click({timeout:1000});
+      }
+    } catch(error) {
+      const after=await snapshot(page);
+      if(after.phase==='upgrade'||after.phase==='won')return after;
+      invariant(after.phase!=='lost','Player lost during the core-loop route');
+      throw error;
+    }
     await page.waitForTimeout(180);
   }
   throw Error('Combat did not reach a finite round ending');
