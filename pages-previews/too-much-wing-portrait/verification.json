@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "release": "kylie-wing-portrait-8ab16c62",
+  "release": "kylie-wing-portrait-0965f6dd",
   "emulated": true,
   "physical_devices": false,
   "cases": [
@@ -22,6 +22,8 @@
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
       "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture",
       "mockNoFillRecovered": true
     },
     {
@@ -41,7 +43,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     },
     {
       "engine": "chromium",
@@ -60,7 +64,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     },
     {
       "engine": "chromium",
@@ -79,7 +85,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     },
     {
       "engine": "chromium",
@@ -98,7 +106,10 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture",
+      "sadResultArt": true
     },
     {
       "engine": "chromium",
@@ -117,7 +128,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     },
     {
       "engine": "chromium",
@@ -136,7 +149,10 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture",
+      "sadResultArt": true
     },
     {
       "engine": "webkit",
@@ -156,6 +172,8 @@
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
       "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture",
       "mockNoFillRecovered": true
     },
     {
@@ -175,7 +193,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     },
     {
       "engine": "webkit",
@@ -194,7 +214,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     },
     {
       "engine": "webkit",
@@ -213,7 +235,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     },
     {
       "engine": "webkit",
@@ -232,7 +256,10 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture",
+      "sadResultArt": true
     },
     {
       "engine": "webkit",
@@ -251,7 +278,9 @@
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
-      "unsupportedShareFallback": true
+      "unsupportedShareFallback": true,
+      "happyResultArt": true,
+      "nativeImageShare": "controlled file-capability/cancellation fixture"
     }
   ],
   "limitations": [

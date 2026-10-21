@@ -2,14 +2,14 @@
   "slug": "too-much-wing-portrait",
   "title": "Too Much Wing - Portrait",
   "purpose": "public-test",
-  "release": "kylie-wing-portrait-8ab16c62",
-  "previous_release": "kylie-wing-portrait-7208d146",
-  "game_revision": "555dabf0a16d2dfe3b5b6e30abf282e062cb7ab0",
-  "artifact": "b23d75fab1bbfa7dc64d7a637c378054ceb1060f6692b05a421ccb8110aa7daf",
-  "verified_at": "2026-10-21T22:04:03+00:00",
-  "verification_result_hash": "dc14345f92cc029888da15afaf0676819afaf2a35cc8f02da52423f6bc567baf",
-  "user_authorization": "User explicitly requested pure portrait at every viewport, with side bars on wide screens, continuing the authorized Pages test workflow.",
-  "prepared_at": "2026-10-21T22:04:18+00:00",
+  "release": "kylie-wing-portrait-0965f6dd",
+  "previous_release": "kylie-wing-portrait-8ab16c62",
+  "game_revision": "c8a5070a3b57e1540466505c0df65fea87d0ded3",
+  "artifact": "ae940f2bb153c21c6179e1556566291bf706c403df59cf71e85f14abf5dbffb5",
+  "verified_at": "2026-10-21T22:37:04+00:00",
+  "verification_result_hash": "902fd10819658a85a0ad365a94c71499112aa399112ac1d61715b9d7ca42948b",
+  "user_authorization": "User explicitly requested happy Kylie for wins and sad Kylie for losses on sharing, continuing the authorized Pages test workflow.",
+  "prepared_at": "2026-10-21T22:37:38+00:00",
   "subject_context_checked_at": "2026-10-21T21:54:41+00:00",
   "topic_expires_at": "2026-10-24T07:00:00Z",
   "ads": "disabled",
@@ -17,8 +17,8 @@
   "commercial_release_approved": false,
   "artifact_files": [
     {
-      "path": "assets/index-B0mdRd2d.js",
-      "sha256": "aff51d279739fd3d2c4575f64b7bbffd88f5d869181f19c72b26798e9da95635"
+      "path": "assets/index-d5FGnQjJ.js",
+      "sha256": "a8a579b3f98076e4b98fbae22953d02caa2869104203c72bcfb3a4711dffed7d"
     },
     {
       "path": "assets/index-k7ECAIBw.css",
@@ -29,20 +29,20 @@
       "sha256": "67d55cebb0efc5f590c7f92462cee8c882db21a61faff0a89347c2094abfdedf"
     },
     {
-      "path": "assets/wing-game-BV2_-AEt.js",
-      "sha256": "6c1a9230ef33be5e6961de0c97da2283e4d3e4ea95653f39fba9a1bdd0a1c05d"
+      "path": "assets/wing-game-BEoeOFjV.js",
+      "sha256": "6e6dfef6730a68b622544d291abec7d9d610e92c7eb2f07b05bc2dcf4b1807ef"
     },
     {
-      "path": "assets/wing-game-C-QfQS3t.css",
-      "sha256": "ec15c8d15a3206f093bcf2e8f6d13622a31e0fb280b159eb6993d89864e2dbe1"
+      "path": "assets/wing-game-Dt42QqTO.css",
+      "sha256": "d5afe8dacffc05eeb873f5e02a4d14ee9b5ff7dff3e498efff0bb1dfc8ae98df"
     },
     {
       "path": "edition.json",
-      "sha256": "427102969e55a261f3c393f2564fd8f64f2a91006b00cebb73b6a5c140b6d379"
+      "sha256": "2b0a2849260bf72705f4f13862b880c4be4a3a45c311b66b8b3064807e9d856a"
     },
     {
       "path": "index.html",
-      "sha256": "93062d518f4514eae20be4ee7e0cf61b764c7bca477373658f70b5f4aad04601"
+      "sha256": "131e9aea6dcf38b1a0f4894b42e951cc3f2b6fd3f0f21448cec9fa18cf99be0b"
     }
   ]
 }
