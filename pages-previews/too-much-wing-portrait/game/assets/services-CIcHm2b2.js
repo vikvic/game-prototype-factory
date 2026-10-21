@@ -1,0 +1,1 @@
+async function n(e,t,r){if(e!=="mock-no-fill")return"disabled";t();try{return await new Promise(a=>setTimeout(a,100)),"unavailable"}finally{r()}}function i(e){if(e){const t=document.createElement("script");t.defer=!0,t.dataset.domain=e,t.src="https://plausible.io/js/script.js",document.head.append(t)}return t=>{if(!e)return;window.plausible?.(t)}}export{n as a,i as t};

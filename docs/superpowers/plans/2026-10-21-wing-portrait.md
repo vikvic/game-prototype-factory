@@ -28,6 +28,6 @@
 
 ## Tasks
 
-1. [ ] Add `wing-portrait.ts` renderer and scoped `wing-portrait.css`; integrate optional layout, input mapping, compact copy and rotation Continue in `wing-game.ts`. Extend `Edition` and Python schema only for the optional enum. Strict TypeScript/Vite build.
-2. [ ] Add the portrait edition and its source/design notes; adapt existing trusted acceptance for world-to-screen navigation, portrait touch direction, rotation pause, portrait viewport matrix and captures. Review the whole change; fix material findings. Commit source, refresh the existing topic context honestly, assemble and verify an immutable release.
+1. [x] Add `wing-portrait.ts` renderer and scoped `wing-portrait.css`; integrate optional layout, input mapping, compact copy and rotation Continue in `wing-game.ts`. Extend `Edition` and Python schema only for the optional enum. Strict TypeScript/Vite build.
+2. [x] Add the portrait edition and its source/design notes; adapt existing trusted acceptance for world-to-screen navigation, portrait touch direction, rotation pause, portrait viewport matrix and captures. Review the whole change; fix material findings. Commit source, refresh the existing topic context honestly, assemble and verify an immutable release.
 3. [ ] Export exact verified bytes to a second Pages snapshot using recorded file order/checksums. Validate combined site and staged bytes, commit/push, wait for Pages, verify live assets and browser interaction. Save release/deployment evidence and provide the separate link, with physical-phone checks stated accurately.
