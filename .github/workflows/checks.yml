@@ -29,3 +29,8 @@ jobs:
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
           npm run build
+      - name: Reusable topical game
+        working-directory: reusable_games/paparazzi-escape
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
