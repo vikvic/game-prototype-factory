@@ -101,3 +101,10 @@ Unknown revenue stays unknown. Costs and estimates remain visible separately. Ad
 Research: Google Trends RSS and publisher feeds, plus manually verified primary links. Game source is pinned; inputs and artifact hashes bind browser verification and approval. Browser checks prove bounded game behavior, not entertainment value, physical ergonomics, virality, audience reach or profitability. The operator still owns topical judgment, distribution and real campaign evaluation.
 
 Two local-output recovery improvements remain: an interrupted export can leave a partial destination that needs inspection/removal before retry, and a failed site build can replace the prior local generated output. The original source/artifacts and already deployed site are preserved. Rebuild the local preview to restore it; never remove historical source or unrelated folders to recover an export.
+
+
+## Too Much Wing revision
+
+The Kylie edition keeps its `kylie-flash-dash` slug and now selects validated `mechanic: wing-escape`. Omitted mechanic still means the original camera-escape game. The reusable package includes both; queued revisions pin their exact source. Holding Space or Tuck folds the wings to pass three doors; five snags or 60 seconds loses, and the car is the destination. The map/physical mishaps are explicitly fictional extensions of the runway outfit.
+
+Trusted acceptance exercises actual open-wing obstruction and held-tuck clearance through ordinary controls, touch cancellation, all required viewport sizes, win/loss/restart and optional sharing. The build verification timeout is now720 seconds to cover the longer real-play route across eleven engine/viewport cases; this is a browser timeout, not a model spending budget. Old immutable builds remain unchanged. A passing new build replaces the local gallery entry at the same URL only after preview regeneration. Public deployment is still separate.

@@ -1,22 +1,22 @@
-# Kylie Flash Dash — candidate launch package
+# Too Much Wing — candidate launch package
 
 Local review only. Hosting is undecided. No public release, social post, outreach, ad request or tracking event has been performed.
 
 ## One audience and one joke
 
-Reach viewers currently discussing Kylie Jenner's runway appearance. Imagine the next challenge: getting to the after-party without another camera moment. Original cartoon art and a fictional chase; no body/appearance jokes, private-life claims, borrowed footage or endorsement language.
+Reach viewers currently discussing Kylie Jenner's runway appearance. Turn the white-winged, jeweled runway look into fictional backstage physical comedy: the wings are far too large for ordinary doors. Original cartoon art and a fictional chase; no body/appearance jokes, private-life claims, borrowed footage or endorsement language.
 
 ## Manual channels
 
-1. An actual gameplay clip on the operator's own Instagram Reels or TikTok. Show movement, camera exposure, the exit and result. Text overlay: "The runway was the easy part." Do not use a celebrity recording as the soundtrack.
+1. An actual gameplay clip on the operator's own Instagram Reels or TikTok. Show movement, camera exposure, the exit and result. Text overlay: "$50m outfit. Standard-size doorway." Show an actual snag, held tuck and narrow-door escape. Do not use a celebrity recording as the soundtrack.
 2. An X post with a playable link and the game's result card. Aim at the current runway conversation, not a general core-gaming audience.
 3. r/KylieJenner and r/popculturechat are audience research leads. Check current rules before proposing any self-promotion; no link dropping or messages are performed by the factory.
 
 ## Caption drafts
 
-- "The runway was the easy part. Can you get cartoon Kylie to the after-party without three more photos? I made a tiny free browser game. Unofficial arcade parody; fictional chase."
-- "Three passes. One exit. So many cameras. Kylie Flash Dash takes a runway moment and gives it a ridiculous after-party escape. Free replay. Sharing optional."
-- "Your exit now has a press tour. Try Kylie Flash Dash and see whether your camera roll makes the headline. Original cartoon game; no affiliation or endorsement."
+- "$50m look. $0 door budget. Get cartoon Kylie and those enormous wings through backstage in Too Much Wing. A fictional, unofficial browser comedy."
+- "The wings were ready for the runway. Nobody measured the door. Hold Tuck, dodge the equipment and get to the car. Free replay; sharing optional."
+- "My outfit survived. The doorframes want hazard pay. Try Too Much Wing — original cartoon art, no account, no endorsement."
 
 ## Actual-play assets
 

@@ -4,12 +4,14 @@ import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir, realpath } from 'node:fs/promises';
 import { resolve, join, extname, sep } from 'node:path';
 import { geometry } from './playchecks/common.mjs';
+import { wingInput, wingWin, wingLoss } from './playchecks/wing_escape.mjs';
 
 const args={};for(let i=2;i<process.argv.length;i+=2)args[process.argv[i].slice(2)]=process.argv[i+1];
 const root=await realpath(resolve(args.dist)),out=resolve(args.output);await mkdir(out,{recursive:true});
 const edition=JSON.parse(await readFile(join(root,'edition.json'),'utf8'));
 if(edition.analytics_domain||edition.ad_mode!=='disabled')throw Error('Acceptance requires disabled production services');
 const result={passed:false,release:edition.release,emulated:true,physical_devices:false,cases:[],limitations:['Desktop engine emulation; no physical-device ergonomics or humor judgment.','Sharing initiation/cancellation does not establish delivery or referral reach.']};
+const wings=edition.mechanic==='wing-escape';
 const invariant=(v,m)=>{if(!v)throw Error(m);};
 const server=createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost');const p=await realpath(join(root,decodeURIComponent(url.pathname).replace(/^\//,'')||'index.html'));if(p!==root&&!p.startsWith(root+sep))throw Error('outside');const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'}[extname(p)]||'application/octet-stream';res.writeHead(200,{'content-type':mime});res.end(await readFile(p));}catch{res.writeHead(404);res.end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const url=`http://127.0.0.1:${server.address().port}/`;
@@ -41,7 +43,7 @@ try{
         const h=Number((await state(page)).worldHeight);
         // Chromium has native multi-touch injection; WebKit covers pointer capture + touch action taps.
         const pad=await page.locator('#move-pad').boundingBox();const before=Number((await state(page)).x);
-        if(name==='chromium'&&touch){
+        if(wings){await wingInput(page,name,touch);entry.nativeMultiTouch=name==='chromium'&&touch;}else if(name==='chromium'&&touch){
           const cdp=await context.newCDPSession(page);const finger={x:pad.x+pad.width*.86,y:pad.y+pad.height*.5,id:1};
           await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger]});await page.waitForTimeout(180);
           const dash=await page.locator('#dash').boundingBox();await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger,{x:dash.x+dash.width/2,y:dash.y+dash.height/2,id:2}]});
@@ -49,29 +51,31 @@ try{
         }else{await page.mouse.move(pad.x+pad.width*.86,pad.y+pad.height*.5);await page.mouse.down();await page.waitForTimeout(180);await page.mouse.up();entry.nativeMultiTouch=false;}
         invariant(Number((await state(page)).x)>before+10,'Movement pad failed');
         await page.locator('#help').click();const old=await page.locator('#time').textContent();await page.waitForTimeout(1100);invariant(await page.locator('#time').textContent()===old,'Help timer moved');await page.locator('#help-close').click();
-        if(touch){await page.locator('#dash').tap();await page.waitForFunction(()=>Number(document.querySelector('#game').dataset.cooldown)>0);}
-        const prior=await state(page);await page.setViewportSize(width>height?{width:390,height:844}:{width:667,height:375});await page.waitForTimeout(150);await geometry(page);await page.setViewportSize({width,height});await page.waitForTimeout(150);const resized=await state(page);invariant(prior.passes===resized.passes&&prior.photos===resized.photos,'Resize changed progress');entry.resizePreserved=true;
+        if(touch&&!wings){await page.locator('#dash').tap();await page.waitForFunction(()=>Number(document.querySelector('#game').dataset.cooldown)>0);}
+        const prior=await state(page);await page.setViewportSize(width>height?{width:390,height:844}:{width:667,height:375});await page.waitForTimeout(150);await geometry(page);await page.setViewportSize({width,height});await page.waitForTimeout(150);const resized=await state(page);invariant((wings?['x','z','doors','snags']:['passes','photos']).every(k=>prior[k]===resized[k]),'Resize changed progress');entry.resizePreserved=true;
         await page.evaluate(()=>window.dispatchEvent(new Event('blur')));const paused=await page.locator('#time').textContent();await page.waitForTimeout(1100);invariant(await page.locator('#time').textContent()===paused,'Blur did not pause');await page.evaluate(()=>window.dispatchEvent(new Event('focus')));entry.backgroundSignal='simulated blur/focus callbacks';
-        await winRun(page);
-        await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='won');invariant((await state(page)).passes==='3','Passes missing');await geometry(page);
+        if(wings)await wingWin(page,width===568);else await winRun(page);
+        await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='won');invariant((await state(page))[wings?'doors':'passes']==='3','Progress missing');await geometry(page);
         const saved=await state(page);
         await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:async()=>{throw new DOMException('Canceled','AbortError');}}));
         await page.locator('#share').click();await page.waitForFunction(()=>document.querySelector('#share-status').textContent.includes('canceled'));
-        invariant((await state(page)).phase===saved.phase&&(await state(page)).passes===saved.passes,'Share cancellation changed game');
+        invariant((await state(page)).phase===saved.phase&&(await state(page))[wings?'doors':'passes']===saved[wings?'doors':'passes'],'Share cancellation changed game');
         await page.evaluate(()=>{Object.defineProperty(navigator,'share',{configurable:true,value:undefined});Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{}}});});
         await page.locator('#share').click();await page.waitForFunction(()=>document.querySelector('#share-status').textContent.includes('Result copied'));entry.unsupportedShareFallback=true;
         const download=page.waitForEvent('download');await page.locator('#save').click();const d=await download;invariant(d.suggestedFilename().endsWith('.png'),'Result image missing');
         await page.screenshot({path:join(out,`${name}-${width}x${height}-won.png`)});
-        await page.locator('#restart').click();await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='playing'&&document.querySelector('#game').dataset.passes==='0');
+        await page.locator('#restart').click();await page.waitForFunction(wings=>{const d=document.querySelector('#game').dataset;return d.phase==='playing'&&d[wings?'doors':'passes']==='0';},wings);
         if(width===1280){
+          if(wings){await wingLoss(page);}else{
           await moveTo(page,480,h*.84);await moveTo(page,480,h*.2);await moveTo(page,500,h*.42);
           await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='lost',{},{timeout:95000});
-          invariant(Number((await state(page)).photos)>0,'Loss route never exercised camera exposure');await page.locator('#restart').click();
+          invariant(Number((await state(page)).photos)>0,'Loss route never exercised camera exposure');}
+          await page.locator('#restart').click();
           await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='playing');
         }
         if(width===568){
           // Controlled provider fixture: exact game bundle, only public runtime service mode differs.
-          await page.route('**/edition.json',route=>route.fulfill({json:{...edition,ad_mode:'mock-no-fill'}}));await page.reload();await page.waitForFunction(()=>document.querySelector('#game')?.dataset.phase==='intro');await page.locator('#start').click();await winRun(page);await page.locator('#restart').click();await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='playing'&&document.querySelector('#game').dataset.adOutcome==='unavailable');entry.mockNoFillRecovered=true;
+          await page.route('**/edition.json',route=>route.fulfill({json:{...edition,ad_mode:'mock-no-fill'}}));await page.reload();await page.waitForFunction(()=>document.querySelector('#game')?.dataset.phase==='intro');await page.locator('#start').click();if(wings)await wingWin(page);else await winRun(page);await page.locator('#restart').click();await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='playing'&&document.querySelector('#game').dataset.adOutcome==='unavailable');entry.mockNoFillRecovered=true;
         }
         invariant(!entry.diagnostics.length,entry.diagnostics.join('; '));entry.passed=true;
       }catch(error){entry.failure=String(error.stack||error);await page.screenshot({path:join(out,`${name}-${width}x${height}-failed.png`)}).catch(()=>{});throw error;}

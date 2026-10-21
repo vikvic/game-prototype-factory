@@ -4,7 +4,7 @@
     "title": "Kylie Jenner's runway appearance — fictional after-party escape",
     "lane": "breaking",
     "audience": "People currently discussing Kylie Jenner's October 2026 runway appearance, especially fashion/pop-culture viewers and her existing fans.",
-    "hook": "The runway was the easy part. Can a cartoon Kylie reach the after-party without giving the cameras three more photos? The chase is fictional; the joke targets constant camera attention.",
+    "hook": "Too Much Wing: an oversized white-winged runway look meets ordinary backstage doors. Hold Tuck to squeeze past racks and cameras to the pickup car. The route and mishaps are fictional.",
     "distribution": "An actual gameplay clip on the operator's own Instagram Reels/TikTok; an X post aimed at the runway conversation. r/KylieJenner and r/popculturechat are research leads only, pending current self-promotion rules. No posts or messages are authorized or sent.",
     "evidence": "BBC Entertainment RSS carried runway coverage dated October 19. Who What Wear independently describes the appearance on October 19. A current r/KylieJenner thread contains direct audience discussion. These establish current coverage and a specific audience, not a measured Google search growth rate, hottest-topic ranking, guaranteed reach or game demand. Search-result vote counts were not retained as reliable measurements.",
     "confidence": "Moderate for current attention and game/hook fit; low for acquisition conversion; unknown for virality and economics.",
@@ -16,7 +16,7 @@
       "context": "clear",
       "subjects": "Kylie Jenner; fictional after-party chase around the October 2026 runway appearance",
       "checked_at": "2026-10-21T06:22:26Z",
-      "notes": "Reviewed current appearance coverage and searched for recent death/bereavement context on October 20 Pacific time. No exclusion identified in the checked results. This is a dated human research judgment, not automated proof of absence. Use original fully clothed cartoon art; no claims about actual evasions, private behavior, body, family or endorsement. Recheck before approval/publication.",
+      "notes": "Reviewed current appearance coverage and searched for recent death/bereavement context on October 20 Pacific time. No exclusion identified in the checked results. This is a dated human research judgment, not automated proof of absence. Use original fully clothed cartoon art; no claims about actual evasions, private behavior, body, family or endorsement. Recheck before approval/publication. Revised game uses the photographed white-wing/jeweled-outfit hook; backstage route, snagging, crew behavior and pickup are invented comedy, not reported events.",
       "source_urls": [
         "https://www.whowhatwear.com/beauty/makeup/kylie-jenner-victorias-secret-fashion-show-2026-makeup",
         "https://www.reddit.com/r/KylieJenner/comments/1x9xki2/kylie_walks_the_runway_for_the_victorias_secret/"
@@ -41,6 +41,18 @@
         "title": "BBC Entertainment RSS",
         "supports": "Feed item on the appearance published October 19, collected October 21 UTC. Individual BBC page could not be fetched; no full-article claim is made.",
         "checked_at": "2026-10-21T06:22:26Z"
+      },
+      {
+        "url": "https://www.vogue.com/article/kylie-jenner-fantasy-bra-2026-victorias-secret-10-18-2026",
+        "title": "Vogue — October 18 runway look",
+        "supports": "White feathered wings, jeweled Fantasy Bra and skirt provide the recognizable visual hook; not evidence of backstage mishaps.",
+        "checked_at": "2026-10-21T07:11:36+00:00"
+      },
+      {
+        "url": "https://www.victoriassecret.com/us/vs/vsinsider/fashion-show/2026-fantasy-bra",
+        "title": "Victoria’s Secret — design account",
+        "supports": "Official account of the jeweled design and movement/light inspiration; no claim about the invented gameplay route.",
+        "checked_at": "2026-10-21T07:11:36+00:00"
       }
     ]
   },
@@ -62,7 +74,9 @@
       "subjects": "Dolly Parton",
       "checked_at": "2026-10-21T06:22:26Z",
       "notes": "Recent death confirmed by the official announcement. User explicitly rejected a lighthearted game about her. Exclude this topic; no game or marketing package should be generated.",
-      "source_urls": ["https://www.dollyparton.com/news/official-announcement-dolly-parton-passes-away-at-80"]
+      "source_urls": [
+        "https://www.dollyparton.com/news/official-announcement-dolly-parton-passes-away-at-80"
+      ]
     },
     "sources": [
       {

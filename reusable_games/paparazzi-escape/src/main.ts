@@ -1,7 +1,7 @@
 import './style.css';
 import { adBreak, tracker } from './services';
 
-type Edition = { id:string; title:string; subject:string; subtitle:string; description:string; accent:string; background:string; outfit:string; setting:string; result_win:string; result_loss:string; preview:boolean; difficulty:'easy'|'normal'|'hard'; theme?:'classic'|'runway'; notice?:string; brand:string; release:string; analytics_domain:string; ad_mode:string };
+export type Edition = { id:string; title:string; subject:string; subtitle:string; description:string; accent:string; background:string; outfit:string; setting:string; result_win:string; result_loss:string; preview:boolean; difficulty:'easy'|'normal'|'hard'; theme?:'classic'|'runway'; mechanic?:'camera-escape'|'wing-escape'; notice?:string; brand:string; release:string; analytics_domain:string; ad_mode:string };
 type Vec = { x:number;y:number };
 type Photographer = Vec & { angle:number; base:number; phase:number };
 const el = <T extends HTMLElement>(id:string) => document.getElementById(id) as T;
@@ -9,6 +9,9 @@ const canvas=el<HTMLCanvasElement>('game'), ctx=canvas.getContext('2d')!;
 let edition:Edition;
 try { const response=await fetch('./edition.json'); if(!response.ok)throw Error('Edition unavailable');edition=await response.json(); }
 catch { el('status').textContent='This edition could not load. Please reload the page.';throw Error('Edition load failed'); }
+if(edition.mechanic==='wing-escape'){
+  const {bootWings}=await import('./wing-game');bootWings(edition);
+}else{
 document.title=`${edition.title} · ${edition.brand}`;
 for(const id of ['title','subject','subtitle','brand'] as const)el(id).textContent=edition[id];
 const notice=edition.notice||(edition.preview?'Fictional preview · original characters':'An independent topical game · original illustrations');
@@ -80,3 +83,5 @@ el('share').onclick=async()=>{track('Share initiated');const status=el('share-st
 el('copy').onclick=async()=>{try{await navigator.clipboard.writeText(location.href.split('?')[0]);el('share-status').textContent='Link copied.';}catch{el('share-status').textContent='Copy the page address from your browser.';}};
 el('save').onclick=()=>{const card=document.createElement('canvas');card.width=1000;card.height=600;const c=card.getContext('2d')!;c.fillStyle=edition.background;c.fillRect(0,0,1000,600);c.fillStyle=edition.accent;c.font='bold 24px system-ui';c.fillText(edition.brand.toUpperCase(),60,80);c.fillStyle='#fff6e8';c.font='bold 46px system-ui';const words=(el('headline').textContent||'').split(' ');let line='',y=190;for(const word of words){if(c.measureText(line+word).width>860){c.fillText(line,60,y);line='';y+=58;}line+=word+' ';}c.fillText(line,60,y);c.font='24px system-ui';c.fillText(el('result-detail').textContent||'',60,450);c.fillText(edition.title,60,520);const a=document.createElement('a');a.download=`${edition.id}-result.png`;a.href=card.toDataURL('image/png');a.click();el('share-status').textContent='Result image prepared.';};
 resize();reset();requestAnimationFrame(frame);
+
+}
