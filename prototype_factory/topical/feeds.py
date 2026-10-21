@@ -32,7 +32,8 @@ def fetch(url, timeout=15, maximum=2_000_000):
         raw = socket.create_connection((addresses[0][4][0], 443), timeout=remaining)
         connection = http.client.HTTPSConnection(parsed.hostname, timeout=remaining)
         try:
-            connection.sock = ssl.create_default_context().wrap_socket(raw, server_hostname=parsed.hostname)
+            wrapped = ssl.create_default_context().wrap_socket(raw, server_hostname=parsed.hostname)
+            connection.sock = wrapped
             path = (parsed.path or "/") + ("?" + parsed.query if parsed.query else "")
             connection.request("GET", path, headers={"User-Agent": "TopicalFactory/0.1 RSS reader", "Accept-Encoding": "identity"})
             response = connection.getresponse()
@@ -43,10 +44,14 @@ def fetch(url, timeout=15, maximum=2_000_000):
                 raise ValueError(f"Feed returned HTTP {response.status}")
             chunks, size = [], 0
             while True:
+                if response.isclosed():
+                    return b"".join(chunks)
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
                     raise ValueError("Feed fetch deadline exceeded")
-                connection.sock.settimeout(remaining)
+                # getresponse() clears connection.sock for Connection: close;
+                # its response file still owns the wrapped socket until EOF.
+                wrapped.settimeout(remaining)
                 chunk = response.read(min(65536, maximum + 1 - size))
                 if not chunk:
                     return b"".join(chunks)

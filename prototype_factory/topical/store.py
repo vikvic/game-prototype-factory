@@ -25,17 +25,25 @@ class TopicalStore:
         self.path = self.state / "topical.sqlite3"
         with self.connect() as db:
             version = db.execute("PRAGMA user_version").fetchone()[0]
-            if version not in (0, 1):
+            if version not in (0, 1, 2):
                 raise ValueError(f"Unsupported topical schema {version}")
+            if version == 1:
+                backup = self.state / 'topical-before-v2.sqlite3'
+                if not backup.exists():
+                    with sqlite3.connect(backup) as destination:
+                        db.backup(destination)
             db.executescript("""
                 PRAGMA journal_mode=WAL;
                 CREATE TABLE IF NOT EXISTS opportunities(id TEXT PRIMARY KEY, status TEXT NOT NULL, data TEXT NOT NULL, updated TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS feed_items(id TEXT PRIMARY KEY, source TEXT NOT NULL, title TEXT NOT NULL, url TEXT NOT NULL, published TEXT, observed TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS releases(id TEXT PRIMARY KEY, edition TEXT NOT NULL, opportunity TEXT NOT NULL, status TEXT NOT NULL, fingerprint TEXT NOT NULL, data TEXT NOT NULL, created TEXT NOT NULL, updated TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY, entity TEXT NOT NULL, kind TEXT NOT NULL, message TEXT NOT NULL, at TEXT NOT NULL);
-                CREATE TABLE IF NOT EXISTS accounting(id TEXT PRIMARY KEY, edition TEXT, kind TEXT NOT NULL, amount REAL NOT NULL, currency TEXT NOT NULL, basis TEXT NOT NULL, period TEXT NOT NULL, note TEXT NOT NULL);
-                PRAGMA user_version=1;
+                CREATE TABLE IF NOT EXISTS accounting(id TEXT PRIMARY KEY, edition TEXT, kind TEXT NOT NULL, amount REAL NOT NULL, currency TEXT NOT NULL, basis TEXT NOT NULL, period TEXT NOT NULL, note TEXT NOT NULL, supersedes TEXT);
             """)
+            if 'supersedes' not in {r['name'] for r in db.execute('PRAGMA table_info(accounting)')}:
+                db.execute('ALTER TABLE accounting ADD COLUMN supersedes TEXT')
+            db.execute('CREATE UNIQUE INDEX IF NOT EXISTS accounting_corrections ON accounting(supersedes) WHERE supersedes IS NOT NULL')
+            db.execute('PRAGMA user_version=2')
 
     @contextmanager
     def connect(self):

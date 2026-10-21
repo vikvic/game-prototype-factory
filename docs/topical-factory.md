@@ -66,7 +66,7 @@ Current runtime is ad-free and untracked. `commercial.toml` keeps live ads disab
 
 Plausible is the proposed measurement provider; no subscription was created. The runtime event boundary exists, but assembled pilot releases deliberately have an empty tracking domain. Before production enablement, fund/configure the service, update privacy copy, verify actual events/costs and build a new reviewed release. Do not infer revenue from SDK calls or shares from dialog closure.
 
-Accounting import accepts a JSON list with `id`, `edition` (or null for site-wide), `kind` (`revenue`, `cost`, `shared-cost`, `operator-time`), nonnegative `amount`, `currency` (USD/EUR/GBP), `basis` (estimated/final), `period`, and `note` identifying its source. `operator-time` is a monetary valuation of time, not a count of hours. Reimporting identical IDs is idempotent; changed IDs require an explicit correction record. No currency conversion or allocation of site-wide earnings is invented.
+Accounting import accepts a JSON list with `id`, `edition` (or null for site-wide), `kind` (`revenue`, `cost`, `shared-cost`, `operator-time`), nonnegative `amount`, `currency` (USD/EUR/GBP), `basis` (estimated/final), `period`, and `note` identifying its source. `operator-time` is a monetary valuation of time, not a count of hours. Reimporting identical IDs is idempotent. To correct an amount, add a new ID with `supersedes` set to the prior effective record ID: a $100 record superseded by an $80 record totals $80, retaining both in history. Currency, edition, kind and period stay the same; basis can change from estimate to final. Import parent records before corrections. Schema v1 is backed up before this v2 addition. No currency conversion or allocation of site-wide earnings is invented.
 
 ```powershell
 python factory.py topical accounting PATH-TO-PRIVATE-REPORT.json
@@ -78,3 +78,5 @@ Unknown revenue stays unknown. Costs and estimates remain visible separately. Ad
 ## Evidence and limits
 
 Research: Google Trends RSS and publisher feeds, plus manually verified primary links. Game source is pinned; inputs and artifact hashes bind browser verification and approval. Browser checks prove bounded game behavior, not entertainment value, physical ergonomics, virality, audience reach or profitability. The operator still owns topical judgment, distribution and real campaign evaluation.
+
+Two local-output recovery improvements remain: an interrupted export can leave a partial destination that needs inspection/removal before retry, and a failed site build can replace the prior local generated output. The original source/artifacts and already deployed site are preserved. Rebuild the local preview to restore it; never remove historical source or unrelated folders to recover an export.

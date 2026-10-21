@@ -98,6 +98,9 @@ def copy_game(root, revision, target):
 
 def work(root, store, once=True):
     with WorkerLock(store.state):
+        abandoned = [r['id'] for r in store.releases() if r['status'] in ('assembling', 'verifying')]
+        if abandoned:
+            raise ValueError('Unresolved abandoned work; run topical recover before starting: ' + ', '.join(abandoned))
         while True:
             with store.connect() as db:
                 db.execute("BEGIN IMMEDIATE")
@@ -156,12 +159,21 @@ def verify(root, store, key):
         if hash_tree(artifact) != data["artifact"]:
             raise ValueError("Artifact changed since build; queue a fresh edition")
         output = folder / "verification"
-        run_process([executable("node"), str(root / "tools" / "check_topical.mjs"), "--dist", str(artifact), "--output", str(output)], root, folder / "verify.log", data["config"]["build"]["verify_timeout_seconds"])
-        result = json.loads((output / "result.json").read_text(encoding="utf-8"))
-        if not result.get("passed") or result.get("release") != key or hash_tree(artifact) != data["artifact"]:
-            raise ValueError("Trusted browser evidence does not match this artifact")
-        data["verification"] = {"artifact": data["artifact"], "at": now(), "result_hash": hashlib.sha256((output / "result.json").read_bytes()).hexdigest()}
-        store.update_release(key, "verified", data, {"built", "verified"})
+        data.pop('verification', None)
+        data.pop('approved_at', None)
+        data.pop('error', None)
+        store.update_release(key, 'verifying', data, {'built', 'verified'})
+        try:
+            run_process([executable("node"), str(root / "tools" / "check_topical.mjs"), "--dist", str(artifact), "--output", str(output)], root, folder / "verify.log", data["config"]["build"]["verify_timeout_seconds"])
+            result = json.loads((output / "result.json").read_text(encoding="utf-8"))
+            if not result.get("passed") or result.get("release") != key or hash_tree(artifact) != data["artifact"]:
+                raise ValueError("Trusted browser evidence does not match this artifact")
+            data["verification"] = {"artifact": data["artifact"], "at": now(), "result_hash": hashlib.sha256((output / "result.json").read_bytes()).hexdigest()}
+            store.update_release(key, "verified", data, {'verifying'})
+        except (Exception, KeyboardInterrupt) as error:
+            data['error'] = str(error) or 'Verification interrupted'
+            store.update_release(key, 'built', data, {'verifying'})
+            raise
 
 
 def approve(root, store, key):
@@ -177,6 +189,9 @@ def approve(root, store, key):
     artifact = store.state / "releases" / key / "project" / "dist"
     if hash_tree(artifact) != data["verification"]["artifact"]:
         raise ValueError("Artifact changed after verification")
+    result_path = artifact.parent.parent / 'verification' / 'result.json'
+    if hashlib.sha256(result_path.read_bytes()).hexdigest() != data['verification']['result_hash']:
+        raise ValueError('Browser evidence changed; rerun verification')
     data["approved_at"] = now()
     store.update_release(key, "approved", data, {"verified"})
 
@@ -184,11 +199,11 @@ def approve(root, store, key):
 def recover(store):
     with WorkerLock(store.state):
         with store.connect() as db:
-            rows = db.execute("SELECT id FROM releases WHERE status='assembling'").fetchall()
+            rows = db.execute("SELECT id FROM releases WHERE status IN ('assembling','verifying')").fetchall()
         for row in rows:
             folder = store.state / "releases" / row[0]
             if (folder / "process.json").exists():
                 raise ValueError(f"Process ownership unresolved for {row[0]}; inspect process.json before recovery")
             data = store.release(row[0])["data"] | {"error": "Worker interrupted; queue original edition explicitly"}
-            store.update_release(row[0], "interrupted", data, {"assembling"})
+            store.update_release(row[0], "interrupted", data, {"assembling", "verifying"})
         return len(rows)

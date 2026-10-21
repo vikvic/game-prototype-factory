@@ -25,30 +25,41 @@ async function moveTo(page,x,y,mayFinish=false){
     await page.keyboard.up(direction);
   }throw Error('Navigation failed');
 }
+async function winRun(page){const h=Number((await state(page)).worldHeight);for(const [x,y]of [[200,.84],[200,.24],[480,.24],[480,.84],[790,.84],[790,.30],[900,.30],[900,.09]])await moveTo(page,x,h*y,y===.09);await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='won');}
 try{
   for(const [name,type]of [['chromium',chromium],['webkit',webkit]]){
     const browser=await type.launch();browsers.push(browser);
     for(const [width,height] of [[568,320],[667,375],[844,390],[667,280],[390,844],...(name==='chromium'?[[1280,720]]:[])]){
       const touch=width!==1280;const context=await browser.newContext({viewport:{width,height},hasTouch:touch,isMobile:touch,deviceScaleFactor:touch?2:1,...(name==='chromium'&&width===844?{recordVideo:{dir:join(out,'clips'),size:{width,height}}}:{})});const page=await context.newPage();page.setDefaultTimeout(8000);
-      const entry={engine:name,width,height,passed:false,diagnostics:[]};result.cases.push(entry);
+      await context.addInitScript(()=>Object.defineProperty(window,'sessionStorage',{configurable:true,get(){throw new DOMException('Storage denied','SecurityError');}}));
+      const entry={engine:name,width,height,passed:false,diagnostics:[],storageDenied:true};result.cases.push(entry);
       page.on('pageerror',e=>entry.diagnostics.push(String(e)));page.on('requestfailed',r=>entry.diagnostics.push(r.url()));
       await page.route('**/*',route=>{if(new URL(route.request().url()).origin!==new URL(url).origin){entry.diagnostics.push('Unexpected external request');return route.abort();}return route.continue();});
       try{
         await page.goto(url);await page.waitForFunction(()=>document.querySelector('#game')?.dataset.phase==='intro');await geometry(page);
         if(touch)await page.locator('#start').tap();else await page.locator('#start').click();
         const h=Number((await state(page)).worldHeight);
-        // Native mouse capture exercises the same pointer pad in both engines; touch taps exercise actions.
+        // Chromium has native multi-touch injection; WebKit covers pointer capture + touch action taps.
         const pad=await page.locator('#move-pad').boundingBox();const before=Number((await state(page)).x);
-        await page.mouse.move(pad.x+pad.width*.86,pad.y+pad.height*.5);await page.mouse.down();await page.waitForTimeout(180);await page.mouse.up();
+        if(name==='chromium'&&touch){
+          const cdp=await context.newCDPSession(page);const finger={x:pad.x+pad.width*.86,y:pad.y+pad.height*.5,id:1};
+          await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger]});await page.waitForTimeout(180);
+          const dash=await page.locator('#dash').boundingBox();await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger,{x:dash.x+dash.width/2,y:dash.y+dash.height/2,id:2}]});
+          await page.waitForFunction(()=>Number(document.querySelector('#game').dataset.cooldown)>0);await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});await cdp.detach();entry.nativeMultiTouch=true;
+        }else{await page.mouse.move(pad.x+pad.width*.86,pad.y+pad.height*.5);await page.mouse.down();await page.waitForTimeout(180);await page.mouse.up();entry.nativeMultiTouch=false;}
         invariant(Number((await state(page)).x)>before+10,'Movement pad failed');
         await page.locator('#help').click();const old=await page.locator('#time').textContent();await page.waitForTimeout(1100);invariant(await page.locator('#time').textContent()===old,'Help timer moved');await page.locator('#help-close').click();
         if(touch){await page.locator('#dash').tap();await page.waitForFunction(()=>Number(document.querySelector('#game').dataset.cooldown)>0);}
-        await moveTo(page,200,h*.84);await moveTo(page,200,h*.24);await moveTo(page,480,h*.24);await moveTo(page,480,h*.84);await moveTo(page,790,h*.84);await moveTo(page,790,h*.30);await moveTo(page,900,h*.30);await moveTo(page,900,h*.09,true);
+        const prior=await state(page);await page.setViewportSize(width>height?{width:390,height:844}:{width:667,height:375});await page.waitForTimeout(150);await geometry(page);await page.setViewportSize({width,height});await page.waitForTimeout(150);const resized=await state(page);invariant(prior.passes===resized.passes&&prior.photos===resized.photos,'Resize changed progress');entry.resizePreserved=true;
+        await page.evaluate(()=>window.dispatchEvent(new Event('blur')));const paused=await page.locator('#time').textContent();await page.waitForTimeout(1100);invariant(await page.locator('#time').textContent()===paused,'Blur did not pause');await page.evaluate(()=>window.dispatchEvent(new Event('focus')));entry.backgroundSignal='simulated blur/focus callbacks';
+        await winRun(page);
         await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='won');invariant((await state(page)).passes==='3','Passes missing');await geometry(page);
         const saved=await state(page);
         await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:async()=>{throw new DOMException('Canceled','AbortError');}}));
         await page.locator('#share').click();await page.waitForFunction(()=>document.querySelector('#share-status').textContent.includes('canceled'));
         invariant((await state(page)).phase===saved.phase&&(await state(page)).passes===saved.passes,'Share cancellation changed game');
+        await page.evaluate(()=>{Object.defineProperty(navigator,'share',{configurable:true,value:undefined});Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{}}});});
+        await page.locator('#share').click();await page.waitForFunction(()=>document.querySelector('#share-status').textContent.includes('Result copied'));entry.unsupportedShareFallback=true;
         const download=page.waitForEvent('download');await page.locator('#save').click();const d=await download;invariant(d.suggestedFilename().endsWith('.png'),'Result image missing');
         await page.screenshot({path:join(out,`${name}-${width}x${height}-won.png`)});
         await page.locator('#restart').click();await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='playing'&&document.querySelector('#game').dataset.passes==='0');
@@ -57,6 +68,10 @@ try{
           await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='lost',{},{timeout:95000});
           invariant(Number((await state(page)).photos)>0,'Loss route never exercised camera exposure');await page.locator('#restart').click();
           await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='playing');
+        }
+        if(width===568){
+          // Controlled provider fixture: exact game bundle, only public runtime service mode differs.
+          await page.route('**/edition.json',route=>route.fulfill({json:{...edition,ad_mode:'mock-no-fill'}}));await page.reload();await page.waitForFunction(()=>document.querySelector('#game')?.dataset.phase==='intro');await page.locator('#start').click();await winRun(page);await page.locator('#restart').click();await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='playing'&&document.querySelector('#game').dataset.adOutcome==='unavailable');entry.mockNoFillRecovered=true;
         }
         invariant(!entry.diagnostics.length,entry.diagnostics.join('; '));entry.passed=true;
       }catch(error){entry.failure=String(error.stack||error);await page.screenshot({path:join(out,`${name}-${width}x${height}-failed.png`)}).catch(()=>{});throw error;}

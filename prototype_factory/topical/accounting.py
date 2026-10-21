@@ -12,6 +12,8 @@ def import_rows(store, path):
         identifier(row.get("id"))
         if row.get("edition") is not None:
             identifier(row["edition"])
+        if row.get('supersedes') is not None:
+            identifier(row['supersedes'])
         if row.get("kind") not in ("revenue", "cost", "shared-cost", "operator-time") or row.get("basis") not in ("estimated", "final"):
             raise ValueError("Invalid accounting kind/basis")
         amount = row.get("amount")
@@ -21,15 +23,25 @@ def import_rows(store, path):
             raise ValueError("Provide currency, period and report provenance note")
     with store.connect() as db:
         for row in rows:
-            values = tuple(row.get(k) for k in ("id", "edition", "kind", "amount", "currency", "basis", "period", "note"))
+            values = tuple(row.get(k) for k in ("id", "edition", "kind", "amount", "currency", "basis", "period", "note", "supersedes"))
             existing = db.execute("SELECT * FROM accounting WHERE id=?", (row["id"],)).fetchone()
             if existing and tuple(existing) != values:
-                raise ValueError("Accounting ID already exists with different values; use a new correction record")
-            db.execute("INSERT OR IGNORE INTO accounting VALUES(?,?,?,?,?,?,?,?)", values)
+                raise ValueError("Accounting ID exists; use a new record with supersedes set to the original ID")
+            if existing:
+                continue
+            if row.get('supersedes'):
+                parent = db.execute('SELECT * FROM accounting WHERE id=?', (row['supersedes'],)).fetchone()
+                if not parent or db.execute('SELECT 1 FROM accounting WHERE supersedes=?', (row['supersedes'],)).fetchone():
+                    raise ValueError('Correction must supersede an existing effective record')
+                if any(row.get(k) != parent[k] for k in ('edition','kind','currency','period')):
+                    raise ValueError('Correction must keep edition/kind/currency/period; amount and basis may change')
+            db.execute("INSERT INTO accounting VALUES(?,?,?,?,?,?,?,?,?)", values)
     return len(rows)
 
 
 def report(store):
     with store.connect() as db:
         records = [dict(row) for row in db.execute("SELECT * FROM accounting ORDER BY period,id")]
-    return {"note": "No reports means revenue unknown. Site-wide revenue stays unallocated. Currencies and estimated/final rows are not combined.", "records": records, "summary": [dict(currency=currency, basis=basis, kind=kind, edition=edition, amount=sum(r['amount'] for r in records if (r['currency'],r['basis'],r['kind'],r['edition'])==(currency,basis,kind,edition))) for currency,basis,kind,edition in sorted({(r['currency'],r['basis'],r['kind'],r['edition']) for r in records}, key=str)]}
+    replaced = {r['supersedes'] for r in records if r['supersedes']}
+    effective = [r for r in records if r['id'] not in replaced]
+    return {"note": "No reports means revenue unknown. Site-wide revenue stays unallocated. Superseded records remain in history but are excluded from totals. Currencies and estimated/final rows are not combined.", "records": records, "summary": [dict(currency=currency, basis=basis, kind=kind, edition=edition, amount=sum(r['amount'] for r in effective if (r['currency'],r['basis'],r['kind'],r['edition'])==(currency,basis,kind,edition))) for currency,basis,kind,edition in sorted({(r['currency'],r['basis'],r['kind'],r['edition']) for r in effective}, key=str)]}
