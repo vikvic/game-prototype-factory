@@ -4,12 +4,14 @@ on:
     branches: [main]
     paths:
       - 'prototypes/**'
+      - 'pages-previews/**'
       - 'prototype_factory/**'
       - 'tools/**'
       - '.github/workflows/pages.yml'
   pull_request:
     paths:
       - 'prototypes/**'
+      - 'pages-previews/**'
       - 'prototype_factory/**'
       - 'tools/**'
       - '.github/workflows/pages.yml'

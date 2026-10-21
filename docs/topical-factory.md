@@ -42,6 +42,10 @@ Keep an edition's source register and design rationale in its own `editions/<slu
 
 For local review, retain a versioned copy in the release's `research/` folder beside `project/`, with document hashes and the source-document commit recorded. This is an operator documentation step; the current assembler does not automatically copy these files. Do not rewrite an existing release's `project/`, `snapshot.json`, `verification/` or built artifact to add notes. Original research timestamps and later document-check dates remain separate.
 
+### User-authorized GitHub Pages tests
+
+An explicit public-testing request can use the factory's existing project Pages site. `pages-previews/<slug>/release.json` records the testing purpose, user authorization, verified artifact hash and game revision; `game/` holds only its static output. `tools/build_site.py` checks fingerprints and disabled services, then copies the snapshot into `dist/testing/<slug>/` after building the existing gallery. `pages.yml` deploys that combined artifact. The blog repository and commercial-site workflow are separate. Ordinary source edits do not automatically replace a test snapshot; re-export it deliberately after verification. This path is for explicitly requested public tests, not an automatic commercial release approval.
+
 The three included editions are **fictional previews**, not actual celebrity releases or measured trending games. They share the same paparazzi-evasion game and vary the subject, presentation and humor. Select the research records for local demonstration:
 
 ```powershell

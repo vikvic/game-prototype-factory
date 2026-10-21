@@ -1,0 +1,43 @@
+{
+  "slug": "too-much-wing",
+  "title": "Too Much Wing",
+  "purpose": "public-test",
+  "release": "kylie-flash-dash-977c73ac",
+  "game_revision": "e6381cce0b8fb145a910fc3a0c8e11388645a9f6",
+  "artifact": "de12b946377be167f161916ce1f722015001ad55be7d9d52fd2a13f3fdc22932",
+  "verified_at": "2026-10-21T15:31:38+00:00",
+  "verification_result_hash": "29a355b8c18bf174856ced97d288551734a7246bfc55bc355dcb5cd6b30a3690",
+  "user_authorization": "User explicitly requested deployment to their GitHub Pages for testing in this conversation.",
+  "prepared_at": "2026-10-21T16:16:04+00:00",
+  "subject_context_checked_at": "2026-10-21T15:21:08+00:00",
+  "topic_expires_at": "2026-10-24T07:00:00Z",
+  "ads": "disabled",
+  "analytics": "disabled",
+  "commercial_release_approved": false,
+  "artifact_files": [
+    {
+      "path": "assets/index-k7ECAIBw.css",
+      "sha256": "d5a7e32a03975d6c105f82153d2a0df4d8cdfb69f13df9c34cd87de99e308d9c"
+    },
+    {
+      "path": "assets/index-YZvDZ4jY.js",
+      "sha256": "881ae83e375ab320a98754092d4bee29840cad5a81f00c153855a7fbbeed9640"
+    },
+    {
+      "path": "assets/services-CIcHm2b2.js",
+      "sha256": "67d55cebb0efc5f590c7f92462cee8c882db21a61faff0a89347c2094abfdedf"
+    },
+    {
+      "path": "assets/wing-game-BGH9WZWn.js",
+      "sha256": "e1ef0b7cc2138fb18a0155bff50cae78dd14998fe9154ed430966c7b363eb715"
+    },
+    {
+      "path": "edition.json",
+      "sha256": "ac75f314ccd6da1c62e54d4f5efb4f075c7fab67cdbb361109c62032aa93f569"
+    },
+    {
+      "path": "index.html",
+      "sha256": "76436f1acf5bc40120be707abd3bd864c762ed36ac0c5215e1411478874a24bc"
+    }
+  ]
+}
