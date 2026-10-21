@@ -1,4 +1,4 @@
-import { crew, gates, props, type WingWorld } from './wing-world';
+import { crew, gates, props, wingFootprint, type WingWorld } from './wing-world';
 
 function box(c:CanvasRenderingContext2D,x:number,y:number,w:number,h:number,r:number,color:string){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();}
 function oval(c:CanvasRenderingContext2D,x:number,y:number,rx:number,ry:number,color:string,angle=0){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,angle,0,Math.PI*2);c.fill();}
@@ -98,6 +98,31 @@ export function drawWingScene(c:CanvasRenderingContext2D,w:WingWorld,pixelsW:num
   const car=p(2570,110);box(c,car.x-8,car.y-65,160,67,18,'#1d202b');box(c,car.x+13,car.y-85,107,40,15,'#282e3b');box(c,car.x+23,car.y-78,83,25,6,'#8aadb9');oval(c,car.x+22,car.y+2,15,15,'#10121a');oval(c,car.x+125,car.y+2,15,15,'#10121a');box(c,car.x-9,car.y-40,9,15,3,'#fff0b7');
   c.fillStyle='#e4ffca';c.font='800 15px system-ui';c.textAlign='center';c.fillText('YOUR CAR ↓',car.x+70,car.y-104);
   for(const f of w.particles){const a=p(f.x,f.z);c.save();c.translate(a.x,a.y-65);c.rotate(w.elapsed*3);oval(c,0,0,3,10,`rgba(255,250,245,${Math.min(1,f.life)})`);c.restore();}
+  const block=w.phase==='playing'?w.blocked:null;
+  if(block){
+    // Ground outlines expose the actual depth/width collision, even behind the tall artwork.
+    const footprint=(x:number,z:number,width:number,depth:number,color:string)=>{
+      const points=[p(x,z),p(x+width,z),p(x+width,z+depth),p(x,z+depth)];
+      c.beginPath();points.forEach((a,i)=>i?c.lineTo(a.x,a.y):c.moveTo(a.x,a.y));c.closePath();
+      c.fillStyle=color+'30';c.fill();c.strokeStyle=color;c.lineWidth=2.5;c.stroke();
+    };
+    const r=block.obstacle,{rx,rz}=wingFootprint(w.open);
+    footprint(r.x,r.z,r.w,r.d,'#ff866f');
+    footprint(w.x-rx,w.z-rz,rx*2,rz*2,'#95e8ff');
+    const contact=p(block.contact.x,block.contact.z);
+    oval(c,contact.x,contact.y,7,7,'#24151e');
+    line(c,[contact.x-4,contact.y-4,contact.x+4,contact.y+4],'#ffb09b',2.5);
+    line(c,[contact.x+4,contact.y-4,contact.x-4,contact.y+4],'#ffb09b',2.5);
+    const label=block.cause==='wings'?'WINGS TOO WIDE':'SOLID OBSTACLE',labelWidth=block.cause==='wings'?128:136;
+    const lx=Math.max(labelWidth/2+8,Math.min(viewW-labelWidth/2-8,contact.x)),ly=Math.max(18,Math.min(h-54,contact.y-25));
+    box(c,lx-labelWidth/2,ly-13,labelWidth,23,5,'#291923');c.fillStyle='#ffceb9';c.font='800 11px system-ui';c.textAlign='center';c.fillText(label,lx,ly+2);
+    if(block.steer){
+      const a=p(w.x,w.z),target=p(block.steer.x,block.steer.z),angle=Math.atan2(target.y-a.y,target.x-a.x);
+      const start={x:a.x+Math.cos(angle)*16,y:a.y+Math.sin(angle)*16},end={x:a.x+Math.cos(angle)*47,y:a.y+Math.sin(angle)*47};
+      line(c,[start.x,start.y,end.x,end.y],'#15252b',7);line(c,[start.x,start.y,end.x,end.y],'#b0f3df',3);
+      line(c,[end.x-11*Math.cos(angle-.55),end.y-11*Math.sin(angle-.55),end.x,end.y,end.x-11*Math.cos(angle+.55),end.y-11*Math.sin(angle+.55)],'#b0f3df',3);
+    }
+  }
   if(w.flash>0){c.fillStyle=`rgba(255,255,255,${w.flash*2})`;c.fillRect(0,0,viewW,h);}
   if(w.phase==='intro'){const x=viewW*.76,y=Math.min(h-18,h*.65+90);c.save();c.translate(x,y);c.scale(1.5,1.5);drawStar(c,1,performance.now()/1000,0);c.restore();}
 }

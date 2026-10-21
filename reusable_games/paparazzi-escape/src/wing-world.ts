@@ -1,11 +1,16 @@
 export type Phase = 'intro' | 'playing' | 'won' | 'lost';
 export type Rect = { x:number; z:number; w:number; d:number; kind:string };
 export type Crew = { x:number; z:number; kind:'press'|'phone'|'tv'; warning:boolean; flash:boolean };
+export type BlockFeedback = {
+  obstacle:Rect; cause:'wings'|'body'; contact:{x:number;z:number};
+  steer:{x:number;z:number}|null; message:string; life:number;
+};
 export type WingWorld = {
   phase:Phase; x:number; z:number; open:number; time:number; elapsed:number; doors:number;
   snags:number; strut:number; distance:number; recoil:number; grace:number; flash:number;
   moving:number; facing:number; lean:number; message:string; lastObstacle:string;
   particles:{x:number;z:number;vx:number;vy:number;life:number}[];
+  blocked:BlockFeedback|null;
 };
 export const gates = [
   {x:600,lo:65,hi:145,label:'STAGE DOOR'},
@@ -24,7 +29,7 @@ const barriers:Rect[] = gates.flatMap(g=>[
 ]);
 export function newWorld():WingWorld {
   return {phase:'intro',x:150,z:105,open:1,time:60,elapsed:0,doors:0,snags:0,strut:0,distance:0,
-    recoil:0,grace:0,flash:0,moving:0,facing:1,lean:0,message:'A $50m runway look. A very ordinary backstage door.',lastObstacle:'',particles:[]};
+    recoil:0,grace:0,flash:0,moving:0,facing:1,lean:0,message:'A $50m runway look. A very ordinary backstage door.',lastObstacle:'',particles:[],blocked:null};
 }
 export function crew(w:WingWorld):Crew[] {
   return [
@@ -33,10 +38,39 @@ export function crew(w:WingWorld):Crew[] {
     {x:2310,z:225,kind:'press' as const,cycle:4.2,offset:2},
   ].map(c=>{const t=(w.elapsed+c.offset)%c.cycle;return {...c,warning:t>c.cycle-1.1,flash:t<.14};});
 }
+export const wingFootprint=(open:number)=>({rx:17+open*18,rz:17+open*55});
+const overlaps=(x:number,z:number,rx:number,rz:number,r:Rect)=>x+rx>r.x&&x-rx<r.x+r.w&&z+rz>r.z&&z-rz<r.z+r.d;
 function obstruction(x:number,z:number,open:number,w:WingWorld):Rect|undefined {
-  const rx=17+open*18,rz=17+open*55;
+  const {rx,rz}=wingFootprint(open);
   const people=crew(w).map(c=>({x:c.x-16,z:c.z-16,w:32,d:32,kind:c.kind==='tv'?'boom crew':c.kind==='phone'?'phone filmer':'photographer'}));
-  return [...barriers,...props,...people].find(r=>x+rx>r.x&&x-rx<r.x+r.w&&z+rz>r.z&&z-rz<r.z+r.d);
+  return [...barriers,...props,...people].find(r=>overlaps(x,z,rx,rz,r));
+}
+// Describe the collision that already happened; this never moves the player or changes clearance.
+function describeBlock(w:WingWorld,r:Rect,x:number,z:number,axis:'x'|'z'):BlockFeedback {
+  const cause=overlaps(x,z,17,17,r)?'body':'wings';
+  const nearX=Math.max(r.x,Math.min(r.x+r.w,w.x)),nearZ=Math.max(r.z,Math.min(r.z+r.d,w.z));
+  // Closest point on the solid rectangle, including wings reopened inside a door slab.
+  const contact=[{x:r.x,z:nearZ},{x:r.x+r.w,z:nearZ},{x:nearX,z:r.z},{x:nearX,z:r.z+r.d}]
+    .reduce((best,point)=>Math.hypot(point.x-w.x,point.z-w.z)<Math.hypot(best.x-w.x,best.z-w.z)?point:best);
+  let steer:BlockFeedback['steer']=null,message=`Wings caught on ${r.kind} — hold TUCK to fit.`;
+  if(cause==='body'){
+    const gate=gates.find(g=>g.label.toLowerCase()===r.kind);
+    if(gate){
+      steer={x:w.x,z:(gate.lo+gate.hi)/2};
+      message=`${r.kind}: move ${steer.z>w.z?'DOWN ↓':'UP ↑'} into the lit gap. Tucking cannot pass a wall.`;
+    }else if(axis==='x'){
+      const above=r.z-19,below=r.z+r.d+19;
+      const goUp=above>=25&&(below>295||Math.abs(w.z-above)<=Math.abs(w.z-below));
+      steer={x:w.x,z:goUp?above:below};
+      message=`${r.kind} blocks your body — move ${goUp?'UP ↑':'DOWN ↓'} around it.`;
+    }else{
+      const left=r.x-19,right=r.x+r.w+19;
+      const goLeft=left>=55&&(right>2590||Math.abs(w.x-left)<=Math.abs(w.x-right));
+      steer={x:goLeft?left:right,z:w.z};
+      message=`${r.kind} blocks your body — move ${goLeft?'LEFT ←':'RIGHT →'} around it.`;
+    }
+  }
+  return {obstacle:{...r},cause,contact,steer,message,life:.85};
 }
 function snag(w:WingWorld,kind:string) {
   if(w.grace>0)return;
@@ -47,12 +81,17 @@ function snag(w:WingWorld,kind:string) {
 export function step(w:WingWorld,dt:number,input:{x:number;z:number;fold:boolean}) {
   if(w.phase!=='playing')return;
   w.time=Math.max(0,w.time-dt);w.elapsed+=dt;w.grace=Math.max(0,w.grace-dt);w.recoil=Math.max(0,w.recoil-dt);w.flash=Math.max(0,w.flash-dt);
+  const clearHint='Follow the lit gaps. Tuck for wing clearance; go around solid obstacles.';
+  if(w.blocked){w.blocked.life-=dt;if(w.blocked.life<=0){w.blocked=null;w.message=clearHint;}}
   w.open+=(Number(!input.fold)-w.open)*Math.min(1,dt*13);
   let dx=input.x,dz=input.z;const length=Math.hypot(dx,dz);if(length>1){dx/=length;dz/=length;}
   const speed=(174-68*(1-w.open))*(w.recoil>0?.25:1),oldX=w.x,oldZ=w.z;
   const nx=Math.max(55,Math.min(2590,w.x+dx*speed*dt)),nz=Math.max(25,Math.min(295,w.z+dz*speed*dt));
-  if(dx){const hit=obstruction(nx,w.z,w.open,w);if(hit)snag(w,hit.kind);else w.x=nx;}
-  if(dz){const hit=obstruction(w.x,nz,w.open,w);if(hit)snag(w,hit.kind);else w.z=nz;}
+  let blocked:BlockFeedback|null=null;
+  if(dx){const hit=obstruction(nx,w.z,w.open,w);if(hit){blocked=describeBlock(w,hit,nx,w.z,'x');snag(w,hit.kind);}else w.x=nx;}
+  if(dz){const hit=obstruction(w.x,nz,w.open,w);if(hit){const feedback=describeBlock(w,hit,w.x,nz,'z');if(!blocked||feedback.cause==='body')blocked=feedback;snag(w,hit.kind);}else w.z=nz;}
+  if(blocked){w.blocked=blocked;w.message=blocked.message;}
+  else if(w.x!==oldX||w.z!==oldZ){if(w.blocked)w.message=clearHint;w.blocked=null;}
   const traveled=Math.hypot(w.x-oldX,w.z-oldZ);w.distance+=traveled;w.strut+=traveled*w.open;w.moving=traveled/dt;
   if(dx)w.facing=Math.sign(dx);w.lean+=(dx*6-w.lean)*Math.min(1,dt*8);
   for(const c of crew(w))if(c.flash&&Math.abs(c.x-w.x)<145&&Math.abs(c.z-w.z)<65){w.flash=.13;if(w.open>.55)snag(w,'flash');}

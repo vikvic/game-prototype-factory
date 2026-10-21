@@ -10,3 +10,7 @@ Runtime receives public edition.json only. No mutable debugging API; Canvas data
 ## Too Much Wing variant
 
 `mechanic: wing-escape` selects the fictional backstage wing game. Three narrow doors and solid equipment require held Space/Tuck to reduce real collision clearance; folding slows movement. Five snags or 60 seconds loses; reach the pickup car after three doors to win. Large original caricature, white feathered wings, jeweled outfit, wing lag/recoil, loose feathers, staged runway/backstage scenery and distinct press/phone/TV crew. No passes or dash cooldown in this variant. Winning images show its character and result. The physical mishaps are fictional; only the outfit/event is the topical reference.
+
+### Collision feedback
+
+The challenge is unchanged: the same footprints, speeds, doors, 60-second timer and five-snag limit apply. A blocked move now reveals the actual obstacle footprint in coral and player clearance in blue, with a contact marker. Wings-only collisions highlight Tuck; body collisions name the obstruction and point around it or toward the door gap. Feedback does not steer or change collision results.

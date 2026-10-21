@@ -26,14 +26,18 @@ export function bootWings(edition:Edition){
   help.querySelector('h2')!.textContent='Too much wing. Not enough door.';
   const paragraphs=help.querySelectorAll('p');
   paragraphs[0].textContent='Reach the car through three marked doors before 60 seconds run out. Open wings snag on door frames, equipment and crew. Five snags end the run.';
-  paragraphs[1].textContent='Move with WASD, arrows or the movement pad. Hold Space or Tuck wings to fold them and walk slowly through the lit gap. Release to spread them again. Camera flashes can startle open wings; tuck near the press. There are no passes to collect.';
+  paragraphs[1].textContent='Move with WASD, arrows or the movement pad. Hold Space or Tuck wings to fold them and walk slowly through the lit gap. When stuck, coral outlines mark the obstruction and blue outlines show your wing clearance. WINGS TOO WIDE means hold Tuck; SOLID OBSTACLE means follow the green arrow around it. Camera flashes can startle open wings; tuck near the press.';
+  el('status').setAttribute('role','status');el('status').setAttribute('aria-live','polite');
   function clearInput(){keys.clear();stick={x:0,z:0};pointer=foldPointer=null;pad.querySelector('i')!.style.display='none';}
   function resize(){const b=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,3);canvas.width=Math.round(b.width*dpr);canvas.height=Math.round(b.height*dpr);clearInput();}
   new ResizeObserver(resize).observe(canvas);
   function sync(){
     el('time').textContent=`${Math.ceil(world.time)}s`;el('passes').textContent=`${world.doors}/3 doors`;el('photos').textContent=`${world.snags}/5 snags`;
-    el('cooldown').textContent=world.open<.25?'folded':'hold';el('exposure').style.width=`${18+world.open*82}%`;el('status').textContent=world.message;
-    Object.assign(canvas.dataset,{phase:world.phase,paused:String(paused),x:world.x.toFixed(2),z:world.z.toFixed(2),doors:String(world.doors),snags:String(world.snags),open:world.open.toFixed(3),lastObstacle:world.lastObstacle,release:edition.release,adMode:edition.ad_mode,mechanic:'wing-escape'});
+    const block=world.phase==='playing'?world.blocked:null,status=el('status'),message=block?.message||world.message;
+    el('cooldown').textContent=world.open<.25?'folded':'hold';el('exposure').style.width=`${18+world.open*82}%`;
+    if(status.textContent!==message)status.textContent=message;
+    status.dataset.blocked=block?.cause||'';el('dash').dataset.needed=String(block?.cause==='wings');el('photos').dataset.impact=String(world.recoil>0);
+    Object.assign(canvas.dataset,{phase:world.phase,paused:String(paused),x:world.x.toFixed(2),z:world.z.toFixed(2),doors:String(world.doors),snags:String(world.snags),open:world.open.toFixed(3),lastObstacle:world.lastObstacle,blockCause:block?.cause||'',blockHint:block?.message||'',release:edition.release,adMode:edition.ad_mode,mechanic:'wing-escape'});
   }
   function start(){clearInput();world=newWorld();world.phase='playing';finished=false;paused=false;el('intro').hidden=true;el('result').hidden=true;el('share-status').textContent='';track('Game start');sync();}
   function finish(){
