@@ -1,11 +1,9 @@
-# Too Much Wing - portrait public test
+# Too Much Wing - portrait-only public test
 
-Separate comparison: https://vikvic.github.io/game-prototype-factory/testing/too-much-wing-portrait/
+https://vikvic.github.io/game-prototype-factory/testing/too-much-wing-portrait/
 
-Release `kylie-wing-portrait-7208d146` pins game revision `e8401bd79c031139d1077a4089b46739ae9d572c`. All 11 trusted Chromium/WebKit cases passed. `game/` is the exact verified build, not a rebuild. `release.json` records the artifact and each file checksum in original factory order; `verification.json` is its matching acceptance evidence. Ads and analytics are disabled.
+Release `kylie-wing-portrait-8ab16c62`, source `555dabf0a16d2dfe3b5b6e30abf282e062cb7ab0`. All13 trusted Chromium/WebKit cases passed, including923x884 in both engines. The vertical course and controls are identical at every viewport. Wide windows center the portrait frame between empty side bars. The horizontal renderer and orientation-selected input were removed. Short windows compact the same interface and reclaim the controls row on results; safe-area padding is preserved.
 
-The existing `/testing/too-much-wing/` snapshot is unchanged. The 60-second timer, three doors, five snags, movement and colliders stay unchanged. Upright play uses an upward course and dedicated controls/status. Turning the phone pauses for Continue.
+The60-second timer, three doors, five snags and physics are unchanged. Ads/analytics are off. The original `/testing/too-much-wing/` snapshot stays unchanged. Previous portrait release `kylie-wing-portrait-7208d146` remains in immutable local history, Git history and the local Pages archive. This folder contains exact verified output, an ordered file/checksum manifest and matching browser evidence.
 
-Physical iPhone/Android ergonomics remain a human check. Minor review follow-ups: Help may scroll on the smallest viewport; held-input interruptions are supported by code inspection and separate cancellation/pause checks rather than a combined held-gesture case.
-
-Source material and design: [edition folder](../../editions/kylie-wing-portrait/README.md). Deployment uses the existing Pages pipeline and preserves the legacy gallery. No commercial launch approval is implied.
+Source material and design: [edition folder](../../editions/kylie-wing-portrait/README.md). Physical-phone comfort and actual notch/home-inset rendering still need a hands-on check. Deferred minor documentation issues: the design paragraph retains the word optional; its WebKit count says first5 although the current matrix covers6. These do not alter runtime behavior.

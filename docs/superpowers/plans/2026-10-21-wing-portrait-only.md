@@ -18,5 +18,5 @@
 
 ## Tasks
 
-1. [ ] Simplify wing-game/art, add centered and compact portrait styles, update design/operator notes and existing acceptance for 923x884 plus the original phone/desktop matrix. Strict build, focused short-window check, one fresh read-only review. Commit source and assemble/verify an immutable release. No new unit suite.
+1. [x] Simplify wing-game/art, add centered and compact portrait styles, update design/operator notes and existing acceptance for 923x884 plus the original phone/desktop matrix. Strict build, focused short-window check, one fresh read-only review. Commit source and assemble/verify an immutable release. No new unit suite.
 2. [ ] Archive the prior portrait snapshot, export the exact verified replacement to the same portrait URL, verify combined site and staged blobs, commit, guarded main fast-forward, preserve local database history, push. Wait for Actions, compare live bytes and inspect the user's wide browser. Save receipts and hand over the same link.

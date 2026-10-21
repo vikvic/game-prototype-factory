@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "release": "kylie-wing-portrait-7208d146",
+  "release": "kylie-wing-portrait-8ab16c62",
   "emulated": true,
   "physical_devices": false,
   "cases": [
@@ -11,6 +11,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0.25,
+        "y": 0,
+        "width": 319.5,
+        "height": 568
+      },
       "nativeMultiTouch": true,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -25,6 +31,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640
+      },
       "nativeMultiTouch": true,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -38,6 +50,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844
+      },
       "nativeMultiTouch": true,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -51,6 +69,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0,
+        "y": 0,
+        "width": 430,
+        "height": 932
+      },
       "nativeMultiTouch": true,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -64,7 +88,32 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 228.03125,
+        "y": 0,
+        "width": 210.9375,
+        "height": 375
+      },
       "nativeMultiTouch": true,
+      "resizePreserved": true,
+      "rotationContinue": true,
+      "backgroundSignal": "simulated blur/focus callbacks",
+      "unsupportedShareFallback": true
+    },
+    {
+      "engine": "chromium",
+      "width": 923,
+      "height": 884,
+      "passed": true,
+      "diagnostics": [],
+      "storageDenied": true,
+      "portraitFrame": {
+        "x": 221.5,
+        "y": 0,
+        "width": 480,
+        "height": 884
+      },
+      "nativeMultiTouch": false,
       "resizePreserved": true,
       "rotationContinue": true,
       "backgroundSignal": "simulated blur/focus callbacks",
@@ -77,6 +126,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 437.5,
+        "y": 0,
+        "width": 405,
+        "height": 720
+      },
       "nativeMultiTouch": false,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -90,6 +145,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0.25,
+        "y": 0,
+        "width": 319.5,
+        "height": 568
+      },
       "nativeMultiTouch": false,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -104,6 +165,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640
+      },
       "nativeMultiTouch": false,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -117,6 +184,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844
+      },
       "nativeMultiTouch": false,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -130,6 +203,12 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 0,
+        "y": 0,
+        "width": 430,
+        "height": 932
+      },
       "nativeMultiTouch": false,
       "resizePreserved": true,
       "rotationContinue": true,
@@ -143,6 +222,31 @@
       "passed": true,
       "diagnostics": [],
       "storageDenied": true,
+      "portraitFrame": {
+        "x": 228.03125,
+        "y": 0,
+        "width": 210.9375,
+        "height": 375
+      },
+      "nativeMultiTouch": false,
+      "resizePreserved": true,
+      "rotationContinue": true,
+      "backgroundSignal": "simulated blur/focus callbacks",
+      "unsupportedShareFallback": true
+    },
+    {
+      "engine": "webkit",
+      "width": 923,
+      "height": 884,
+      "passed": true,
+      "diagnostics": [],
+      "storageDenied": true,
+      "portraitFrame": {
+        "x": 221.5,
+        "y": 0,
+        "width": 480,
+        "height": 884
+      },
       "nativeMultiTouch": false,
       "resizePreserved": true,
       "rotationContinue": true,

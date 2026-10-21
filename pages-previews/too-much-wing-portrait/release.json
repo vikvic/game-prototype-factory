@@ -2,22 +2,23 @@
   "slug": "too-much-wing-portrait",
   "title": "Too Much Wing - Portrait",
   "purpose": "public-test",
-  "release": "kylie-wing-portrait-7208d146",
-  "game_revision": "e8401bd79c031139d1077a4089b46739ae9d572c",
-  "artifact": "6122be2926df60922c83e665b469a1126ada23c955df14c826171f41e93ee0aa",
-  "verified_at": "2026-10-21T17:44:56+00:00",
-  "verification_result_hash": "87795f8b36a07f292bf7912d0d8e4b1ec7f46db4db86c67622b71b2835ba5f21",
-  "user_authorization": "User approved the portrait proposal, including a separate GitHub Pages comparison link, with Ok do this.",
-  "prepared_at": "2026-10-21T17:45:19+00:00",
-  "subject_context_checked_at": "2026-10-21T17:29:17+00:00",
+  "release": "kylie-wing-portrait-8ab16c62",
+  "previous_release": "kylie-wing-portrait-7208d146",
+  "game_revision": "555dabf0a16d2dfe3b5b6e30abf282e062cb7ab0",
+  "artifact": "b23d75fab1bbfa7dc64d7a637c378054ceb1060f6692b05a421ccb8110aa7daf",
+  "verified_at": "2026-10-21T22:04:03+00:00",
+  "verification_result_hash": "dc14345f92cc029888da15afaf0676819afaf2a35cc8f02da52423f6bc567baf",
+  "user_authorization": "User explicitly requested pure portrait at every viewport, with side bars on wide screens, continuing the authorized Pages test workflow.",
+  "prepared_at": "2026-10-21T22:04:18+00:00",
+  "subject_context_checked_at": "2026-10-21T21:54:41+00:00",
   "topic_expires_at": "2026-10-24T07:00:00Z",
   "ads": "disabled",
   "analytics": "disabled",
   "commercial_release_approved": false,
   "artifact_files": [
     {
-      "path": "assets/index-DBqTKhIH.js",
-      "sha256": "725e0ffc4aa422173e334d2fb6ca476fb17f84c9ea3e856e7a9a70ea07119c23"
+      "path": "assets/index-B0mdRd2d.js",
+      "sha256": "aff51d279739fd3d2c4575f64b7bbffd88f5d869181f19c72b26798e9da95635"
     },
     {
       "path": "assets/index-k7ECAIBw.css",
@@ -28,20 +29,20 @@
       "sha256": "67d55cebb0efc5f590c7f92462cee8c882db21a61faff0a89347c2094abfdedf"
     },
     {
-      "path": "assets/wing-game-BVOGfzWj.js",
-      "sha256": "a869848af498e14e8056aff98e9294a7022980a51c2397041fc19085b4ef2e47"
+      "path": "assets/wing-game-BV2_-AEt.js",
+      "sha256": "6c1a9230ef33be5e6961de0c97da2283e4d3e4ea95653f39fba9a1bdd0a1c05d"
     },
     {
-      "path": "assets/wing-game-C6_Ovw5U.css",
-      "sha256": "fe2f41b271d756ad8e17745c94d9b5d9a15a95eab70e33f8b0e85b4dfede1079"
+      "path": "assets/wing-game-C-QfQS3t.css",
+      "sha256": "ec15c8d15a3206f093bcf2e8f6d13622a31e0fb280b159eb6993d89864e2dbe1"
     },
     {
       "path": "edition.json",
-      "sha256": "e941183d75e77cff5f08a9a90f1b0f445b198e31055b417cf92ddf94e5131a5d"
+      "sha256": "427102969e55a261f3c393f2564fd8f64f2a91006b00cebb73b6a5c140b6d379"
     },
     {
       "path": "index.html",
-      "sha256": "318c28c566b106497dc1f68defdc323ef80f615b53a2de52dcce2a7f3919752b"
+      "sha256": "93062d518f4514eae20be4ee7e0cf61b764c7bca477373658f70b5f4aad04601"
     }
   ]
 }
