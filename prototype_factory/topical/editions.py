@@ -19,7 +19,7 @@ GAME = "paparazzi-escape"
 
 
 def validate(data):
-    allowed = {"id", "opportunity", "game", "title", "subject", "subtitle", "description", "accent", "background", "outfit", "setting", "result_win", "result_loss", "preview", "difficulty", "theme", "notice", "mechanic"}
+    allowed = {"id", "opportunity", "game", "title", "subject", "subtitle", "description", "accent", "background", "outfit", "setting", "result_win", "result_loss", "preview", "difficulty", "theme", "notice", "mechanic", "layout"}
     if not isinstance(data, dict) or set(data) - allowed:
         raise ValueError("Edition contains unsupported fields")
     for key in ("id", "opportunity"):
@@ -38,6 +38,8 @@ def validate(data):
         raise ValueError("Edition theme must be classic or runway")
     if data.get("mechanic", "camera-escape") not in ("camera-escape", "wing-escape"):
         raise ValueError("Edition mechanic must be camera-escape or wing-escape")
+    if data.get("layout", "adaptive") not in ("adaptive", "portrait-course"):
+        raise ValueError("Edition layout must be adaptive or portrait-course")
     if "notice" in data and (not isinstance(data["notice"], str) or not 1 <= len(data["notice"]) <= 160):
         raise ValueError("Edition notice must contain 1–160 characters")
     return data

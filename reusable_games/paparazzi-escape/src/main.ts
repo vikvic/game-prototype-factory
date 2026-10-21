@@ -1,7 +1,7 @@
 import './style.css';
 import { adBreak, tracker } from './services';
 
-export type Edition = { id:string; title:string; subject:string; subtitle:string; description:string; accent:string; background:string; outfit:string; setting:string; result_win:string; result_loss:string; preview:boolean; difficulty:'easy'|'normal'|'hard'; theme?:'classic'|'runway'; mechanic?:'camera-escape'|'wing-escape'; notice?:string; brand:string; release:string; analytics_domain:string; ad_mode:string };
+export type Edition = { id:string; title:string; subject:string; subtitle:string; description:string; accent:string; background:string; outfit:string; setting:string; result_win:string; result_loss:string; preview:boolean; difficulty:'easy'|'normal'|'hard'; theme?:'classic'|'runway'; mechanic?:'camera-escape'|'wing-escape'; layout?:'adaptive'|'portrait-course'; notice?:string; brand:string; release:string; analytics_domain:string; ad_mode:string };
 type Vec = { x:number;y:number };
 type Photographer = Vec & { angle:number; base:number; phase:number };
 const el = <T extends HTMLElement>(id:string) => document.getElementById(id) as T;

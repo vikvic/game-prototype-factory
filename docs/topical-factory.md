@@ -118,3 +118,20 @@ Two local-output recovery improvements remain: an interrupted export can leave a
 The Kylie edition keeps its `kylie-flash-dash` slug and now selects validated `mechanic: wing-escape`. Omitted mechanic still means the original camera-escape game. The reusable package includes both; queued revisions pin their exact source. Holding Space or Tuck folds the wings to pass three doors; five snags or 60 seconds loses, and the car is the destination. The map/physical mishaps are explicitly fictional extensions of the runway outfit.
 
 Trusted acceptance exercises actual open-wing obstruction and held-tuck clearance through ordinary controls, touch cancellation, all required viewport sizes, win/loss/restart and optional sharing. The build verification timeout is now720 seconds to cover the longer real-play route across eleven engine/viewport cases; this is a browser timeout, not a model spending budget. Old immutable builds remain unchanged. A passing new build replaces the local gallery entry at the same URL only after preview regeneration. Public deployment is still separate.
+
+
+## Portrait comparison: Too Much Wing
+
+`editions/kylie-wing-portrait/` adds `layout: portrait-course`. Upright play looks upward along the existing course; screen Up moves forward. Landscape keeps the existing view. Turning the phone pauses for Continue without resetting position or progress. Timer, speeds, three doors and five snags are unchanged.
+
+Build an immutable candidate with:
+
+```powershell
+python factory.py topical queue editions/kylie-wing-portrait/edition.json
+python factory.py topical work --once
+python factory.py topical verify <queued-release-id>
+```
+
+The separate public comparison link after a successful Pages run is <https://vikvic.github.io/game-prototype-factory/testing/too-much-wing-portrait/>. The existing `/testing/too-much-wing/` snapshot stays unchanged. A local `site` or `export` command does not deploy. A Pages snapshot must copy exactly the verified release and include its ordered file/checksum manifest, as with the first test snapshot.
+
+The browser matrix covers small and large portrait sizes, mobile landscape and desktop using Chromium/WebKit. It does not replace checking thumb comfort, safe areas and browser chrome on physical iPhone/Android devices before choosing the default. Sources and design reasoning are in the edition folder.

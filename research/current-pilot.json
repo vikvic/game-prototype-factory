@@ -9,14 +9,14 @@
     "evidence": "BBC Entertainment RSS carried runway coverage dated October 19. Who What Wear independently describes the appearance on October 19. A current r/KylieJenner thread contains direct audience discussion. These establish current coverage and a specific audience, not a measured Google search growth rate, hottest-topic ranking, guaranteed reach or game demand. Search-result vote counts were not retained as reliable measurements.",
     "confidence": "Moderate for current attention and game/hook fit; low for acquisition conversion; unknown for virality and economics.",
     "observed_at": "2026-10-21T06:22:26Z",
-    "reviewed_at": "2026-10-21T15:21:08+00:00",
+    "reviewed_at": "2026-10-21T17:29:17+00:00",
     "expires_at": "2026-10-24T07:00:00Z",
     "editorial_review": {
       "decision": "eligible",
       "context": "clear",
       "subjects": "Kylie Jenner; fictional backstage wing-navigation comedy",
-      "checked_at": "2026-10-21T15:21:08+00:00",
-      "notes": "October 21 maintenance review: re-opened Vogue appearance coverage and the official design account, and searched current death/bereavement context. Search surfaced July family bereavement; no new October exclusion identified in the checked results. Limited research judgment, not proof of absence. This is a local collision-feedback iteration. Route, crew behavior and mishaps remain invented; recheck before public approval. No affiliation or endorsement.",
+      "checked_at": "2026-10-21T17:29:17+00:00",
+      "notes": "October 21 portrait comparison review: opened Vogue appearance coverage and the official design account; searched current death/bereavement context using Kylie Jenner with October 2026 terms and People/E!/TMZ sources. Results surfaced July family bereavement and current October runway coverage; no new October exclusion identified in the checked results. Bounded research judgment, not proof of absence. User approved a separate public GitHub Pages test of the portrait usability iteration. Route, crew and mishaps remain invented; no commercial approval, affiliation or endorsement.",
       "source_urls": [
         "https://www.vogue.com/article/kylie-jenner-fantasy-bra-2026-victorias-secret-10-18-2026",
         "https://www.victoriassecret.com/us/vs/vsinsider/fashion-show/2026-fantasy-bra",
@@ -47,18 +47,18 @@
         "url": "https://www.vogue.com/article/kylie-jenner-fantasy-bra-2026-victorias-secret-10-18-2026",
         "title": "Vogue — October 18 runway look",
         "supports": "White feathered wings, jeweled Fantasy Bra and skirt provide the recognizable visual hook; not evidence of backstage mishaps.",
-        "checked_at": "2026-10-21T15:21:08+00:00"
+        "checked_at": "2026-10-21T17:29:17+00:00"
       },
       {
         "url": "https://www.victoriassecret.com/us/vs/vsinsider/fashion-show/2026-fantasy-bra",
         "title": "Victoria’s Secret — design account",
         "supports": "Official account of the jeweled design and movement/light inspiration; no claim about the invented gameplay route.",
-        "checked_at": "2026-10-21T15:21:08+00:00"
+        "checked_at": "2026-10-21T17:29:17+00:00"
       },
       {
         "url": "https://www.tmz.com/2026/07/19/kylie-jenner-posts-for-dead-grandmother-mj/",
         "title": "TMZ — July family tribute",
-        "checked_at": "2026-10-21T15:21:08+00:00",
+        "checked_at": "2026-10-21T17:29:17+00:00",
         "published_at": "2026-07-19T15:15:00Z",
         "supports": "Search surfaced July family bereavement, not a newly reported October event."
       }
