@@ -24,13 +24,14 @@ export async function wingInput(page,name,touch){
   await page.waitForFunction(()=>Number(document.querySelector('#game').dataset.open)>.9);
   const x=Number((await state(page)).x);await page.waitForTimeout(160);require(Math.abs(Number((await state(page)).x)-x)<1,'Canceled touch kept moving');
 }
-export async function wingWin(page,proveSnag=false){
+export async function wingWin(page,proveSnag=false,doorScreenshot=null){
   if(proveSnag){
     await move(page,520,105);await page.keyboard.down('ArrowRight');await page.waitForTimeout(750);await page.keyboard.up('ArrowRight');
     const s=await state(page);require(Number(s.snags)>0&&Number(s.x)<584&&s.doors==='0','Open wings passed a narrow door or failed to snag');
+    if(doorScreenshot)await page.screenshot({path:doorScreenshot});
   }
   await page.keyboard.down(' ');await page.waitForFunction(()=>Number(document.querySelector('#game').dataset.open)<.15);
-  for(const [x,z]of [[700,105],[1095,105],[1095,220],[1390,220],[1510,145],[1745,145],[2170,145],[2520,145]])await move(page,x,z,x===2520);
+  for(const [x,z]of [[700,105],[1115,105],[1115,220],[1390,220],[1510,145],[1745,145],[2170,145],[2520,145]])await move(page,x,z,x===2520);
   await page.keyboard.up(' ');await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='won');
   require((await state(page)).doors==='3','Wing exit skipped door progression');
 }

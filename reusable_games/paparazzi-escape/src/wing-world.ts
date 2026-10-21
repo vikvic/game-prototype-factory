@@ -14,7 +14,7 @@ export const gates = [
 ];
 export const props:Rect[] = [
   {x:930,z:185,w:140,d:105,kind:'clothing rack'},
-  {x:1120,z:35,w:85,d:65,kind:'road case'},
+  {x:1160,z:35,w:85,d:65,kind:'road case'},
   {x:1620,z:30,w:105,d:95,kind:'TV equipment'},
   {x:1800,z:210,w:100,d:100,kind:'makeup station'},
 ];

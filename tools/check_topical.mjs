@@ -54,7 +54,7 @@ try{
         if(touch&&!wings){await page.locator('#dash').tap();await page.waitForFunction(()=>Number(document.querySelector('#game').dataset.cooldown)>0);}
         const prior=await state(page);await page.setViewportSize(width>height?{width:390,height:844}:{width:667,height:375});await page.waitForTimeout(150);await geometry(page);await page.setViewportSize({width,height});await page.waitForTimeout(150);const resized=await state(page);invariant((wings?['x','z','doors','snags']:['passes','photos']).every(k=>prior[k]===resized[k]),'Resize changed progress');entry.resizePreserved=true;
         await page.evaluate(()=>window.dispatchEvent(new Event('blur')));const paused=await page.locator('#time').textContent();await page.waitForTimeout(1100);invariant(await page.locator('#time').textContent()===paused,'Blur did not pause');await page.evaluate(()=>window.dispatchEvent(new Event('focus')));entry.backgroundSignal='simulated blur/focus callbacks';
-        if(wings)await wingWin(page,width===568);else await winRun(page);
+        if(wings)await wingWin(page,width===568,width===568?join(out,`${name}-${width}x${height}-door.png`):null);else await winRun(page);
         await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='won');invariant((await state(page))[wings?'doors':'passes']==='3','Progress missing');await geometry(page);
         const saved=await state(page);
         await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:async()=>{throw new DOMException('Canceled','AbortError');}}));

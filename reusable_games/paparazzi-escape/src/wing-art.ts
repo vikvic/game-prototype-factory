@@ -53,7 +53,7 @@ export function drawStar(c:CanvasRenderingContext2D,open:number,t:number,walk:nu
 export function drawWingScene(c:CanvasRenderingContext2D,w:WingWorld,pixelsW:number,pixelsH:number){
   const aspect=pixelsW/pixelsH,viewW=Math.max(720,Math.min(1150,960*Math.pow(aspect/2.25,.35))),h=viewW/aspect;
   c.setTransform(pixelsW/viewW,0,0,pixelsW/viewW,0,0);
-  const camera=Math.max(0,Math.min(2800-viewW,w.x-viewW*.32)),base=(h-160)/2+30;
+  const camera=Math.max(0,Math.min(2800-viewW,w.x-viewW*.32)),base=(h-160)/2+65;
   const p=(x:number,z:number)=>({x:x-camera+z*.16,y:base+z*.48});
   const bg=c.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#201722');bg.addColorStop(1,'#4e3b45');c.fillStyle=bg;c.fillRect(0,0,viewW,h);
   const floor=p(0,0);c.fillStyle='#7d6570';c.fillRect(0,floor.y,viewW,190);
@@ -77,12 +77,15 @@ export function drawWingScene(c:CanvasRenderingContext2D,w:WingWorld,pixelsW:num
       box(c,a.x,a.y-60,r.w,65,5,'#b4838e');box(c,a.x+12,a.y-100,r.w-24,50,3,'#88949e');
       for(let i=0;i<5;i++)oval(c,a.x+15+i*17,a.y-100,3,3,'#fff4c9');
     }else{box(c,a.x,a.y-34,r.w,b.y-a.y+34,5,'#34313f');line(c,[a.x+8,a.y-20,a.x+r.w-8,a.y-20],'#a6a0b4',2);box(c,a.x+27,a.y-14,20,6,2,'#17141d');}
-  }})),...gates.map((g,index)=>({z:g.hi,draw:()=>{
-    for(const [lo,hi] of [[0,g.lo],[g.hi,320]]){const a=p(g.x-16,lo),b=p(g.x+16,hi);box(c,a.x,a.y-95,b.x-a.x,b.y-a.y+95,2,'#60394d');for(let x=a.x+4;x<b.x;x+=7)line(c,[x,a.y-92,x,b.y],'#8a526a',3);}
-    const a=p(g.x,g.lo),b=p(g.x,g.hi);line(c,[a.x,a.y,a.x,a.y-95,b.x,b.y-95,b.x,b.y],'#efd7ae',5);
-    c.save();c.translate((a.x+b.x)/2-4,(a.y+b.y)/2-100);c.fillStyle='#f7e1ba';c.textAlign='center';c.font='800 10px system-ui';c.fillText(g.label,0,0);c.restore();
+  }})),...gates.flatMap((g,index)=>{
+    const wall=(lo:number,hi:number,height:number)=>{const a=p(g.x-16,lo),b=p(g.x+16,hi);box(c,a.x,a.y-height,b.x-a.x,b.y-a.y+height,2,'#60394d');for(let x=a.x+4;x<b.x;x+=7)line(c,[x,a.y-height+3,x,b.y],'#8a526a',3);};
+    // Separate depth layers and cut away the foreground wall so the real gap stays visible.
+    return [{z:g.lo/2,draw:()=>wall(0,g.lo,145)},{z:(g.hi+320)/2,draw:()=>wall(g.hi,320,12)},{z:(g.lo+g.hi)/2,draw:()=>{
+    const a=p(g.x,g.lo),b=p(g.x,g.hi);c.fillStyle='#ffe6a333';c.beginPath();c.moveTo(a.x-20,a.y);c.lineTo(a.x+20,a.y);c.lineTo(b.x+20,b.y);c.lineTo(b.x-20,b.y);c.closePath();c.fill();
+    line(c,[a.x,a.y,a.x,a.y-145,b.x,b.y-145,b.x,b.y],'#efd7ae',5);
+    c.save();c.translate((a.x+b.x)/2-4,(a.y+b.y)/2-150);c.fillStyle='#f7e1ba';c.textAlign='center';c.font='800 10px system-ui';c.fillText(g.label,0,0);c.restore();
     const mid=p(g.x-52,(g.lo+g.hi)/2);c.fillStyle=index<w.doors?'#9ee9bc':'#ffe3a4';c.font='800 12px system-ui';c.textAlign='center';c.fillText(index<w.doors?'✓ CLEAR':'TUCK →',mid.x-8,mid.y+15);
-  }})),...crew(w).map(person=>({z:person.z,draw:()=>{
+  }}];}),...crew(w).map(person=>({z:person.z,draw:()=>{
     const a=p(person.x,person.z);oval(c,a.x,a.y+3,21,7,'#0005');line(c,[a.x-7,a.y,a.x-5,a.y-23,a.x+6,a.y-23,a.x+9,a.y],'#282331',7);box(c,a.x-13,a.y-49,27,31,5,person.kind==='phone'?'#b7886d':person.kind==='tv'?'#637082':'#342f3c');oval(c,a.x,a.y-60,11,13,'#d8ae91');
     if(person.kind==='press'){box(c,a.x-12,a.y-57,28,14,3,'#17151e');box(c,a.x-34,a.y-55,24,10,3,'#343542');oval(c,a.x-33,a.y-50,5,6,'#a9c6d6');}
     if(person.kind==='phone'){box(c,a.x-21,a.y-69,12,22,2,'#17151e');box(c,a.x-19,a.y-66,8,14,1,'#b1dce3');}
