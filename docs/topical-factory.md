@@ -36,6 +36,12 @@ Dates in the checked-in research are historical observations, not automatically 
 
 ## Preview editions
 
+### Keep research beside each prototype
+
+Keep an edition's source register and design rationale in its own `editions/<slug>/` folder: `SOURCES.md` for dated links and supported claims, `DESIGN.md` for adaptation decisions, and `sources.json` for structured references. Distinguish observed facts, historical observations, fictional gameplay and unmeasured hypotheses. The [Too Much Wing source pack](../editions/kylie-flash-dash/README.md) is the current example.
+
+For local review, retain a versioned copy in the release's `research/` folder beside `project/`, with document hashes and the source-document commit recorded. This is an operator documentation step; the current assembler does not automatically copy these files. Do not rewrite an existing release's `project/`, `snapshot.json`, `verification/` or built artifact to add notes. Original research timestamps and later document-check dates remain separate.
+
 The three included editions are **fictional previews**, not actual celebrity releases or measured trending games. They share the same paparazzi-evasion game and vary the subject, presentation and humor. Select the research records for local demonstration:
 
 ```powershell

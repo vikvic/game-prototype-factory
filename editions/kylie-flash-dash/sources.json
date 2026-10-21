@@ -1,0 +1,70 @@
+{
+  "edition": "kylie-flash-dash",
+  "title": "Too Much Wing",
+  "documentation_checked_at": "2026-10-21T15:48:27Z",
+  "game_revision": "e6381cce0b8fb145a910fc3a0c8e11388645a9f6",
+  "release": "kylie-flash-dash-977c73ac",
+  "editorial_approval_refreshed": false,
+  "sources": [
+    {
+      "id": "V1",
+      "title": "Vogue runway report",
+      "url": "https://www.vogue.com/article/kylie-jenner-fantasy-bra-2026-victorias-secret-10-18-2026",
+      "kind": "appearance-and-visual-reference",
+      "published_date_visible": "2026-10-18",
+      "checked_at": "2026-10-21T15:48:27Z",
+      "status": "opened",
+      "claim_notes": "See the V1 row in SOURCES.md; no incident claim."
+    },
+    {
+      "id": "VS1",
+      "title": "Official design account",
+      "url": "https://www.victoriassecret.com/us/vs/vsinsider/fashion-show/2026-fantasy-bra",
+      "kind": "primary-design-reference",
+      "published_date_visible": null,
+      "checked_at": "2026-10-21T15:48:27Z",
+      "status": "opened",
+      "claim_notes": "Page checked; embedded video playback not verified."
+    },
+    {
+      "id": "W1",
+      "title": "Who What Wear appearance coverage",
+      "url": "https://www.whowhatwear.com/beauty/makeup/kylie-jenner-victorias-secret-fashion-show-2026-makeup",
+      "kind": "secondary-coverage-and-visual-reference",
+      "published_date_visible": null,
+      "checked_at": "2026-10-21T15:48:27Z",
+      "status": "opened",
+      "claim_notes": "Earlier research records a publication time; this check did not independently establish it."
+    },
+    {
+      "id": "R1",
+      "title": "Fan conversation",
+      "url": "https://www.reddit.com/r/KylieJenner/comments/1x9xki2/kylie_walks_the_runway_for_the_victorias_secret/",
+      "kind": "audience-observation",
+      "published_date_visible": null,
+      "checked_at": "2026-10-21T15:48:27Z",
+      "status": "opened",
+      "claim_notes": "No precise timestamp, audience size or trend-growth claim."
+    },
+    {
+      "id": "B1",
+      "title": "BBC Entertainment RSS",
+      "url": "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
+      "kind": "historical-feed-observation",
+      "checked_at": "2026-10-21T06:22:26Z",
+      "status": "historical-not-reopened",
+      "claim_notes": "Original record says individual article fetch failed; refer to the immutable build snapshot."
+    },
+    {
+      "id": "C1",
+      "title": "Previous subject-context reference",
+      "url": "https://www.tmz.com/2026/07/19/kylie-jenner-posts-for-dead-grandmother-mj/",
+      "kind": "historical-context-review",
+      "checked_at": "2026-10-21T15:21:08Z",
+      "status": "historical-not-reopened",
+      "claim_notes": "Not creative source material; does not refresh editorial approval."
+    }
+  ],
+  "fictional_elements": ["doorway snags", "backstage map", "crew encounters", "pickup route", "game physics"],
+  "asset_policy": "Links and original notes only; no source media downloaded or embedded."
+}
