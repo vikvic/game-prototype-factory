@@ -122,7 +122,7 @@ Trusted acceptance exercises actual open-wing obstruction and held-tuck clearanc
 
 ## Portrait comparison: Too Much Wing
 
-`editions/kylie-wing-portrait/` adds `layout: portrait-course`. Upright play looks upward along the existing course; screen Up moves forward. Landscape keeps the existing view. Turning the phone pauses for Continue without resetting position or progress. Timer, speeds, three doors and five snags are unchanged.
+`editions/kylie-wing-portrait/` adds `layout: portrait-course`. The wing game always uses a vertical course; screen Up moves forward at every viewport. Wide windows center a portrait frame with empty side bars. There is no horizontal wing-game renderer or orientation-selected control mapping. Turning the phone pauses for Continue without resetting position or progress. Timer, speeds, three doors and five snags are unchanged.
 
 Build an immutable candidate with:
 

@@ -1,5 +1,5 @@
 import { adBreak, tracker } from './services';
-import { drawStar, drawWingScene } from './wing-art';
+import { drawStar } from './wing-art';
 import { newWorld, step } from './wing-world';
 import { drawWingPortrait, portraitMessage } from './wing-portrait';
 import './wing-portrait.css';
@@ -9,10 +9,11 @@ export function bootWings(edition:Edition){
   const el=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
   const canvas=el<HTMLCanvasElement>('game'),ctx=canvas.getContext('2d')!,pad=el('move-pad'),help=el<HTMLDialogElement>('help-dialog');
   let world=newWorld(),paused=false,last=0,finished=false,usedAd=false,pointer:number|null=null,foldPointer:number|null=null;
-  let portrait=false,rotationPaused=false;
-  const portraitCourse=edition.layout==='portrait-course',arena=canvas.parentElement!,main=arena.parentElement!,footer=document.querySelector('footer')!;
+  let rotationPaused=false,wasWide=innerWidth>innerHeight;
+  const arena=canvas.parentElement!,main=arena.parentElement!,footer=document.querySelector('footer')!;
+  document.body.dataset.layout='portrait';main.insertBefore(el('status'),footer);
   const rotation=document.createElement('div');rotation.id='rotation-pause';rotation.className='overlay';rotation.hidden=true;
-  rotation.innerHTML='<article><h2>Phone turned.</h2><p>Same run. Ready?</p><button id="rotation-continue" class="primary">Continue</button></article>';arena.append(rotation);
+  rotation.innerHTML='<article><h2>Paused.</h2><p>Same run. Ready?</p><button id="rotation-continue" class="primary">Continue</button></article>';arena.append(rotation);
   let stick={x:0,z:0};const keys=new Set<string>(),track=tracker(edition.analytics_domain);
   document.body.dataset.mechanic='wing-escape';document.body.dataset.theme='runway';
   document.title=`${edition.title} · ${edition.brand}`;
@@ -21,7 +22,7 @@ export function bootWings(edition:Edition){
   el('preview-label').textContent=notice;el('help-notice').textContent=notice;
   el('runway-portrait').setAttribute('hidden','');
   el('intro').querySelector('.eyebrow')!.textContent='THE $50M LOOK. THE $0 DOOR BUDGET.';
-  el('intro').querySelector('.steps')!.innerHTML='<span>↔ Move backstage</span><span>↘ Hold TUCK to squeeze</span><span>🚘 Reach your car</span>';
+  el('intro').querySelector('.steps')!.innerHTML='<span>↑ Move forward</span><span>Hold TUCK</span><span>🚘 Reach the car</span>';
   el('start').textContent='Get these wings out →';
   el('dash').innerHTML='Tuck wings <span id="cooldown">hold</span>';
   el('dash').setAttribute('aria-label','Hold to tuck wings');
@@ -32,29 +33,26 @@ export function bootWings(edition:Edition){
   help.querySelector('h2')!.textContent='Too much wing. Not enough door.';
   const paragraphs=help.querySelectorAll('p');
   paragraphs[0].textContent='Reach the car through three marked doors before 60 seconds run out. Open wings snag on door frames, equipment and crew. Five snags end the run.';
-  paragraphs[1].textContent='Move with WASD, arrows or the movement pad. Hold Space or Tuck wings to fold them and walk slowly through the lit gap. When stuck, coral outlines mark the obstruction and blue outlines show your wing clearance. WINGS TOO WIDE means hold Tuck; SOLID OBSTACLE means follow the green arrow around it. Camera flashes can startle open wings; tuck near the press.';
+  paragraphs[1].textContent='Push the pad up to advance; left and right move across the corridor. Hold Space or Tuck wings to fit the lit gap. Blue shows wing clearance; coral marks contact. WINGS TOO WIDE means Tuck. SOLID OBSTACLE means follow the green arrow around it. Tuck near flashing cameras.';
   el('status').setAttribute('role','status');el('status').setAttribute('aria-live','polite');
   function clearInput(){keys.clear();stick={x:0,z:0};pointer=foldPointer=null;pad.querySelector('i')!.style.display='none';}
   function resize(){
-    const next=portraitCourse&&matchMedia('(orientation: portrait)').matches,changed=next!==portrait;
-    portrait=next;document.body.dataset.layout=portrait?'portrait':'landscape';
-    const status=el('status');if(portrait&&status.parentElement!==main)main.insertBefore(status,footer);else if(!portrait&&status.parentElement!==arena)arena.append(status);
-    el('intro').querySelector('.steps')!.innerHTML=portrait?'<span>↑ Move forward</span><span>Hold TUCK</span><span>🚘 Reach the car</span>':'<span>↔ Move backstage</span><span>↘ Hold TUCK to squeeze</span><span>🚘 Reach your car</span>';
-    paragraphs[1].textContent=(portrait?'Push the pad up to advance; left and right move across the corridor. ':'Move with WASD, arrows or the movement pad. ')+'Hold Space or Tuck wings to fold them and walk slowly through the lit gap. Blue outlines show wing clearance before a doorway. Coral marks the obstruction: WINGS TOO WIDE means hold Tuck; SOLID OBSTACLE means follow the green arrow around it. Camera flashes can startle open wings; tuck near the press.';
+    const wide=innerWidth>innerHeight,changed=wide!==wasWide;wasWide=wide;
     const b=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,3);canvas.width=Math.round(b.width*dpr);canvas.height=Math.round(b.height*dpr);clearInput();
     if(changed&&world.phase==='playing'){rotationPaused=true;rotation.hidden=false;pause();}
   }
-  // Reparenting status changes Canvas bounds. Defer that mutation beyond observer delivery.
+  // Resize Canvas backing outside observer delivery; the course and input mapping never rotate.
   let resizePending=false;
   function scheduleResize(){if(!resizePending){resizePending=true;requestAnimationFrame(()=>{resizePending=false;resize();});}}
   new ResizeObserver(scheduleResize).observe(canvas);window.addEventListener('resize',scheduleResize);
   function sync(){
+    document.body.dataset.phase=world.phase;
     el('time').textContent=`${Math.ceil(world.time)}s`;el('passes').textContent=`${world.doors}/3 doors`;el('photos').textContent=`${world.snags}/5 snags`;
-    const block=world.phase==='playing'?world.blocked:null,status=el('status'),message=portrait?portraitMessage(block?.message||world.message):block?.message||world.message;
+    const block=world.phase==='playing'?world.blocked:null,status=el('status'),message=portraitMessage(block?.message||world.message);
     el('cooldown').textContent=world.open<.25?'folded':'hold';el('exposure').style.width=`${18+world.open*82}%`;
     if(status.textContent!==message)status.textContent=message;
     status.dataset.blocked=block?.cause||'';el('dash').dataset.needed=String(block?.cause==='wings');el('photos').dataset.impact=String(world.recoil>0);
-    Object.assign(canvas.dataset,{phase:world.phase,paused:String(paused),layout:portrait?'portrait':'landscape',time:world.time.toFixed(3),x:world.x.toFixed(2),z:world.z.toFixed(2),doors:String(world.doors),snags:String(world.snags),open:world.open.toFixed(3),lastObstacle:world.lastObstacle,blockCause:block?.cause||'',blockHint:block?(portrait?portraitMessage(block.message):block.message):'',release:edition.release,adMode:edition.ad_mode,mechanic:'wing-escape'});
+    Object.assign(canvas.dataset,{phase:world.phase,paused:String(paused),layout:'portrait',time:world.time.toFixed(3),x:world.x.toFixed(2),z:world.z.toFixed(2),doors:String(world.doors),snags:String(world.snags),open:world.open.toFixed(3),lastObstacle:world.lastObstacle,blockCause:block?.cause||'',blockHint:block?portraitMessage(block.message):'',release:edition.release,adMode:edition.ad_mode,mechanic:'wing-escape'});
   }
   function start(){clearInput();world=newWorld();world.phase='playing';finished=false;rotationPaused=false;rotation.hidden=true;paused=false;el('intro').hidden=true;el('result').hidden=true;el('share-status').textContent='';track('Game start');sync();}
   function finish(){
@@ -93,9 +91,9 @@ export function bootWings(edition:Edition){
     const dt=Math.max(.001,Math.min((stamp-last)/1000,.035));last=stamp;
     if(!paused){
       const x=stick.x+Number(keys.has('d')||keys.has('arrowright'))-Number(keys.has('a')||keys.has('arrowleft')),y=stick.z+Number(keys.has('s')||keys.has('arrowdown'))-Number(keys.has('w')||keys.has('arrowup'));
-      step(world,dt,{x:portrait?-y:x,z:portrait?x:y,fold:foldPointer!==null||keys.has(' ')});if(!finished&&(world.phase==='won'||world.phase==='lost'))finish();
+      step(world,dt,{x:-y,z:x,fold:foldPointer!==null||keys.has(' ')});if(!finished&&(world.phase==='won'||world.phase==='lost'))finish();
     }
-    (portrait?drawWingPortrait:drawWingScene)(ctx,world,canvas.width,canvas.height);
+    drawWingPortrait(ctx,world,canvas.width,canvas.height);
     if(paused&&world.phase==='playing'){ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#171321bb';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#fff';ctx.font=`bold ${28*(devicePixelRatio||1)}px system-ui`;ctx.textAlign='center';ctx.fillText('Paused',canvas.width/2,canvas.height/2);}
     sync();requestAnimationFrame(frame);
   }
