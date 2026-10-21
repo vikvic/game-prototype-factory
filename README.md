@@ -1,5 +1,9 @@
 # Game prototype factory
 
+The new **Topical Arcade** workflow adds researched opportunities, reusable games
+and subject-specific editions in a separate queue. See [the operator guide](docs/topical-factory.md).
+Start with `python factory.py topical readiness`. Historical prototype commands remain available.
+
 **Markdown idea → queued job → local game folder → web playtest link.**
 
 A local Python orchestrator hands each idea to a fresh Codex or Claude Code process in

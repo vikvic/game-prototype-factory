@@ -29,6 +29,7 @@ def child_environment() -> dict:
     # Keep the selected CLI's login/provider authentication. Never pass publishing secrets.
     for name in list(env):
         if name.upper() in {"DISCORD_WEBHOOK_URL", "GH_TOKEN", "GITHUB_TOKEN", "NODE_OPTIONS",
+                            "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "PLAUSIBLE_API_KEY",
                             "CLAUDE_CODE_DANGEROUSLY_SKIP_PERMISSIONS"}:
             del env[name]
     env["CI"] = "true"

@@ -1,0 +1,29 @@
+[site]
+name = "Topical Arcade"
+url = ""
+contact_email = ""
+
+[research]
+region = "US"
+language = "en"
+timeout_seconds = 15
+max_feed_bytes = 2000000
+cache_minutes = 30
+
+[build]
+install_timeout_seconds = 300
+build_timeout_seconds = 180
+verify_timeout_seconds = 420
+
+[analytics]
+enabled = false
+domain = ""
+
+[ads]
+enabled = false
+approved = false
+publisher_id = ""
+rewarded = false
+
+[deploy]
+cloudflare_project = ""

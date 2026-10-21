@@ -1,0 +1,17 @@
+{
+  "id": "costume-caper",
+  "opportunity": "halloween-flash",
+  "game": "paparazzi-escape",
+  "title": "Costume Caper",
+  "subject": "The velvet vampire",
+  "subtitle": "A dramatic cape. A deeply inconvenient photo opportunity.",
+  "description": "Costume Caper: collect three passes, dodge camera cones and make a ridiculous escape. Original fictional character; free replay and optional result sharing.",
+  "accent": "#c2a3ff",
+  "background": "#242039",
+  "outfit": "#aa7ee6",
+  "setting": "Costume parade",
+  "result_win": "Vampire dodges cameras. Reflection remains unconfirmed.",
+  "result_loss": "Vampire photographed three times. Immortality gets awkward.",
+  "preview": true,
+  "difficulty": "normal"
+}

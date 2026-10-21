@@ -1,0 +1,38 @@
+name: Topical Arcade commercial release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: topical-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: topical-production
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Assemble approved immutable artifacts
+        run: python tools/build_topical_site.py
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+      - name: Resolve configured project
+        id: project
+        run: |
+          python - <<'PY'
+          import os,re,tomllib
+          with open('commercial.toml','rb') as f: value=tomllib.load(f)['deploy']['cloudflare_project']
+          if not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,57}',value): raise SystemExit('Configure a valid Cloudflare project')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write('name='+value+'\n')
+          PY
+      - name: Deploy the checked artifact
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3.14.1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy commercial-dist --project-name=${{ steps.project.outputs.name }} --branch=main

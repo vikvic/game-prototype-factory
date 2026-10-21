@@ -1,0 +1,5 @@
+[
+  {"name":"Google Trends US", "url":"https://trends.google.com/trending/rss?geo=US"},
+  {"name":"BBC Entertainment", "url":"https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"},
+  {"name":"BBC Technology", "url":"https://feeds.bbci.co.uk/news/technology/rss.xml"}
+]

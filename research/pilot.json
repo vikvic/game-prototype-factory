@@ -1,0 +1,222 @@
+[
+  {
+    "id": "austin-paddock",
+    "title": "Austin paddock escape",
+    "lane": "breaking",
+    "audience": "US race-weekend viewers",
+    "hook": "Get from the paddock to the car without getting photographed.",
+    "distribution": "r/formula1 weekly discussion; independent F1 short-video creators; check submission rules before posting.",
+    "evidence": "Official calendar lists Austin October 23–25. Search growth and game demand are unmeasured.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-10-26T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://www.formula1.com/en/racing/2026",
+        "title": "2026 F1 calendar",
+        "supports": "Event dates only, not audience growth.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "mexico-paddock",
+    "title": "Mexico race-weekend getaway",
+    "lane": "breaking",
+    "audience": "Mexico race-weekend fans",
+    "hook": "Escape the photo scrum before the next session.",
+    "distribution": "Spanish/English F1 fan creators; r/formula1 event discussion after moderator review.",
+    "evidence": "Official calendar lists Mexico October 30–November 1. Demand remains unmeasured.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-11-02T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://www.formula1.com/en/racing/2026",
+        "title": "2026 F1 calendar",
+        "supports": "Event dates only.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "vegas-paddock",
+    "title": "Vegas night escape",
+    "lane": "ongoing",
+    "audience": "Las Vegas race-weekend viewers",
+    "hook": "Neon cameras, a velvet rope and a waiting car.",
+    "distribution": "Race-weekend fan creators and Las Vegas event communities; voluntary player links.",
+    "evidence": "Official calendar lists Las Vegas November 19–21. Topic opportunity, not a measured trending claim.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-11-22T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://www.formula1.com/en/racing/2026",
+        "title": "2026 F1 calendar",
+        "supports": "Scheduled event only.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "basketball-arrival",
+    "title": "Tunnel walk escape",
+    "lane": "breaking",
+    "audience": "Basketball opening-week viewers",
+    "hook": "Make the tunnel entrance without feeding the cameras.",
+    "distribution": "Basketball fan short-video creators and r/nba daily discussion subject to rules.",
+    "evidence": "League schedule confirms October 20 opening. Growth/game demand unmeasured.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-10-27T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://www.nba.com/news/2026-27-nba-regular-season-schedule",
+        "title": "League schedule",
+        "supports": "Opening date only.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "awards-arrival",
+    "title": "Awards arrival escape",
+    "lane": "ongoing",
+    "audience": "Film-awards and red-carpet viewers",
+    "hook": "Collect passes and make the entrance before the cameras catch you.",
+    "distribution": "Film/fashion creators covering red-carpet arrivals; r/Oscars discussion subject to rules.",
+    "evidence": "Academy announced March 14, 2027 ceremony. Planning lead only; no current hype established.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2027-03-15T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://press.oscars.org/news/academy-and-abc-announce-show-dates-99th-and-100th-oscarsr",
+        "title": "Academy ceremony announcement",
+        "supports": "Scheduled ceremony, not immediate demand.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "fashion-flash",
+    "title": "Fashion flash escape",
+    "lane": "ongoing",
+    "audience": "Fashion-event and outfit-discussion viewers",
+    "hook": "Get the outfit from the entrance to the exit with your composure intact.",
+    "distribution": "Fashion commentary creators; fashion event communities; seek moderator permission.",
+    "evidence": "Vogue maintains event coverage; current growth is unmeasured. Historical coverage does not establish a new event.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-11-20T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://www.vogue.com/tag/event/met-gala",
+        "title": "Vogue event coverage",
+        "supports": "Existence of fashion/red-carpet coverage only.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "halloween-flash",
+    "title": "Costume night escape",
+    "lane": "breaking",
+    "audience": "Costume/parade audiences",
+    "hook": "Escape cameras in an extravagantly impractical costume.",
+    "distribution": "NYC costume creators; r/AskNYC event threads subject to rules; costume discussion communities.",
+    "evidence": "Parade organizer lists October 31, 2026. Search growth remains unmeasured.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-11-02T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://halloween-nyc.com/",
+        "title": "NYC Halloween Parade",
+        "supports": "Organizer-confirmed event date only.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "agent-overload",
+    "title": "Too many assistants",
+    "lane": "ongoing",
+    "audience": "AI-agent developers and users",
+    "hook": "Finish one task while assistants create more tasks for each other.",
+    "distribution": "r/LocalLLaMA and agent developer communities subject to rules; developer-video creators.",
+    "evidence": "Anthropic published a 2026 agentic coding report. Vendor evidence establishes topic activity, not independent demand.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-11-20T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://resources.anthropic.com/2026-agentic-coding-trends-report",
+        "title": "Agentic coding report",
+        "supports": "Vendor discussion of agent adoption; independent corroboration missing.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "cancel-maze",
+    "title": "Cancel the subscription",
+    "lane": "ongoing",
+    "audience": "People discussing subscription fatigue",
+    "hook": "Find cancellation while fictional retention offers become absurd.",
+    "distribution": "Consumer-tech creators; subscription discussion communities; no claim about a named provider.",
+    "evidence": "Netflix documents cancellation steps. Frustration/interest is a hypothesis requiring community evidence.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-11-20T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://help.netflix.com/en/node/407",
+        "title": "Netflix cancellation help",
+        "supports": "Cancellation workflow exists; no evidence of deceptive behavior or growth.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  },
+  {
+    "id": "carryon-chaos",
+    "title": "Carry-on chaos",
+    "lane": "ongoing",
+    "audience": "Budget-travel and packing audiences",
+    "hook": "Fit an absurd wardrobe into a fictional changing bag limit.",
+    "distribution": "Packing and budget-travel creators; r/onebag promotional rules apply.",
+    "evidence": "Airline contract documents baggage limits. Source may be historical: validate active carrier and policies before a topical claim.",
+    "confidence": "moderate on source facts; unknown on demand; requires editorial recheck",
+    "observed_at": "2026-10-21T05:06:34+00:00",
+    "reviewed_at": "2026-10-21T05:06:34+00:00",
+    "expires_at": "2026-11-20T12:00:00Z",
+    "sources": [
+      {
+        "url": "https://content.spirit.com/Shared/en-us/Documents/Contract_of_Carriage.pdf",
+        "title": "Airline carriage document",
+        "supports": "Historical baggage constraints only; active-carrier and demand checks needed.",
+        "checked_at": "2026-10-21T05:06:34+00:00",
+        "published_at": null
+      }
+    ]
+  }
+]

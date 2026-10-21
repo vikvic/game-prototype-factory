@@ -6,6 +6,8 @@ __pycache__/
 *.pyc
 node_modules/
 dist/
+commercial-preview/
+commercial-dist/
 .superpowers/
 .venv/
 .claude/worktrees/

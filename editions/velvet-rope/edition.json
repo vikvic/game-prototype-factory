@@ -1,0 +1,17 @@
+{
+  "id": "velvet-rope",
+  "opportunity": "awards-arrival",
+  "game": "paparazzi-escape",
+  "title": "Velvet Rope",
+  "subject": "The mysterious nominee",
+  "subtitle": "You practiced the speech. You forgot the escape route.",
+  "description": "Velvet Rope: collect three passes, dodge camera cones and make a ridiculous escape. Original fictional character; free replay and optional result sharing.",
+  "accent": "#f6d584",
+  "background": "#242a25",
+  "outfit": "#e6be60",
+  "setting": "Awards arrival",
+  "result_win": "Nominee escapes photographers. Wins Best Exit.",
+  "result_loss": "Nominee spotted. Outfit wins the supporting role.",
+  "preview": true,
+  "difficulty": "normal"
+}

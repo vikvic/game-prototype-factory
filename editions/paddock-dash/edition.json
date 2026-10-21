@@ -1,0 +1,17 @@
+{
+  "id": "paddock-dash",
+  "opportunity": "austin-paddock",
+  "game": "paparazzi-escape",
+  "title": "Paddock Dash",
+  "subject": "The rookie",
+  "subtitle": "The race can wait. Your good angle cannot.",
+  "description": "Paddock Dash: collect three passes, dodge camera cones and make a ridiculous escape. Original fictional character; free replay and optional result sharing.",
+  "accent": "#ffb37a",
+  "background": "#202b38",
+  "outfit": "#ec795b",
+  "setting": "Paddock exit",
+  "result_win": "Rookie escapes press. Team requests the same pace on track.",
+  "result_loss": "Rookie gives three interviews. None were scheduled.",
+  "preview": true,
+  "difficulty": "normal"
+}
