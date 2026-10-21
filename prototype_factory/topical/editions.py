@@ -12,14 +12,14 @@ from ..export import linked
 from ..locking import WorkerLock
 from ..runner import run_process
 from .config import load
-from .research import digest, require_current
+from .research import digest, require_current, require_editorial_review
 from .store import identifier, now
 
 GAME = "paparazzi-escape"
 
 
 def validate(data):
-    allowed = {"id", "opportunity", "game", "title", "subject", "subtitle", "description", "accent", "background", "outfit", "setting", "result_win", "result_loss", "preview", "difficulty"}
+    allowed = {"id", "opportunity", "game", "title", "subject", "subtitle", "description", "accent", "background", "outfit", "setting", "result_win", "result_loss", "preview", "difficulty", "theme", "notice"}
     if not isinstance(data, dict) or set(data) - allowed:
         raise ValueError("Edition contains unsupported fields")
     for key in ("id", "opportunity"):
@@ -34,6 +34,10 @@ def validate(data):
             raise ValueError(f"{key} must be a six-digit hex color")
     if data.get("difficulty") not in ("easy", "normal", "hard") or not isinstance(data.get("preview"), bool):
         raise ValueError("Edition needs difficulty easy/normal/hard and boolean preview")
+    if data.get("theme", "classic") not in ("classic", "runway"):
+        raise ValueError("Edition theme must be classic or runway")
+    if "notice" in data and (not isinstance(data["notice"], str) or not 1 <= len(data["notice"]) <= 160):
+        raise ValueError("Edition notice must contain 1–160 characters")
     return data
 
 
@@ -60,6 +64,8 @@ def hash_tree(folder):
 def queue(root, store, path):
     data = validate(json.loads(path.read_text(encoding="utf-8-sig")))
     opportunity = require_current(store, data["opportunity"])
+    if not data["preview"]:
+        require_editorial_review(opportunity)
     revision = git(root, "rev-parse", "HEAD").decode().strip()
     snapshot = {"edition": data, "research": opportunity, "revision": revision, "config": load(root)}
     fingerprint = digest(snapshot)
@@ -113,7 +119,11 @@ def work(root, store, once=True):
             data = release["data"]
             folder = store.state / "releases" / key
             try:
-                require_current(store, release["opportunity"])
+                current = require_current(store, release["opportunity"])
+                if not data["edition"]["preview"]:
+                    require_editorial_review(current)
+                    if digest(current) != digest(data["research"]):
+                        raise ValueError("Research changed after queueing; queue a fresh release")
                 folder.mkdir(parents=True, exist_ok=False)
                 (folder / "snapshot.json").write_text(json.dumps(data, indent=2), encoding="utf-8")
                 project = folder / "project"
@@ -184,6 +194,7 @@ def approve(root, store, key):
     if data["edition"]["preview"]:
         raise ValueError("Fictional preview editions cannot receive public editorial approval")
     current = require_current(store, row["opportunity"], review=True)
+    require_editorial_review(current)
     if digest(current) != digest(data["research"]) or digest(load(root)) != digest(data["config"]):
         raise ValueError("Research/config changed; queue and verify a fresh release")
     artifact = store.state / "releases" / key / "project" / "dist"

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .config import load, readiness
 from .editions import hash_tree
-from .research import digest, require_current
+from .research import digest, require_current, require_editorial_review
 from .store import now
 
 
@@ -15,6 +15,7 @@ def export_release(root, store, key):
     if row["status"] != "approved":
         raise ValueError("Public export requires editorial approval")
     research = require_current(store, row["opportunity"], review=True)
+    require_editorial_review(research)
     if digest(research) != digest(data["research"]) or digest(load(root)) != digest(data["config"]):
         raise ValueError("Release inputs changed after approval")
     source = store.state / "releases" / key / "project" / "dist"
@@ -78,11 +79,12 @@ def build_site(root, store=None, preview=False):
         edition = data["edition"]
         slug = edition["id"]
         shutil.copytree(source, target / "games" / slug)
-        cards.append(f'<a class="card" href="./games/{html.escape(slug)}/"><span>{html.escape(edition["setting"])}</span><h2>{html.escape(edition["title"])}</h2><p>{html.escape(edition["subtitle"])}</p><strong>Make an entrance ↗</strong></a>')
+        kind = ('Fictional mechanic preview' if edition['preview'] else 'Release candidate · editorial review pending') if preview else edition['setting']
+        cards.append(f'<a class="card" href="./games/{html.escape(slug)}/"><span>{html.escape(kind)}</span><h2>{html.escape(edition["title"])}</h2><p>{html.escape(edition["subtitle"])}</p><strong>Make an entrance ↗</strong></a>')
         manifest.append({"release": data["id"], "edition": slug, "artifact": data["artifact"], "revision": data["revision"]})
     brand = html.escape(config["site"]["name"])
     robots = 'noindex,nofollow' if preview else 'index,follow'
-    label = 'LOCAL PREVIEW · FICTIONAL EDITIONS · ADS OFF' if preview else 'TINY GAMES. BIG MOMENTS.'
+    label = 'LOCAL PREVIEW · NOT PUBLISHED · ADS OFF' if preview else 'TINY GAMES. BIG MOMENTS.'
     style = 'body{margin:0;background:#10141b;color:#fff5e4;font:17px system-ui}main{max-width:1050px;margin:7vh auto;padding:24px}small,span{color:#ffc873;font-size:12px;letter-spacing:.1em}h1{font-size:clamp(42px,8vw,80px);line-height:1.05;margin:20px 0}p{color:#adb8c9;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:40px}.card{display:block;background:#202936;border:1px solid #4c5665;border-radius:20px;padding:28px;color:inherit;text-decoration:none}.card:hover{border-color:#ffc873}strong{color:#ffc873;font-size:14px}footer{margin-top:40px}a{color:#ffc873}'
     (target / "index.html").write_text(f'<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="{robots}"><title>{brand}</title><style>{style}</style><main><small>{label}</small><h1>Five minutes.<br>One ridiculous escape.</h1><p>Pick a moment. Dodge the cameras. Leave with a story.</p><div class="grid">{"".join(cards)}</div><footer><a href="./privacy.html">Privacy</a> · <a href="./contact.html">Contact</a></footer></main></html>', encoding="utf-8")
     privacy = 'These games currently use no ads, tracking scripts, player accounts or friend permissions. Sharing happens only when you choose it. Ad opportunities use page memory and require no browser storage or player identifiers. Hosting may retain ordinary security logs.'

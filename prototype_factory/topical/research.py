@@ -39,7 +39,40 @@ def validate(data):
         instant(source.get("checked_at"))
     if "reviewed_at" in data:
         instant(data["reviewed_at"])
+    if "editorial_review" in data:
+        validate_editorial_review(data)
     return data
+
+
+def validate_editorial_review(data):
+    review = data.get("editorial_review")
+    if not isinstance(review, dict):
+        raise ValueError("Public editions need a dated editorial context review in their opportunity")
+    if review.get("decision") not in ("eligible", "excluded", "uncertain"):
+        raise ValueError("Editorial decision must be eligible, excluded or uncertain")
+    if review.get("context") not in ("clear", "recent-death-or-bereavement", "uncertain", "not-person-related"):
+        raise ValueError("Editorial review needs an explicit death/bereavement context check")
+    for key in ("subjects", "notes"):
+        if not isinstance(review.get(key), str) or not 1 <= len(review[key]) <= 2000:
+            raise ValueError(f"Editorial review needs {key}")
+    stamp = instant(review.get("checked_at"))
+    if stamp > datetime.now(timezone.utc) + timedelta(minutes=5):
+        raise ValueError("Editorial review cannot be in the future")
+    urls = review.get("source_urls")
+    known = {source["url"] for source in data["sources"]}
+    if not isinstance(urls, list) or not 1 <= len(urls) <= 20 or any(not isinstance(url, str) or url not in known for url in urls):
+        raise ValueError("Editorial review must cite sources recorded in the opportunity")
+    return review
+
+
+def require_editorial_review(data):
+    review = validate_editorial_review(data)
+    if review["decision"] != "eligible" or review["context"] not in ("clear", "not-person-related"):
+        raise ValueError("Subject excluded or uncertain: " + review["notes"])
+    limit = timedelta(hours=2 if data["lane"] == "breaking" else 24)
+    if datetime.now(timezone.utc) - instant(review["checked_at"]) > limit:
+        raise ValueError("Editorial context review stale; recheck recent deaths/bereavement and current news")
+    return review
 
 
 def import_research(store, path):
@@ -80,6 +113,8 @@ def select(store, key):
     row = store.opportunity(key)
     if instant(row["data"]["expires_at"]) <= datetime.now(timezone.utc):
         raise ValueError("Cannot select an expired opportunity")
+    if "editorial_review" in row["data"]:
+        require_editorial_review(row["data"])
     with store.connect() as db:
         db.execute("UPDATE opportunities SET status='selected',updated=? WHERE id=?", (now(), key))
     store.event(key, "selected", "Operator selected opportunity; not yet published")

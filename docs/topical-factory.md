@@ -17,6 +17,23 @@ python factory.py topical opportunities
 
 RSS results are untrusted observations, never automatic build instructions. Collection is bounded/cached; failures appear per source. Ten researched opportunity hypotheses are included with dated links and distribution targets. Event dates are not proof of rising demand. Some sources are historical or vendor-authored, explicitly labeled. Read each Markdown brief and update evidence before editorial selection. An identical import is idempotent; changed evidence revokes selection.
 
+### Subject context before development
+
+Search attention alone does not make a subject suitable. Check current news, recent deaths and bereavement before creating a lighthearted real-person edition. Affected subjects are excluded from this format. Record the subject, dated sources, reasoning and decision in `editorial_review`; uncertain context blocks selection/build rather than guessing. This is an operator research judgment, not an automatic death detector.
+
+Every non-preview edition now requires `editorial_review` in its opportunity: `decision` (`eligible`, `excluded`, `uncertain`), `context` (`clear`, `recent-death-or-bereavement`, `uncertain`, `not-person-related`), `subjects`, `notes`, `checked_at`, and `source_urls` referencing its recorded sources. Only eligible/clear or eligible/not-person-related can proceed. The review must be within two hours for breaking topics or 24 hours for ongoing topics at queue/build/approval/export. Changed research requires a fresh snapshot. Selection refuses an explicitly excluded or uncertain review; old fictional demonstrations remain available.
+
+`research/current-pilot.json` includes the Kylie runway candidate and the rejected Dolly costume lead. The latter records why a trend signal was overridden; it has no edition to build. To load the candidate:
+
+```powershell
+python factory.py topical research research/current-pilot.json
+python factory.py topical select kylie-runway-2026
+python factory.py topical queue editions/kylie-flash-dash/edition.json
+python factory.py topical work --once
+```
+
+Dates in the checked-in research are historical observations, not automatically refreshed proof. Recheck and edit the JSON before using it after the review window.
+
 ## Preview editions
 
 The three included editions are **fictional previews**, not actual celebrity releases or measured trending games. They share the same paparazzi-evasion game and vary the subject, presentation and humor. Select the research records for local demonstration:
@@ -44,9 +61,13 @@ python factory.py topical serve
 
 Open http://127.0.0.1:8766/ . Mobile landscape and portrait are supported. Gameplay: collect all three passes, avoid camera cones and reach the exit. WASD/arrows, Space dash, or movement pad + Dash. Three photos or a 90-second timeout loses. Help/background pauses. Result sharing, cancellation, saving and restart are independent.
 
+The gallery labels these as mechanic previews. A non-preview edition such as Kylie Flash Dash is labeled a release candidate pending editorial review when viewed locally. It adds original character presentation and scene styling through optional validated `theme` (`classic`/`runway`) and `notice` (plain text, at most 160 characters) fields. Neither local verification nor `preview:false` grants editorial approval or publishes it.
+
 `verify` runs factory-owned Chromium/WebKit gameplay and layout acceptance, storing screenshots and an actual-play video under the release's verification folder. It uses no production ads or analytics. These are desktop emulations, not physical-device verification. `show RELEASE-ID` reveals snapshot, status and diagnostics. `recover` requires the worker lock and refuses unresolved process ownership; queue a fresh release after inspection. Existing release artifacts are never overwritten.
 
 ## From preview to a public release
+
+Hosting is currently **undecided** at the user's request. No account or project has been created. The instructions below describe the existing optional Cloudflare adapter. The verified output is static and portable: another host can serve the same `commercial-dist/` files through a deployment adapter that preserves the approval/artifact checks. Do not upload `commercial-preview/` or connect an unreviewed auto-build to production. Netlify and Firebase Hosting are alternatives; Vercel's free Hobby plan excludes commercial use. Confirm current plan/traffic costs when choosing a host. A public origin and contact address are still needed before a public release; neither requires purchasing a custom domain just to validate an ad-free pilot.
 
 1. Research a specific audience/hook, choose a subject and review local/imported assets and copy. Refresh source observation/review times honestly. No automated posting or celebrity endorsement is implied.
 2. Copy an edition to a new stable slug, set its fields and set `preview:false`. Use original or appropriately sourced assets; this first game uses only original procedural figures.

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "kylie-runway-2026",
+    "title": "Kylie Jenner's runway appearance — fictional after-party escape",
+    "lane": "breaking",
+    "audience": "People currently discussing Kylie Jenner's October 2026 runway appearance, especially fashion/pop-culture viewers and her existing fans.",
+    "hook": "The runway was the easy part. Can a cartoon Kylie reach the after-party without giving the cameras three more photos? The chase is fictional; the joke targets constant camera attention.",
+    "distribution": "An actual gameplay clip on the operator's own Instagram Reels/TikTok; an X post aimed at the runway conversation. r/KylieJenner and r/popculturechat are research leads only, pending current self-promotion rules. No posts or messages are authorized or sent.",
+    "evidence": "BBC Entertainment RSS carried runway coverage dated October 19. Who What Wear independently describes the appearance on October 19. A current r/KylieJenner thread contains direct audience discussion. These establish current coverage and a specific audience, not a measured Google search growth rate, hottest-topic ranking, guaranteed reach or game demand. Search-result vote counts were not retained as reliable measurements.",
+    "confidence": "Moderate for current attention and game/hook fit; low for acquisition conversion; unknown for virality and economics.",
+    "observed_at": "2026-10-21T06:22:26Z",
+    "reviewed_at": "2026-10-21T06:22:26Z",
+    "expires_at": "2026-10-24T07:00:00Z",
+    "editorial_review": {
+      "decision": "eligible",
+      "context": "clear",
+      "subjects": "Kylie Jenner; fictional after-party chase around the October 2026 runway appearance",
+      "checked_at": "2026-10-21T06:22:26Z",
+      "notes": "Reviewed current appearance coverage and searched for recent death/bereavement context on October 20 Pacific time. No exclusion identified in the checked results. This is a dated human research judgment, not automated proof of absence. Use original fully clothed cartoon art; no claims about actual evasions, private behavior, body, family or endorsement. Recheck before approval/publication.",
+      "source_urls": [
+        "https://www.whowhatwear.com/beauty/makeup/kylie-jenner-victorias-secret-fashion-show-2026-makeup",
+        "https://www.reddit.com/r/KylieJenner/comments/1x9xki2/kylie_walks_the_runway_for_the_victorias_secret/"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.whowhatwear.com/beauty/makeup/kylie-jenner-victorias-secret-fashion-show-2026-makeup",
+        "title": "Who What Wear — Kylie Jenner runway coverage",
+        "supports": "Independent October 19 reporting of the appearance; read article, not a trend-volume measurement. Images/recordings are not imported.",
+        "published_at": "2026-10-19T17:00:34Z",
+        "checked_at": "2026-10-21T06:22:26Z"
+      },
+      {
+        "url": "https://www.reddit.com/r/KylieJenner/comments/1x9xki2/kylie_walks_the_runway_for_the_victorias_secret/",
+        "title": "r/KylieJenner — audience conversation about the runway appearance",
+        "supports": "Direct audience discussion observed. Relative timestamps/search vote counts were inconsistent, so no precise audience size or post time is asserted. Not permission to self-promote or reuse photos.",
+        "checked_at": "2026-10-21T06:22:26Z"
+      },
+      {
+        "url": "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
+        "title": "BBC Entertainment RSS",
+        "supports": "Feed item on the appearance published October 19, collected October 21 UTC. Individual BBC page could not be fetched; no full-article claim is made.",
+        "checked_at": "2026-10-21T06:22:26Z"
+      }
+    ]
+  },
+  {
+    "id": "dolly-halloween-2026",
+    "title": "Dolly Halloween costume trend — excluded",
+    "lane": "ongoing",
+    "audience": "Dolly Parton costume searches; rejected despite an apparent seasonal search signal.",
+    "hook": "Do not build. Search attention does not establish suitability for a throwaway comedy game.",
+    "distribution": "None. User rejected the subject; no edition was built or published.",
+    "evidence": "Google's costume list provided a trend signal, but Dolly Parton's official site records her death on August 25, 2026. The missing context invalidated the initial choice. Preserve the rejection so the source's ranking does not cause reselection.",
+    "confidence": "High on exclusion: direct user instruction and official announcement.",
+    "observed_at": "2026-10-21T06:22:26Z",
+    "reviewed_at": "2026-10-21T06:22:26Z",
+    "expires_at": "2026-11-02T08:00:00Z",
+    "editorial_review": {
+      "decision": "excluded",
+      "context": "recent-death-or-bereavement",
+      "subjects": "Dolly Parton",
+      "checked_at": "2026-10-21T06:22:26Z",
+      "notes": "Recent death confirmed by the official announcement. User explicitly rejected a lighthearted game about her. Exclude this topic; no game or marketing package should be generated.",
+      "source_urls": ["https://www.dollyparton.com/news/official-announcement-dolly-parton-passes-away-at-80"]
+    },
+    "sources": [
+      {
+        "url": "https://www.dollyparton.com/news/official-announcement-dolly-parton-passes-away-at-80",
+        "title": "Official death announcement",
+        "supports": "Official site dates the death announcement August 25, 2026. This context overrides a costume search ranking for this game's editorial fit.",
+        "checked_at": "2026-10-21T06:22:26Z"
+      },
+      {
+        "url": "https://frightgeist.withgoogle.com/costumes/dolly-parton",
+        "title": "Google Frightgeist — costume data",
+        "supports": "Initial seasonal signal only. Not sufficient to select a subject without current-context research.",
+        "checked_at": "2026-10-21T06:22:26Z"
+      }
+    ]
+  }
+]
