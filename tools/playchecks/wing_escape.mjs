@@ -37,6 +37,8 @@ export async function wingWin(page,proveSnag=false,doorScreenshot=null){
   require((await state(page)).doors==='3','Wing exit skipped door progression');
 }
 export async function wingLoss(page){
+  // Navigate with ordinary key pulses before holding: retry changes Canvas size and clears input.
+  await move(page,520,105);
   const forward=(await state(page)).layout==='portrait'?'ArrowUp':'ArrowRight';await page.keyboard.down(forward);
   await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='lost',null,{timeout:16000});await page.keyboard.up(forward);
   const s=await state(page);require(s.snags==='5'&&Number(s.x)<584,'Snag loss did not block at first doorway');
