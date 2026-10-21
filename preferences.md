@@ -19,3 +19,10 @@
 - Use approximately 44x44 CSS-pixel action targets. Dense board cells need a usable explicit selection/confirmation or packing flow. Do not shrink the whole UI, depend on hover/right-click/keyboard, or require fullscreen/orientation lock. Preserve browser zoom and scope gesture suppression to the game surface.
 - Put long instructions in an accessible Help dialog. Pause the game while Help is open or portrait rotate guidance is shown, resume the same round on close/rotation, and clear held movement input. Keep a visible Restart and meaningful status/feedback.
 - Document the actual touch loop, selectors and any coverage limits in PROTOTYPE.md. The existing production build establishes compilation; trusted Chromium/WebKit emulation checks establish browser evidence. Claim physical-device verification only when actually performed.
+
+## Shareable outcome design
+
+- Treat completed-round results as part of the entertainment. Use prominent original character artwork that reacts to the actual outcome: happy/triumphant for a win, sad or comically defeated for a loss.
+- Keep the reaction consistent in the result screen, saved image and native image share where supported. Include readable result context and a replay link so a friend can understand the joke and try it.
+- Prefer distinctive expressions and concise outcome jokes over a generic score panel. Design for people to want to share; virality is a goal to measure, not a guaranteed result.
+- Keep sharing optional and independent of progress, retries and rewards. Retain link/copy/save fallbacks when native image sharing is unavailable.

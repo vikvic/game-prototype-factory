@@ -65,3 +65,11 @@ body[data-layout="portrait"] #rotation-pause h2{font-size:26px}
  body[data-layout="portrait"] #rotation-pause h2{font-size:18px}
  body[data-layout="portrait"] #rotation-pause p{font-size:11px}
 }
+
+/* Outcome artwork is shared with the downloadable card; reclaim the inactive controls row. */
+body[data-layout="portrait"] .result-hero{display:flex;flex-direction:column;align-items:center;gap:6px}
+body[data-layout="portrait"] #result-portrait{width:170px;height:136px;max-width:100%;border-radius:18px}
+body[data-layout="portrait"][data-phase="won"] main,body[data-layout="portrait"][data-phase="lost"] main{grid-template-rows:70px minmax(0,1fr) 38px}
+body[data-layout="portrait"][data-phase="won"] footer,body[data-layout="portrait"][data-phase="lost"] footer{display:none}
+@media(max-height:650px){body[data-layout="portrait"] #result-portrait{width:140px;height:112px}body[data-layout="portrait"][data-phase="won"] main,body[data-layout="portrait"][data-phase="lost"] main{grid-template-rows:70px minmax(0,1fr) 34px}}
+@media(max-height:500px){body[data-layout="portrait"] .result-hero{display:grid;grid-template-columns:78px minmax(0,1fr);align-items:center;gap:5px;text-align:left}body[data-layout="portrait"] #result-portrait{width:78px;height:84px;object-fit:cover;border-radius:10px}body[data-layout="portrait"] #headline{font-size:14px;margin:3px 0}body[data-layout="portrait"][data-phase="won"] main,body[data-layout="portrait"][data-phase="lost"] main{grid-template-rows:62px minmax(0,1fr) 30px}}

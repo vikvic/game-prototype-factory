@@ -21,3 +21,7 @@ The existing trusted acceptance is adapted for 320x568, 360x640, 390x844, 430x93
 The first release is a separate Pages test snapshot with ads/analytics disabled. It does not replace the original test link or approve a commercial launch.
 
 October 21 correction: keep one portrait experience, including landscape browser windows. Side bars are empty; ads remain disabled. In short windows the same controls compact, and results reclaim the control row for readable actions. Physics and challenge values are unchanged.
+
+## Emotional sharing
+
+Wins show the original cartoon Kylie smiling with joyful eyes, outstretched wings and confetti. Losses show a frown, tears and folded wings. The same expression appears on the result screen and the1080x1350 saved card, with the actual outcome, run statistics, a short challenge and replay URL. Native sharing attaches the prebuilt PNG where file sharing is supported; otherwise the existing link/copy/save actions remain. The file is prepared at finish so the share click can invoke the native dialog immediately. No gameplay values or sharing gates change.

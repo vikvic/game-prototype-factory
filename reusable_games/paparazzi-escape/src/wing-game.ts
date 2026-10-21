@@ -1,5 +1,5 @@
 import { adBreak, tracker } from './services';
-import { drawStar } from './wing-art';
+import { paintResultPortrait, makeResultCard } from './wing-results';
 import { newWorld, step } from './wing-world';
 import { drawWingPortrait, portraitMessage } from './wing-portrait';
 import './wing-portrait.css';
@@ -10,6 +10,11 @@ export function bootWings(edition:Edition){
   const canvas=el<HTMLCanvasElement>('game'),ctx=canvas.getContext('2d')!,pad=el('move-pad'),help=el<HTMLDialogElement>('help-dialog');
   let world=newWorld(),paused=false,last=0,finished=false,usedAd=false,pointer:number|null=null,foldPointer:number|null=null;
   let rotationPaused=false,wasWide=innerWidth>innerHeight;
+  let resultCard:ReturnType<typeof makeResultCard>|null=null;
+  const resultArticle=el('result').querySelector('article')!,hero=document.createElement('div'),copy=document.createElement('div'),resultPortrait=document.createElement('canvas');
+  hero.className='result-hero';resultPortrait.id='result-portrait';resultPortrait.setAttribute('role','img');
+  copy.append(el('result-kicker'),el('headline'));hero.append(resultPortrait,copy);resultArticle.prepend(hero);
+
   const arena=canvas.parentElement!,main=arena.parentElement!,footer=document.querySelector('footer')!;
   document.body.dataset.layout='portrait';main.insertBefore(el('status'),footer);
   const rotation=document.createElement('div');rotation.id='rotation-pause';rotation.className='overlay';rotation.hidden=true;
@@ -54,11 +59,12 @@ export function bootWings(edition:Edition){
     status.dataset.blocked=block?.cause||'';el('dash').dataset.needed=String(block?.cause==='wings');el('photos').dataset.impact=String(world.recoil>0);
     Object.assign(canvas.dataset,{phase:world.phase,paused:String(paused),layout:'portrait',time:world.time.toFixed(3),x:world.x.toFixed(2),z:world.z.toFixed(2),doors:String(world.doors),snags:String(world.snags),open:world.open.toFixed(3),lastObstacle:world.lastObstacle,blockCause:block?.cause||'',blockHint:block?portraitMessage(block.message):'',release:edition.release,adMode:edition.ad_mode,mechanic:'wing-escape'});
   }
-  function start(){clearInput();world=newWorld();world.phase='playing';finished=false;rotationPaused=false;rotation.hidden=true;paused=false;el('intro').hidden=true;el('result').hidden=true;el('share-status').textContent='';track('Game start');sync();}
+  function start(){clearInput();resultCard=null;world=newWorld();world.phase='playing';finished=false;rotationPaused=false;rotation.hidden=true;paused=false;el('intro').hidden=true;el('result').hidden=true;el('share-status').textContent='';track('Game start');sync();}
   function finish(){
-    finished=true;clearInput();el('headline').textContent=world.phase==='won'?edition.result_win:edition.result_loss;
+    finished=true;clearInput();const won=world.phase==='won';paintResultPortrait(resultPortrait,won);el('result').dataset.outcome=won?'won':'lost';el('result-kicker').textContent=won?'BACKSTAGE ICON':'DOORFRAME VICTORY';el('share').textContent=won?'Share win':'Share loss';el('headline').textContent=world.phase==='won'?edition.result_win:edition.result_loss;
     const style=world.distance?Math.round(world.strut/world.distance*100):0;
     el('result-detail').textContent=`${Math.round(world.elapsed)}s · ${world.doors}/3 doors · ${world.snags} snags · ${style}% wings-out strut`;
+    resultCard=makeResultCard(edition,won,el('headline').textContent||'',el('result-detail').textContent||'',url());
     el('result').hidden=false;track(world.phase==='won'?'Round complete':'Round lost');
   }
   const fold=el('dash');fold.onpointerdown=event=>{event.preventDefault();if(world.phase!=='playing'||paused||foldPointer!==null)return;foldPointer=event.pointerId;fold.setPointerCapture(event.pointerId);};
@@ -77,15 +83,10 @@ export function bootWings(edition:Edition){
   el('restart').onclick=async()=>{try{if(!usedAd&&edition.ad_mode!=='disabled'){usedAd=true;const outcome=await adBreak(edition.ad_mode,pause,resume);canvas.dataset.adOutcome=outcome;}}catch{canvas.dataset.adOutcome='unavailable';}finally{start();track('Restart');}};
   const summary=()=>`${el('headline').textContent}\n${el('result-detail').textContent}`;
   const url=()=>location.href.split('?')[0];
-  el('share').onclick=async()=>{track('Share initiated');try{if(navigator.share){await navigator.share({title:edition.title,text:summary(),url:url()});el('share-status').textContent='Share dialog closed. Play again whenever you like.';}else{await navigator.clipboard.writeText(`${summary()}\n${url()}`);el('share-status').textContent='Result copied. Send it wherever you like.';}}catch(error){el('share-status').textContent=error instanceof DOMException&&error.name==='AbortError'?'Sharing canceled. Your result is still here.':'Sharing unavailable. Use Save image or copy the page address.';}};
+  el('share').onclick=async()=>{track('Share initiated');try{if(navigator.share){const plain={title:edition.title,text:summary(),url:url()};let payload:ShareData=plain;try{const image={...plain,files:resultCard?[resultCard.file]:[]};if(resultCard&&navigator.canShare?.(image))payload=image;}catch{/* Use the link payload when file capability is unavailable. */}await navigator.share(payload);el('share-status').textContent='Share dialog closed. Play again whenever you like.';}else{await navigator.clipboard.writeText(`${summary()}\n${url()}`);el('share-status').textContent='Result copied. Send it wherever you like.';}}catch(error){el('share-status').textContent=error instanceof DOMException&&error.name==='AbortError'?'Sharing canceled. Your result is still here.':'Sharing unavailable. Use Save image or copy the page address.';}};
   el('copy').onclick=async()=>{try{await navigator.clipboard.writeText(url());el('share-status').textContent='Link copied.';}catch{el('share-status').textContent='Copy the page address from your browser.';}};
   el('save').onclick=()=>{
-    const card=document.createElement('canvas');card.width=1000;card.height=600;const c=card.getContext('2d')!;
-    c.fillStyle='#302336';c.fillRect(0,0,1000,600);c.fillStyle='#f4a4cf';c.font='bold 23px system-ui';c.fillText(edition.brand.toUpperCase(),55,60);
-    c.fillStyle='#fff8e8';c.font='bold 44px system-ui';let line='',y=145;for(const word of (el('headline').textContent||'').split(' ')){if(c.measureText(line+word).width>650){c.fillText(line,55,y);line='';y+=54;}line+=word+' ';}c.fillText(line,55,y);
-    c.font='22px system-ui';c.fillText(el('result-detail').textContent||'',55,440);c.fillText(edition.title,55,505);c.font='15px system-ui';c.fillText('Fictional backstage comedy · Unofficial',55,548);
-    c.save();c.translate(830,370);c.scale(1.5,1.5);drawStar(c,1,0,0);c.restore();
-    const a=document.createElement('a');a.download=`${edition.id}-result.png`;a.href=card.toDataURL('image/png');a.click();el('share-status').textContent='Result image prepared.';
+    if(!resultCard)return;const a=document.createElement('a');a.download=resultCard.file.name;a.href=resultCard.dataUrl;a.click();el('share-status').textContent='Result image prepared.';
   };
   function frame(stamp:number){
     const dt=Math.max(.001,Math.min((stamp-last)/1000,.035));last=stamp;

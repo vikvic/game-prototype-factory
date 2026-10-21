@@ -1,4 +1,5 @@
 // Trusted factory acceptance. Candidate games cannot select or modify this scenario.
+import { createHash } from 'node:crypto';
 import { chromium, webkit } from 'playwright';
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir, realpath } from 'node:fs/promises';
@@ -61,17 +62,20 @@ try{
         await page.evaluate(()=>window.dispatchEvent(new Event('blur')));const paused=await page.locator('#time').textContent();await page.waitForTimeout(1100);invariant(await page.locator('#time').textContent()===paused,'Blur did not pause');await page.evaluate(()=>window.dispatchEvent(new Event('focus')));entry.backgroundSignal='simulated blur/focus callbacks';
         if(wings)await wingWin(page,primary,primary?join(out,`${name}-${width}x${height}-door.png`):null);else await winRun(page);
         await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='won');invariant((await state(page))[wings?'doors':'passes']==='3','Progress missing');await geometry(page);
+        if(wings)invariant(await page.locator('#result-portrait').getAttribute('data-mood')==='happy','Win portrait is not happy');
         const saved=await state(page);
-        await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:async()=>{throw new DOMException('Canceled','AbortError');}}));
+        await page.evaluate(()=>{Object.defineProperty(navigator,'canShare',{configurable:true,value:data=>!!data.files?.length});Object.defineProperty(navigator,'share',{configurable:true,value:async data=>{window.__shareImage=data.files?.length?{name:data.files[0].name,type:data.files[0].type,size:data.files[0].size}:null;throw new DOMException('Canceled','AbortError');}});});
         await page.locator('#share').click();await page.waitForFunction(()=>document.querySelector('#share-status').textContent.includes('canceled'));
         invariant((await state(page)).phase===saved.phase&&(await state(page))[wings?'doors':'passes']===saved[wings?'doors':'passes'],'Share cancellation changed game');
         await page.evaluate(()=>{Object.defineProperty(navigator,'share',{configurable:true,value:undefined});Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{}}});});
         await page.locator('#share').click();await page.waitForFunction(()=>document.querySelector('#share-status').textContent.includes('Result copied'));entry.unsupportedShareFallback=true;
         const download=page.waitForEvent('download');await page.locator('#save').click();const d=await download;invariant(d.suggestedFilename().endsWith('.png'),'Result image missing');
+        let wonCardHash='';if(wings){const bytes=await readFile(await d.path());invariant(d.suggestedFilename().endsWith('-won.png')&&bytes.readUInt32BE(16)===1080&&bytes.readUInt32BE(20)===1350,'Win card outcome/dimensions missing');const shared=await page.evaluate(()=>window.__shareImage);invariant(shared?.name===d.suggestedFilename()&&shared.type==='image/png'&&shared.size===bytes.length,'Native share did not receive the winning PNG');wonCardHash=createHash('sha256').update(bytes).digest('hex');await writeFile(join(out,`${name}-${width}x${height}-won-card.png`),bytes);entry.happyResultArt=true;entry.nativeImageShare='controlled file-capability/cancellation fixture';}
+
         await page.screenshot({path:join(out,`${name}-${width}x${height}-won.png`)});
         await page.locator('#restart').click();await page.waitForFunction(wings=>{const d=document.querySelector('#game').dataset;return d.phase==='playing'&&d[wings?'doors':'passes']==='0';},wings);
-        if(width===1280){
-          if(wings){await wingLoss(page);}else{
+        if(width===1280||(wings&&width===667)){
+          if(wings){await wingLoss(page);await geometry(page);invariant(await page.locator('#result-portrait').getAttribute('data-mood')==='sad','Loss portrait is not sad');await page.screenshot({path:join(out,`${name}-${width}x${height}-lost.png`)});const lostDownload=page.waitForEvent('download');await page.locator('#save').click();const lost=await lostDownload,bytes=await readFile(await lost.path());invariant(lost.suggestedFilename().endsWith('-lost.png')&&bytes.readUInt32BE(16)===1080&&bytes.readUInt32BE(20)===1350&&createHash('sha256').update(bytes).digest('hex')!==wonCardHash,'Loss reused the winning card');await writeFile(join(out,`${name}-${width}x${height}-lost-card.png`),bytes);entry.sadResultArt=true;}else{
           await moveTo(page,480,h*.84);await moveTo(page,480,h*.2);await moveTo(page,500,h*.42);
           await page.waitForFunction(()=>document.querySelector('#game').dataset.phase==='lost',{},{timeout:95000});
           invariant(Number((await state(page)).photos)>0,'Loss route never exercised camera exposure');}

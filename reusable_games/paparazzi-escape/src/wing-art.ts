@@ -3,7 +3,9 @@ function oval(c:CanvasRenderingContext2D,x:number,y:number,rx:number,ry:number,c
 function line(c:CanvasRenderingContext2D,points:number[],color:string,width=2){c.strokeStyle=color;c.lineWidth=width;c.lineCap='round';c.beginPath();c.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)c.lineTo(points[i],points[i+1]);c.stroke();}
 function sparkle(c:CanvasRenderingContext2D,x:number,y:number,r:number){c.fillStyle='#fff7cc';c.beginPath();c.moveTo(x,y-r);c.lineTo(x+r*.28,y-r*.25);c.lineTo(x+r,y);c.lineTo(x+r*.28,y+r*.25);c.lineTo(x,y+r);c.lineTo(x-r*.28,y+r*.25);c.lineTo(x-r,y);c.lineTo(x-r*.28,y-r*.25);c.fill();}
 
-export function drawStar(c:CanvasRenderingContext2D,open:number,t:number,walk:number,recoil=0,facing=1){
+export type StarMood='neutral'|'happy'|'sad';
+
+export function drawStar(c:CanvasRenderingContext2D,open:number,t:number,walk:number,recoil=0,facing=1,mood:StarMood='neutral'){
   c.save();c.translate(recoil>0?Math.sin(t*48)*5:0,Math.sin(t*9)*Math.min(walk/170,1)*2);
   oval(c,0,5,39,10,'#0006');
   // Feathers fold toward the body. Their delay and overshoot are deliberate comedy.
@@ -36,13 +38,25 @@ export function drawStar(c:CanvasRenderingContext2D,open:number,t:number,walk:nu
   c.beginPath();c.moveTo(14,-112);c.bezierCurveTo(28,-91,12,-80,24,-60);c.lineTo(12,-62);c.lineTo(9,-110);c.closePath();c.fill();
   oval(c,1,-106,16,23,'#eac0a7');
   c.fillStyle='#211b23';c.beginPath();c.moveTo(-17,-110);c.bezierCurveTo(-18,-140,30,-136,18,-105);c.bezierCurveTo(13,-116,-2,-121,-17,-110);c.fill();
-  line(c,[-11,-111,-5,-113,-1,-111],'#3a2525',2.5);line(c,[5,-111,10,-113,14,-110],'#3a2525',2.5);
-  const blink=Math.sin(t*.8)>.995;
-  if(!blink){oval(c,-5,-104,5,2.5,'#fff2e6');oval(c,10,-104,5,2.5,'#fff2e6');}
-  line(c,[-10,-105,-5,-104,-1,-105],'#2f202a',blink?1.5:2);line(c,[5,-105,10,-104,14,-105],'#2f202a',blink?1.5:2);
-  if(!blink){oval(c,-5,-104,1.3,1.9,'#3b2420');oval(c,10,-104,1.3,1.9,'#3b2420');}
+  if(mood==='sad'){
+    line(c,[-11,-114,-5,-117,-1,-119],'#3a2525',2.5);line(c,[5,-119,10,-117,15,-114],'#3a2525',2.5);
+  }else{line(c,[-11,-111,-5,-113,-1,-111],'#3a2525',2.5);line(c,[5,-111,10,-113,14,-110],'#3a2525',2.5);}
+  const blink=mood==='neutral'&&Math.sin(t*.8)>.995;
+  if(mood==='happy'){
+    line(c,[-10,-104,-5,-108,-1,-104],'#2f202a',2);line(c,[5,-104,10,-108,15,-104],'#2f202a',2);
+    oval(c,-9,-98,4,2,'#df869566');oval(c,13,-98,4,2,'#df869566');
+  }else{
+    if(!blink){oval(c,-5,-104,5,2.5,'#fff2e6');oval(c,10,-104,5,2.5,'#fff2e6');}
+    line(c,[-10,-105,-5,-104,-1,-105],'#2f202a',blink?1.5:2);line(c,[5,-105,10,-104,14,-105],'#2f202a',blink?1.5:2);
+    if(!blink){oval(c,-5,-104,1.3,1.9,'#3b2420');oval(c,10,-104,1.3,1.9,'#3b2420');}
+  }
   line(c,[3,-103,5,-97,1,-96],'#bd8c7c',1);
-  c.fillStyle=recoil>0?'#8e364e':'#ab5b64';c.beginPath();c.moveTo(-4,-90);c.quadraticCurveTo(1,-95,4,-91);c.quadraticCurveTo(9,-94,11,-90);c.quadraticCurveTo(3,-84,-4,-90);c.fill();
+  if(mood==='happy'){
+    c.fillStyle='#813d50';c.beginPath();c.moveTo(-6,-94);c.quadraticCurveTo(3,-90,13,-94);c.quadraticCurveTo(4,-78,-6,-94);c.fill();line(c,[-3,-92,4,-91,10,-92],'#fff6ee',2);
+  }else if(mood==='sad'){
+    c.strokeStyle='#9e5067';c.lineWidth=2.5;c.beginPath();c.moveTo(-4,-88);c.quadraticCurveTo(4,-98,12,-88);c.stroke();
+    for(const x of [-9,14]){c.fillStyle='#94dcff';c.beginPath();c.moveTo(x,-101);c.quadraticCurveTo(x-5,-94,x,-92);c.quadraticCurveTo(x+5,-94,x,-101);c.fill();}
+  }else{c.fillStyle=recoil>0?'#8e364e':'#ab5b64';c.beginPath();c.moveTo(-4,-90);c.quadraticCurveTo(1,-95,4,-91);c.quadraticCurveTo(9,-94,11,-90);c.quadraticCurveTo(3,-84,-4,-90);c.fill();}
   oval(c,-14,-96,2,2,'#f1d894');oval(c,17,-96,2,2,'#f1d894');
   if(open>.7){sparkle(c,-10+Math.sin(t*2)*8,-71,3+Math.sin(t*6));sparkle(c,48,-83+Math.sin(t)*10,4);}
   c.restore();
