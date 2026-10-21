@@ -44,7 +44,10 @@ export function bootWings(edition:Edition){
     const b=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,3);canvas.width=Math.round(b.width*dpr);canvas.height=Math.round(b.height*dpr);clearInput();
     if(changed&&world.phase==='playing'){rotationPaused=true;rotation.hidden=false;pause();}
   }
-  new ResizeObserver(resize).observe(canvas);
+  // Reparenting status changes Canvas bounds. Defer that mutation beyond observer delivery.
+  let resizePending=false;
+  function scheduleResize(){if(!resizePending){resizePending=true;requestAnimationFrame(()=>{resizePending=false;resize();});}}
+  new ResizeObserver(scheduleResize).observe(canvas);window.addEventListener('resize',scheduleResize);
   function sync(){
     el('time').textContent=`${Math.ceil(world.time)}s`;el('passes').textContent=`${world.doors}/3 doors`;el('photos').textContent=`${world.snags}/5 snags`;
     const block=world.phase==='playing'?world.blocked:null,status=el('status'),message=portrait?portraitMessage(block?.message||world.message):block?.message||world.message;
