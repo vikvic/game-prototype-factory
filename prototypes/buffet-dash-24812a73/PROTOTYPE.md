@@ -5,7 +5,7 @@ A Canvas buffet game with a 100-second round. Fully eat portions at the home tab
 ## Controls
 - Start begins the clock. Restart immediately starts a fresh run.
 - WASD / arrows move. Click or tap the room to walk to a destination.
-- Near a station, Serve selects its portion. Click a plate cell to place its top-left corner, or Auto-place for the first available fit. Rotate swaps width and height.
+- Near a station, Q / Serve selects its portion. Click a plate cell to place its top-left corner, or Auto-place for the first available fit. Rotate swaps width and height.
 - Cancel / Escape abandons selection, serving, or eating. Moving cancels an unfinished serve without adding food.
 - E / Eat at home consumes portions in pickup order. Movement stops eating. Partial eating progress is retained; press Eat at home to resume.
 
@@ -39,4 +39,21 @@ Shared controls: #help opens #help-dialog; #help-close closes it. Escape closes 
 
 Touch: #start begins the 100-second round; tap #game to walk to a station, #serve selects its food, then tap one of the twelve #plate button cells (row-major) or #auto. #rotate swaps a selected rectangular portion's footprint. #cancel cancels the current action. Walk HOME and #eat to bank fully eaten portions. Packing, rotation, automatic placement, Serve/Eat/Cancel and Restart remain co-visible. Compact maps render station/home labels at 10 CSS pixels and omit tiny secondary map text; the contextual prompt reports value/footprint, and activity reports serving/eating times. Plate cells are a dense grid with individual row/column accessible names, fit previews and food/value labels; action buttons retain 44-pixel minimum targets. Status and current action/progress remain visible beside the map/plate.
 
-Verified 2026-10-19: existing strict TypeScript / production build passed. Scratch Chromium and WebKit emulation covered all five declared viewport sizes with no button clipping/overlap, action-target failures, document overflow or uncaught page errors; screenshots were retained locally. Help/portrait pause was checked at the smallest size for the timed starters and Buffet. A real touch smoke at 568x320 covered Buffet rotation/manual packing/19 points banked/restart and Tunnel ore selection/confirmation/cursor correction/second nest/three turrets/wave-1 clear/restart. Full trusted touch-gameplay scenarios remain a subsequent verification gate. No physical-device verification is claimed here; human readability, comfort and balance remain playtest questions.
+Verified 2026-10-19: existing strict TypeScript / production build passed. Scratch Chromium and WebKit emulation covered all five declared viewport sizes with no button clipping/overlap, action-target failures, document overflow or uncaught page errors; screenshots were retained locally. Help/portrait pause was checked at the smallest size. A real touch smoke at 568x320 covered rotation/manual packing/19 points banked/restart. Full trusted touch-gameplay scenarios remain a subsequent verification gate. No physical-device verification is claimed here; human readability, comfort and balance remain playtest questions.
+
+## Overhead art pass (2026-10-22)
+
+The Canvas room is redrawn in a 3/4 overhead RPG style using vector paths only (no sprites or image assets); all art lives in `src/art.ts`, and `draw()` in `src/main.ts` calls into it.
+
+- Room: tiled floor, back wall with windows and sign, round home rug whose radius matches the 78-unit home range. Serving-range circles (102 units) remain on the floor.
+- Stations: buffet counters (lit top surface + front face) in each food's color, with a drawn dish per food, a nameplate, and a footprint grid. On compact maps the nameplate sits below the counter (still 10 CSS px) so the dish stays visible.
+- Home table: wooden table, place setting, two chairs.
+- Player: original chibi diner (knit beanie, napkin bib). Faces front by default; back and side views plus a walk bob while moving.
+- Depth: stations, table and player are drawn in y order, so the player can stand behind a counter. A "!" bubble appears over the player while in serving range. Ready/end messages use a bordered dialogue box.
+
+Other changes in this pass:
+- Spawn moved from the table centre to just behind the table (58 units north), still inside home range, so the player no longer overlaps the table art. Starting distances to stations change slightly; no tuning values changed.
+- Q is a keyboard shortcut for Serve (E already eats).
+- `ui()` now only writes DOM text and plate-cell attributes when their values change, instead of on every frame.
+
+Verified 2026-10-22: strict TypeScript / production build passed. Headless Chromium at 1280x720 and 568x320 covered start, keyboard and tap movement, Q serve, auto-place, return home, eat to bank points and restart, with no page errors. Visual quality, readability and balance remain playtest questions.
