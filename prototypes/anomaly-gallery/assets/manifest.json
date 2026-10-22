@@ -1,0 +1,3258 @@
+{
+  "generated": "2026-09-15T18:12:37.573Z",
+  "width": 1000,
+  "note": "Curated headlessly: usable/hasFace/graftable/blobs written. Re-run curate.html in a browser to re-derive.",
+  "items": [
+    {
+      "id": "rembrandt-self-portrait",
+      "title": "File:Rembrandt self portrait.jpg",
+      "kind": "face",
+      "name": "Self-portrait .",
+      "artist": "Rembrandt",
+      "year": "1659",
+      "license": "Public domain",
+      "credit": "teamrioja.org : Home : Info : Pic",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARembrandt%20self%20portrait.jpg",
+      "file": "rembrandt-self-portrait.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.1806,
+          "y": 0.8557,
+          "r": 0.0226
+        },
+        {
+          "x": 0.2274,
+          "y": 0.8595,
+          "r": 0.0177
+        }
+      ],
+      "blob": {
+        "x": 0.1806,
+        "y": 0.8557,
+        "r": 0.0226
+      },
+      "graftable": false,
+      "aspect": 1.2742
+    },
+    {
+      "id": "rembrandt-the-jewish-bride",
+      "title": "File:Rembrandt Harmensz. van Rijn - Portret van een paar als oudtestamentische figuren, genaamd 'Het Joodse bruidje' - Google Art Project.jpg",
+      "kind": "face",
+      "name": "The Jewish Bride",
+      "artist": "Rembrandt",
+      "year": "1665",
+      "license": "Public domain",
+      "credit": "Unknown source Unknown source",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARembrandt%20Harmensz.%20van%20Rijn%20-%20Portret%20van%20een%20paar%20als%20oudtestamentische%20figuren%2C%20genaamd%20'Het%20Joodse%20bruidje'%20-%20Google%20Art%20Project.jpg",
+      "file": "rembrandt-the-jewish-bride.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.3065,
+          "y": 0.5,
+          "r": 0.0726
+        },
+        {
+          "x": 0.5435,
+          "y": 0.4646,
+          "r": 0.0661
+        },
+        {
+          "x": 0.2645,
+          "y": 0.396,
+          "r": 0.0661
+        }
+      ],
+      "blob": {
+        "x": 0.3065,
+        "y": 0.5,
+        "r": 0.0726
+      },
+      "graftable": true,
+      "aspect": 0.729
+    },
+    {
+      "id": "rembrandt-peale-rembrandt-peale-thomas-jefferson",
+      "title": "File:Official Presidential portrait of Thomas Jefferson (by Rembrandt Peale, 1800).jpg",
+      "kind": "face",
+      "name": "Rembrandt Peale - Thomas Jefferson",
+      "artist": "Rembrandt Peale",
+      "year": "1800",
+      "license": "Public domain",
+      "credit": "https://www.whitehousehistory.org/galleries/presidential-portraits",
+      "source": "https://commons.wikimedia.org/wiki/File%3AOfficial%20Presidential%20portrait%20of%20Thomas%20Jefferson%20(by%20Rembrandt%20Peale%2C%201800).jpg",
+      "file": "rembrandt-peale-rembrandt-peale-thomas-jefferson.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.729,
+          "y": 0.5824,
+          "r": 0.021
+        },
+        {
+          "x": 0.7081,
+          "y": 0.5865,
+          "r": 0.0194
+        },
+        {
+          "x": 0.2403,
+          "y": 0.5446,
+          "r": 0.0145
+        }
+      ],
+      "blob": {
+        "x": 0.729,
+        "y": 0.5824,
+        "r": 0.021
+      },
+      "graftable": false,
+      "aspect": 1.1935
+    },
+    {
+      "id": "rembrandt-peale-portrait-of-charles-hodge-rembrandt-peale",
+      "title": "File:PORTRAIT OF CHARLES HODGE, Rembrandt Peale.jpg",
+      "kind": "face",
+      "name": "PORTRAIT OF CHARLES HODGE, Rembrandt Peale",
+      "artist": "Rembrandt Peale",
+      "year": "1850",
+      "license": "Public domain",
+      "credit": "http://www.sothebys.com/en/auctions/ecatalogue/2011/american-paintings-drawings-sculpture/",
+      "source": "https://commons.wikimedia.org/wiki/File%3APORTRAIT%20OF%20CHARLES%20HODGE%2C%20Rembrandt%20Peale.jpg",
+      "file": "rembrandt-peale-portrait-of-charles-hodge-rembrandt-peale.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.7597,
+          "y": 0.5746,
+          "r": 0.0145
+        },
+        {
+          "x": 0.8177,
+          "y": 0.591,
+          "r": 0.0145
+        }
+      ],
+      "blob": {
+        "x": 0.7597,
+        "y": 0.5746,
+        "r": 0.0145
+      },
+      "graftable": false,
+      "aspect": 1.179
+    },
+    {
+      "id": "rembrandt-self-portrait-at-the-age-of-63",
+      "title": "File:Rembrandt, Self Portrait at the Age of 63.jpg",
+      "kind": "face",
+      "name": "Self Portrait at the Age of 63",
+      "artist": "Rembrandt",
+      "year": "1669",
+      "license": "Public domain",
+      "credit": "National Gallery",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARembrandt%2C%20Self%20Portrait%20at%20the%20Age%20of%2063.jpg",
+      "file": "rembrandt-self-portrait-at-the-age-of-63.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.8065,
+          "y": 0.7992,
+          "r": 0.0242
+        },
+        {
+          "x": 0.7758,
+          "y": 0.8031,
+          "r": 0.0129
+        },
+        {
+          "x": 0.4,
+          "y": 0.4276,
+          "r": 0.0129
+        }
+      ],
+      "blob": {
+        "x": 0.8065,
+        "y": 0.7992,
+        "r": 0.0242
+      },
+      "graftable": false,
+      "aspect": 1.2371
+    },
+    {
+      "id": "rembrandt-self-portrait-at-the-age-of-34",
+      "title": "File:Rembrandt, Self Portrait at the Age of 34.jpg",
+      "kind": "face",
+      "name": "Self Portrait at the Age of 34",
+      "artist": "Rembrandt",
+      "year": "1640",
+      "license": "Public domain",
+      "credit": "National Gallery",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARembrandt%2C%20Self%20Portrait%20at%20the%20Age%20of%2034.jpg",
+      "file": "rembrandt-self-portrait-at-the-age-of-34.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6871,
+          "y": 0.7959,
+          "r": 0.0258
+        },
+        {
+          "x": 0.1806,
+          "y": 0.5324,
+          "r": 0.0226
+        },
+        {
+          "x": 0.6645,
+          "y": 0.7838,
+          "r": 0.0177
+        }
+      ],
+      "blob": {
+        "x": 0.6871,
+        "y": 0.7959,
+        "r": 0.0258
+      },
+      "graftable": false,
+      "aspect": 1.1935
+    },
+    {
+      "id": "rembrandt-portrait-of-a-woman",
+      "title": "File:Rembrandt - Portrait of a woman - MET DP145913.jpg",
+      "kind": "face",
+      "name": "Portrait of a Woman",
+      "artist": "Rembrandt",
+      "year": "1633",
+      "license": "Public domain",
+      "credit": "https://www.metmuseum.org/collection/the-collection-online/search/437390",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARembrandt%20-%20Portrait%20of%20a%20woman%20-%20MET%20DP145913.jpg",
+      "file": "rembrandt-portrait-of-a-woman.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.45,
+          "y": 0.567,
+          "r": 0.0129
+        }
+      ],
+      "blob": {
+        "x": 0.45,
+        "y": 0.567,
+        "r": 0.0129
+      },
+      "graftable": false,
+      "aspect": 1.3484
+    },
+    {
+      "id": "rembrandt-and-workshop-portrait-of-a-young-woman-the-middend",
+      "title": "File:Rembrandt (workshop) - Portrait of a Woman - Q21515145 (with frame).jpg",
+      "kind": "face",
+      "name": "Portrait of a Young Woman (\u201cThe Middendorf Rembrandt\u201d)",
+      "artist": "Rembrandt and workshop",
+      "year": "1633",
+      "license": "CC0",
+      "credit": "Own work (Hay Kranen)",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARembrandt%20(workshop)%20-%20Portrait%20of%20a%20Woman%20-%20Q21515145%20(with%20frame).jpg",
+      "file": "rembrandt-and-workshop-portrait-of-a-young-woman-the-middend.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.4355,
+          "y": 0.6155,
+          "r": 0.0129
+        },
+        {
+          "x": 0.4226,
+          "y": 0.6155,
+          "r": 0.0129
+        },
+        {
+          "x": 0.4097,
+          "y": 0.6143,
+          "r": 0.0129
+        }
+      ],
+      "blob": {
+        "x": 0.4355,
+        "y": 0.6155,
+        "r": 0.0129
+      },
+      "graftable": false,
+      "aspect": 1.3339
+    },
+    {
+      "id": "johannes-vermeer-woman-reading-a-letter-1-alternative-title-",
+      "title": "File:Vermeer, Johannes - Woman reading a letter - ca. 1662-1663.jpg",
+      "kind": "face",
+      "name": "Woman reading a letter . [ 1 ] Alternative title(s): Woman in Blue Reading a Letter .",
+      "artist": "Johannes Vermeer",
+      "year": "1662",
+      "license": "Public domain",
+      "credit": "Unknown source Unknown source",
+      "source": "https://commons.wikimedia.org/wiki/File%3AVermeer%2C%20Johannes%20-%20Woman%20reading%20a%20letter%20-%20ca.%201662-1663.jpg",
+      "file": "johannes-vermeer-woman-reading-a-letter-1-alternative-title-.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.5468,
+          "y": 0.642,
+          "r": 0.0581
+        },
+        {
+          "x": 0.7774,
+          "y": 0.3715,
+          "r": 0.0548
+        },
+        {
+          "x": 0.4226,
+          "y": 0.3486,
+          "r": 0.0484
+        }
+      ],
+      "blob": {
+        "x": 0.5468,
+        "y": 0.642,
+        "r": 0.0581
+      },
+      "graftable": true,
+      "aspect": 1.1984
+    },
+    {
+      "id": "johannes-vermeer-a-young-woman-standing-at-a-virginal",
+      "title": "File:Jan Vermeer van Delft - Lady Standing at a Virginal - National Gallery, London.jpg",
+      "kind": "face",
+      "name": "A Young Woman standing at a Virginal",
+      "artist": "Johannes Vermeer",
+      "year": "1670",
+      "license": "Public domain",
+      "credit": "www.nationalgallery.org.uk : Home : Info",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJan%20Vermeer%20van%20Delft%20-%20Lady%20Standing%20at%20a%20Virginal%20-%20National%20Gallery%2C%20London.jpg",
+      "file": "johannes-vermeer-a-young-woman-standing-at-a-virginal.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7452,
+          "y": 0.364,
+          "r": 0.0468
+        },
+        {
+          "x": 0.5903,
+          "y": 0.3782,
+          "r": 0.0306
+        },
+        {
+          "x": 0.6839,
+          "y": 0.3768,
+          "r": 0.0306
+        }
+      ],
+      "blob": {
+        "x": 0.7452,
+        "y": 0.364,
+        "r": 0.0468
+      },
+      "graftable": true,
+      "aspect": 1.1387
+    },
+    {
+      "id": "johannes-vermeer-study-of-a-young-woman-1-alternative-title-",
+      "title": "File:Vermeer-Portrait of a Young Woman.jpg",
+      "kind": "face",
+      "name": "Study of a young woman . [ 1 ] Alternative title(s): Portrait of a Young Woman .",
+      "artist": "Johannes Vermeer",
+      "year": "1665",
+      "license": "Public domain",
+      "credit": "The Met, Johannes Vermeer - Study of a Young Woman",
+      "source": "https://commons.wikimedia.org/wiki/File%3AVermeer-Portrait%20of%20a%20Young%20Woman.jpg",
+      "file": "johannes-vermeer-study-of-a-young-woman-1-alternative-title-.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.7387,
+          "y": 0.7673,
+          "r": 0.0161
+        },
+        {
+          "x": 0.7419,
+          "y": 0.7818,
+          "r": 0.0145
+        }
+      ],
+      "blob": {
+        "x": 0.7387,
+        "y": 0.7673,
+        "r": 0.0161
+      },
+      "graftable": false,
+      "aspect": 1.1161
+    },
+    {
+      "id": "johannes-vermeer-young-woman-with-a-water-jug-detail",
+      "title": "File:Johannes Vermeer - Young Woman with a Water Jug (detail) - WGA24663.jpg",
+      "kind": "face",
+      "name": "Young Woman with a Water Jug (detail)",
+      "artist": "Johannes Vermeer",
+      "year": "1660",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJohannes%20Vermeer%20-%20Young%20Woman%20with%20a%20Water%20Jug%20(detail)%20-%20WGA24663.jpg",
+      "file": "johannes-vermeer-young-woman-with-a-water-jug-detail.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7435,
+          "y": 0.8271,
+          "r": 0.0387
+        },
+        {
+          "x": 0.7935,
+          "y": 0.8283,
+          "r": 0.0387
+        },
+        {
+          "x": 0.2258,
+          "y": 0.8053,
+          "r": 0.0371
+        }
+      ],
+      "blob": {
+        "x": 0.7435,
+        "y": 0.8271,
+        "r": 0.0387
+      },
+      "graftable": true,
+      "aspect": 1.3339
+    },
+    {
+      "id": "raphael-portrait-of-baldassare-castiglione",
+      "title": "File:Raffaello Sanzio - Portrait of Baldassare Castiglione - WGA18821.jpg",
+      "kind": "face",
+      "name": "Portrait of Baldassare Castiglione",
+      "artist": "Raphael",
+      "year": "1514",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARaffaello%20Sanzio%20-%20Portrait%20of%20Baldassare%20Castiglione%20-%20WGA18821.jpg",
+      "file": "raphael-portrait-of-baldassare-castiglione.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.2097,
+          "y": 0.5605,
+          "r": 0.05
+        },
+        {
+          "x": 0.7694,
+          "y": 0.4739,
+          "r": 0.029
+        },
+        {
+          "x": 0.1823,
+          "y": 0.5936,
+          "r": 0.0258
+        }
+      ],
+      "blob": {
+        "x": 0.2097,
+        "y": 0.5605,
+        "r": 0.05
+      },
+      "graftable": true,
+      "aspect": 1.2661
+    },
+    {
+      "id": "raphael-bindo-altoviti",
+      "title": "File:Raphael - Bindo Altoviti - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Bindo Altoviti",
+      "artist": "Raphael",
+      "year": "1515",
+      "license": "Public domain",
+      "credit": "1wFXbRHFG363BA at Google Cultural Institute maximum zoom level",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARaphael%20-%20Bindo%20Altoviti%20-%20Google%20Art%20Project.jpg",
+      "file": "raphael-bindo-altoviti.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.2742,
+          "y": 0.5396,
+          "r": 0.0694
+        },
+        {
+          "x": 0.4419,
+          "y": 0.5089,
+          "r": 0.0581
+        },
+        {
+          "x": 0.7839,
+          "y": 0.6883,
+          "r": 0.0452
+        }
+      ],
+      "blob": {
+        "x": 0.2742,
+        "y": 0.5396,
+        "r": 0.0694
+      },
+      "graftable": true,
+      "aspect": 1.3661
+    },
+    {
+      "id": "raphael-portrait-of-a-cardinal",
+      "title": "File:Portrait of a Cardinal, by Raffael, from Prado in Google Earth.jpg",
+      "kind": "face",
+      "name": "Portrait of a Cardinal",
+      "artist": "Raphael",
+      "year": "1510",
+      "license": "Public domain",
+      "credit": "The Prado in Google Earth: Home page scaled down from 8 level of zoom, JPEG compression qu",
+      "source": "https://commons.wikimedia.org/wiki/File%3APortrait%20of%20a%20Cardinal%2C%20by%20Raffael%2C%20from%20Prado%20in%20Google%20Earth.jpg",
+      "file": "raphael-portrait-of-a-cardinal.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3919,
+          "y": 0.6721,
+          "r": 0.2597
+        },
+        {
+          "x": 0.629,
+          "y": 0.5895,
+          "r": 0.1919
+        },
+        {
+          "x": 0.7145,
+          "y": 0.7234,
+          "r": 0.0968
+        }
+      ],
+      "blob": {
+        "x": 0.3919,
+        "y": 0.6721,
+        "r": 0.2597
+      },
+      "graftable": true,
+      "aspect": 1.2887
+    },
+    {
+      "id": "livioandronico2013-la-fornarina-by-raffaello",
+      "title": "File:La Fornarina by Raffaello.jpg",
+      "kind": "face",
+      "name": "La Fornarina by Raffaello",
+      "artist": "Livioandronico2013",
+      "year": "2017",
+      "license": "Public domain",
+      "credit": "Own work",
+      "source": "https://commons.wikimedia.org/wiki/File%3ALa%20Fornarina%20by%20Raffaello.jpg",
+      "file": "livioandronico2013-la-fornarina-by-raffaello.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.2177,
+          "y": 0.7821,
+          "r": 0.0194
+        },
+        {
+          "x": 0.1919,
+          "y": 0.7922,
+          "r": 0.0145
+        }
+      ],
+      "blob": {
+        "x": 0.2177,
+        "y": 0.7821,
+        "r": 0.0194
+      },
+      "graftable": false,
+      "aspect": 1.2806
+    },
+    {
+      "id": "raphael-portrait-of-baldassarre-castiglione",
+      "title": "File:Baldassare Castiglione, by Raffaello Sanzio, from C2RMF retouchedFXD.jpg",
+      "kind": "face",
+      "name": "Portrait of Baldassarre Castiglione",
+      "artist": "Raphael",
+      "year": "1514",
+      "license": "Public domain",
+      "credit": "This file was derived from: Balthazar Castiglione, by Raffaello Sanzio, from C2RMF retouch",
+      "source": "https://commons.wikimedia.org/wiki/File%3ABaldassare%20Castiglione%2C%20by%20Raffaello%20Sanzio%2C%20from%20C2RMF%20retouchedFXD.jpg",
+      "file": "raphael-portrait-of-baldassarre-castiglione.jpg",
+      "hasFace": true,
+      "blobs": null,
+      "blob": null,
+      "graftable": false,
+      "aspect": 1.2435
+    },
+    {
+      "id": "titian-portrait-of-gerolamo-barbarigo",
+      "title": "File:Titian - Portrait of a man with a quilted sleeve.jpg",
+      "kind": "face",
+      "name": "Portrait of Gerolamo (?) Barbarigo",
+      "artist": "Titian",
+      "year": "1510",
+      "license": "Public domain",
+      "credit": "National Gallery, London - online catalogue .",
+      "source": "https://commons.wikimedia.org/wiki/File%3ATitian%20-%20Portrait%20of%20a%20man%20with%20a%20quilted%20sleeve.jpg",
+      "file": "titian-portrait-of-gerolamo-barbarigo.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3855,
+          "y": 0.4568,
+          "r": 0.0355
+        },
+        {
+          "x": 0.4742,
+          "y": 0.4582,
+          "r": 0.0306
+        },
+        {
+          "x": 0.3532,
+          "y": 0.4714,
+          "r": 0.029
+        }
+      ],
+      "blob": {
+        "x": 0.3855,
+        "y": 0.4568,
+        "r": 0.0355
+      },
+      "graftable": true,
+      "aspect": 1.2145
+    },
+    {
+      "id": "titian-autorretrato-self-portrait",
+      "title": "File:Titian - Self-portrait (Museo del Prado).jpg",
+      "kind": "face",
+      "name": "Autorretrato Self-Portrait",
+      "artist": "Titian",
+      "year": "1562",
+      "license": "Public domain",
+      "credit": "Museo Nacional del Prado online",
+      "source": "https://commons.wikimedia.org/wiki/File%3ATitian%20-%20Self-portrait%20(Museo%20del%20Prado).jpg",
+      "file": "titian-autorretrato-self-portrait.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3742,
+          "y": 0.4109,
+          "r": 0.0387
+        },
+        {
+          "x": 0.35,
+          "y": 0.3884,
+          "r": 0.0145
+        }
+      ],
+      "blob": {
+        "x": 0.3742,
+        "y": 0.4109,
+        "r": 0.0387
+      },
+      "graftable": true,
+      "aspect": 1.3581
+    },
+    {
+      "id": "titian-selbstbildnis-self-portrait",
+      "title": "File:Self-portrait of Titian.jpg",
+      "kind": "face",
+      "name": "Selbstbildnis Self-Portrait",
+      "artist": "Titian",
+      "year": "1550",
+      "license": "Public domain",
+      "credit": "Fig 6 from Self Portrait: Renaissance to Contemporary (Anthony Bond, Joanna Woodall, ISBN ",
+      "source": "https://commons.wikimedia.org/wiki/File%3ASelf-portrait%20of%20Titian.jpg",
+      "file": "titian-selbstbildnis-self-portrait.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.4839,
+          "y": 0.5588,
+          "r": 0.0419
+        },
+        {
+          "x": 0.5145,
+          "y": 0.537,
+          "r": 0.029
+        },
+        {
+          "x": 0.4855,
+          "y": 0.6158,
+          "r": 0.0274
+        }
+      ],
+      "blob": {
+        "x": 0.4839,
+        "y": 0.5588,
+        "r": 0.0419
+      },
+      "graftable": true,
+      "aspect": 1.3306
+    },
+    {
+      "id": "titian-la-schiavona-la-schiavona",
+      "title": "File:Titian - Portrait of a Lady ('La Schiavona') - Google Art Project.jpg",
+      "kind": "face",
+      "name": "La Schiavona La Schiavona",
+      "artist": "Titian",
+      "year": "1510",
+      "license": "Public domain",
+      "credit": "Google Arts & Culture \u2014 IAGlTmpYmP7gPw",
+      "source": "https://commons.wikimedia.org/wiki/File%3ATitian%20-%20Portrait%20of%20a%20Lady%20('La%20Schiavona')%20-%20Google%20Art%20Project.jpg",
+      "file": "titian-la-schiavona-la-schiavona.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.2887,
+          "y": 0.7725,
+          "r": 0.0903
+        },
+        {
+          "x": 0.4032,
+          "y": 0.428,
+          "r": 0.0532
+        },
+        {
+          "x": 0.3435,
+          "y": 0.712,
+          "r": 0.0516
+        }
+      ],
+      "blob": {
+        "x": 0.2887,
+        "y": 0.7725,
+        "r": 0.0903
+      },
+      "graftable": true,
+      "aspect": 1.1984
+    },
+    {
+      "id": "titian-portrait-of-jacopo-strada",
+      "title": "File:Titian - Portrait of Jacopo Strada - WGA22980.jpg",
+      "kind": "face",
+      "name": "Portrait of Jacopo Strada",
+      "artist": "Titian",
+      "year": "1567",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3ATitian%20-%20Portrait%20of%20Jacopo%20Strada%20-%20WGA22980.jpg",
+      "file": "titian-portrait-of-jacopo-strada.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6532,
+          "y": 0.5707,
+          "r": 0.0613
+        },
+        {
+          "x": 0.629,
+          "y": 0.6166,
+          "r": 0.0565
+        },
+        {
+          "x": 0.5887,
+          "y": 0.6613,
+          "r": 0.0532
+        }
+      ],
+      "blob": {
+        "x": 0.6532,
+        "y": 0.5707,
+        "r": 0.0613
+      },
+      "graftable": true,
+      "aspect": 1.3
+    },
+    {
+      "id": "titian-la-femme-au-miroir-woman-with-a-mirror",
+      "title": "File:Portrait d'une Femme \u00e0 sa Toilette, by Titian, from C2RMF retouched.jpg",
+      "kind": "face",
+      "name": "La Femme au miroir Woman with a Mirror",
+      "artist": "Titian",
+      "year": "1515",
+      "license": "Public domain",
+      "credit": "Retouched from File:Portrait d'une Femme \u00e0 sa Toilette, by Titian, from C2RMF.jpg , origin",
+      "source": "https://commons.wikimedia.org/wiki/File%3APortrait%20d'une%20Femme%20%C3%A0%20sa%20Toilette%2C%20by%20Titian%2C%20from%20C2RMF%20retouched.jpg",
+      "file": "titian-la-femme-au-miroir-woman-with-a-mirror.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.5823,
+          "y": 0.5111,
+          "r": 0.0726
+        },
+        {
+          "x": 0.371,
+          "y": 0.6281,
+          "r": 0.0629
+        },
+        {
+          "x": 0.3468,
+          "y": 0.5722,
+          "r": 0.0581
+        }
+      ],
+      "blob": {
+        "x": 0.5823,
+        "y": 0.5111,
+        "r": 0.0726
+      },
+      "graftable": true,
+      "aspect": 1.2403
+    },
+    {
+      "id": "titian-portrait-of-a-friend-of-titian-marco-mantova-benevide",
+      "title": "File:Titian - Portrait of a Friend of Titian (Marco Mantova Benavides), ca. 1550.jpg",
+      "kind": "face",
+      "name": "Portrait of a Friend of Titian, Marco Mantova Benevides",
+      "artist": "Titian",
+      "year": "1550",
+      "license": "Public domain",
+      "credit": "art.famsf.org",
+      "source": "https://commons.wikimedia.org/wiki/File%3ATitian%20-%20Portrait%20of%20a%20Friend%20of%20Titian%20(Marco%20Mantova%20Benavides)%2C%20ca.%201550.jpg",
+      "file": "titian-portrait-of-a-friend-of-titian-marco-mantova-benevide.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3355,
+          "y": 0.7768,
+          "r": 0.021
+        },
+        {
+          "x": 0.2726,
+          "y": 0.8016,
+          "r": 0.0161
+        },
+        {
+          "x": 0.3355,
+          "y": 0.8264,
+          "r": 0.0129
+        }
+      ],
+      "blob": {
+        "x": 0.3355,
+        "y": 0.7768,
+        "r": 0.021
+      },
+      "graftable": false,
+      "aspect": 1.2355
+    },
+    {
+      "id": "titian-settimia-jacovacci-k-pm-sa-portrait-of-settimia-jacov",
+      "title": "File:Titian - Portrait of Settimia Jacovacci (?) - Museum of Fine Arts, Budapest.jpg",
+      "kind": "face",
+      "name": "Settimia Jacovacci (?) k\u00e9pm\u00e1sa Portrait of Settimia Jacovacci (?)",
+      "artist": "Titian",
+      "year": "1545",
+      "license": "Public domain",
+      "credit": "https://www.mfab.hu/artworks/portrait-of-settimia-jacovacci/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ATitian%20-%20Portrait%20of%20Settimia%20Jacovacci%20(%3F)%20-%20Museum%20of%20Fine%20Arts%2C%20Budapest.jpg",
+      "file": "titian-settimia-jacovacci-k-pm-sa-portrait-of-settimia-jacov.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3323,
+          "y": 0.586,
+          "r": 0.0468
+        },
+        {
+          "x": 0.4484,
+          "y": 0.4312,
+          "r": 0.0371
+        },
+        {
+          "x": 0.2355,
+          "y": 0.5602,
+          "r": 0.0355
+        }
+      ],
+      "blob": {
+        "x": 0.3323,
+        "y": 0.586,
+        "r": 0.0468
+      },
+      "graftable": true,
+      "aspect": 1.3129
+    },
+    {
+      "id": "titian-ritratto-di-paolo-iii-portrait-of-pope-paul-iii",
+      "title": "File:Portrait of Pope Paul III Farnese (by Titian) - National Museum of Capodimonte.jpg",
+      "kind": "face",
+      "name": "Ritratto di Paolo III Portrait of Pope Paul III",
+      "artist": "Titian",
+      "year": "1543",
+      "license": "Public domain",
+      "credit": "gallerix.org",
+      "source": "https://commons.wikimedia.org/wiki/File%3APortrait%20of%20Pope%20Paul%20III%20Farnese%20(by%20Titian)%20-%20National%20Museum%20of%20Capodimonte.jpg",
+      "file": "titian-ritratto-di-paolo-iii-portrait-of-pope-paul-iii.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.3387,
+          "y": 0.3758,
+          "r": 0.079
+        },
+        {
+          "x": 0.371,
+          "y": 0.759,
+          "r": 0.0629
+        },
+        {
+          "x": 0.2855,
+          "y": 0.754,
+          "r": 0.0565
+        }
+      ],
+      "blob": {
+        "x": 0.3387,
+        "y": 0.3758,
+        "r": 0.079
+      },
+      "graftable": true,
+      "aspect": 1.3048
+    },
+    {
+      "id": "giacomo-brogi-carlo-brogi-photographic-print-of-self-portrai",
+      "title": "File:Photographic print of self portrait painting attributed to Titian - DPLA - 96f23287a2b15767cb253725fa6b6354.jpg",
+      "kind": "face",
+      "name": "Photographic print of self portrait painting attributed to Titian - DPLA - 96f23287a2b1576",
+      "artist": "Giacomo Brogi / Carlo Brogi",
+      "year": "1870",
+      "license": "Public domain",
+      "credit": "Philadelphia Museum of Art",
+      "source": "https://commons.wikimedia.org/wiki/File%3APhotographic%20print%20of%20self%20portrait%20painting%20attributed%20to%20Titian%20-%20DPLA%20-%2096f23287a2b15767cb253725fa6b6354.jpg",
+      "file": "giacomo-brogi-carlo-brogi-photographic-print-of-self-portrai.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7452,
+          "y": 0.6392,
+          "r": 0.0694
+        },
+        {
+          "x": 0.7468,
+          "y": 0.7027,
+          "r": 0.0629
+        },
+        {
+          "x": 0.5742,
+          "y": 0.823,
+          "r": 0.0565
+        }
+      ],
+      "blob": {
+        "x": 0.7452,
+        "y": 0.6392,
+        "r": 0.0694
+      },
+      "graftable": true,
+      "aspect": 1.1935
+    },
+    {
+      "id": "titian-ritratto-di-paolo-iii-con-il-camauro-portrait-of-pope",
+      "title": "File:Portrait of Pope Paul III with Camauro (by Titian) - National Museum of Capodimonte.jpg",
+      "kind": "face",
+      "name": "Ritratto di Paolo III con il camauro Portrait of Pope Paul III with Camauro",
+      "artist": "Titian",
+      "year": "1545",
+      "license": "Public domain",
+      "credit": "de.gallerix.ru",
+      "source": "https://commons.wikimedia.org/wiki/File%3APortrait%20of%20Pope%20Paul%20III%20with%20Camauro%20(by%20Titian)%20-%20National%20Museum%20of%20Capodimonte.jpg",
+      "file": "titian-ritratto-di-paolo-iii-con-il-camauro-portrait-of-pope.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.4194,
+          "y": 0.5367,
+          "r": 0.1194
+        },
+        {
+          "x": 0.629,
+          "y": 0.6528,
+          "r": 0.1081
+        },
+        {
+          "x": 0.5226,
+          "y": 0.698,
+          "r": 0.1
+        }
+      ],
+      "blob": {
+        "x": 0.4194,
+        "y": 0.5367,
+        "r": 0.1194
+      },
+      "graftable": true,
+      "aspect": 1.3194
+    },
+    {
+      "id": "frans-hals-portrait-of-a-couple-probably-isaac-abrahamsz-mas",
+      "title": "File:Frans Hals - Wedding portrait of Isaac Abrahamsz Massa and Beatrix van der Laan.jpg",
+      "kind": "face",
+      "name": "Portrait of a Couple, Probably Isaac Abrahamsz Massa and Beatrix van der Laen",
+      "artist": "Frans Hals",
+      "year": "1622",
+      "license": "Public domain",
+      "credit": "Unknown source Unknown source",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFrans%20Hals%20-%20Wedding%20portrait%20of%20Isaac%20Abrahamsz%20Massa%20and%20Beatrix%20van%20der%20Laan.jpg",
+      "file": "frans-hals-portrait-of-a-couple-probably-isaac-abrahamsz-mas.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.7629,
+          "y": 0.5789,
+          "r": 0.0177
+        },
+        {
+          "x": 0.5258,
+          "y": 0.5752,
+          "r": 0.0161
+        }
+      ],
+      "blob": {
+        "x": 0.7629,
+        "y": 0.5789,
+        "r": 0.0177
+      },
+      "graftable": false,
+      "aspect": 0.8581
+    },
+    {
+      "id": "after-frans-hals-frans-hals-1582-83-1666",
+      "title": "File:Hals - Self-Portrait copy.jpg",
+      "kind": "face",
+      "name": "Frans Hals (1582/83\u20131666)",
+      "artist": "After Frans Hals",
+      "year": "1650",
+      "license": "Public domain",
+      "credit": "www.metmuseum.org : Home : Info",
+      "source": "https://commons.wikimedia.org/wiki/File%3AHals%20-%20Self-Portrait%20copy.jpg",
+      "file": "after-frans-hals-frans-hals-1582-83-1666.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6758,
+          "y": 0.638,
+          "r": 0.0726
+        },
+        {
+          "x": 0.6758,
+          "y": 0.7018,
+          "r": 0.0532
+        },
+        {
+          "x": 0.6839,
+          "y": 0.7476,
+          "r": 0.0419
+        }
+      ],
+      "blob": {
+        "x": 0.6758,
+        "y": 0.638,
+        "r": 0.0726
+      },
+      "graftable": true,
+      "aspect": 1.1629
+    },
+    {
+      "id": "frans-hals-the-laughing-cavalier-1-alternative-title-s-portr",
+      "title": "File:Cavalier soldier Hals-1624x.jpg",
+      "kind": "face",
+      "name": "The Laughing Cavalier . [ 1 ] Alternative title(s): Portrait of an unknown man . [ 2 ]",
+      "artist": "Frans Hals",
+      "year": "1624",
+      "license": "Public domain",
+      "credit": "https://www.oxfordartonline.com/page/wallace-collection-guide",
+      "source": "https://commons.wikimedia.org/wiki/File%3ACavalier%20soldier%20Hals-1624x.jpg",
+      "file": "frans-hals-the-laughing-cavalier-1-alternative-title-s-portr.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6323,
+          "y": 0.8119,
+          "r": 0.0274
+        },
+        {
+          "x": 0.6371,
+          "y": 0.7894,
+          "r": 0.0194
+        },
+        {
+          "x": 0.6226,
+          "y": 0.8331,
+          "r": 0.0129
+        }
+      ],
+      "blob": {
+        "x": 0.6323,
+        "y": 0.8119,
+        "r": 0.0274
+      },
+      "graftable": false,
+      "aspect": 1.2177
+    },
+    {
+      "id": "frans-hals-claes-duyst-van-voorhout",
+      "title": "File:Frans Hals - Claes Duyst van Voorhout.jpg",
+      "kind": "face",
+      "name": "Claes Duyst van Voorhout",
+      "artist": "Frans Hals",
+      "year": "1638",
+      "license": "Public domain",
+      "credit": "Metropolitan Museum of Art website",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFrans%20Hals%20-%20Claes%20Duyst%20van%20Voorhout.jpg",
+      "file": "frans-hals-claes-duyst-van-voorhout.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.8065,
+          "y": 0.4881,
+          "r": 0.0258
+        },
+        {
+          "x": 0.3452,
+          "y": 0.4775,
+          "r": 0.0258
+        },
+        {
+          "x": 0.321,
+          "y": 0.4696,
+          "r": 0.0242
+        }
+      ],
+      "blob": {
+        "x": 0.8065,
+        "y": 0.4881,
+        "r": 0.0258
+      },
+      "graftable": false,
+      "aspect": 1.2194
+    },
+    {
+      "id": "after-frans-hals-portrait-of-frans-hals-1582-1666-1-alternat",
+      "title": "File:After Frans Hals - Portrait of Frans Hals - Indianapolis.jpg",
+      "kind": "face",
+      "name": "Portrait of Frans Hals (1582-1666) . [ 1 ] Alternative title(s): Copy of Self-portrait . [",
+      "artist": "After Frans Hals",
+      "year": "1648",
+      "license": "Public domain",
+      "credit": "Indianapolis Museum of Art",
+      "source": "https://commons.wikimedia.org/wiki/File%3AAfter%20Frans%20Hals%20-%20Portrait%20of%20Frans%20Hals%20-%20Indianapolis.jpg",
+      "file": "after-frans-hals-portrait-of-frans-hals-1582-1666-1-alternat.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6887,
+          "y": 0.6126,
+          "r": 0.0226
+        },
+        {
+          "x": 0.6565,
+          "y": 0.6043,
+          "r": 0.0194
+        },
+        {
+          "x": 0.6306,
+          "y": 0.6043,
+          "r": 0.0145
+        }
+      ],
+      "blob": {
+        "x": 0.6887,
+        "y": 0.6126,
+        "r": 0.0226
+      },
+      "graftable": false,
+      "aspect": 1.3613
+    },
+    {
+      "id": "frans-hals-merrymakers-at-shrovetide",
+      "title": "File:Frans Hals, Merrymakers at Shrovetide, The Metropolitan Museum of Art.jpg",
+      "kind": "face",
+      "name": "Merrymakers at Shrovetide",
+      "artist": "Frans Hals",
+      "year": "1616",
+      "license": "Public domain",
+      "credit": "Metropolitan Museum of Art",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFrans%20Hals%2C%20Merrymakers%20at%20Shrovetide%2C%20The%20Metropolitan%20Museum%20of%20Art.jpg",
+      "file": "frans-hals-merrymakers-at-shrovetide.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.3371,
+          "y": 0.783,
+          "r": 0.0532
+        },
+        {
+          "x": 0.7952,
+          "y": 0.7472,
+          "r": 0.0371
+        },
+        {
+          "x": 0.3677,
+          "y": 0.7485,
+          "r": 0.0306
+        }
+      ],
+      "blob": {
+        "x": 0.3371,
+        "y": 0.783,
+        "r": 0.0532
+      },
+      "graftable": true,
+      "aspect": 1.3081
+    },
+    {
+      "id": "after-frans-hals-portrait-of-frans-hals-1582-83-1666",
+      "title": "File:Follower of Frans Hals - Portret van Frans Hals (RKD B17g).jpg",
+      "kind": "face",
+      "name": "Portrait of Frans Hals (1582/83-1666)",
+      "artist": "After Frans Hals",
+      "year": "1648",
+      "license": "Public domain",
+      "credit": "https://research.rkd.nl/nl/detail/https%3A%2f%2fdata.rkd.nl%2fimages%2f30638",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFollower%20of%20Frans%20Hals%20-%20Portret%20van%20Frans%20Hals%20(RKD%20B17g).jpg",
+      "file": "after-frans-hals-portrait-of-frans-hals-1582-83-1666.jpg",
+      "hasFace": true,
+      "blobs": null,
+      "blob": null,
+      "graftable": false,
+      "aspect": 1.221
+    },
+    {
+      "id": "after-frans-hals-portret-van-frans-hals-1582-83-1666",
+      "title": "File:Follower of Frans Hals - Portret van Frans Hals (RKD B17b).jpg",
+      "kind": "face",
+      "name": "Portret van Frans Hals (1582/83-1666)",
+      "artist": "After Frans Hals",
+      "year": "1648",
+      "license": "Public domain",
+      "credit": "https://research.rkd.nl/nl/detail/https%3A%2f%2fdata.rkd.nl%2fimages%2f30638",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFollower%20of%20Frans%20Hals%20-%20Portret%20van%20Frans%20Hals%20(RKD%20B17b).jpg",
+      "file": "after-frans-hals-portret-van-frans-hals-1582-83-1666.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.35,
+          "y": 0.7011,
+          "r": 0.1226
+        },
+        {
+          "x": 0.2806,
+          "y": 0.7767,
+          "r": 0.0823
+        },
+        {
+          "x": 0.4839,
+          "y": 0.7083,
+          "r": 0.079
+        }
+      ],
+      "blob": {
+        "x": 0.35,
+        "y": 0.7011,
+        "r": 0.1226
+      },
+      "graftable": true,
+      "aspect": 1.3435
+    },
+    {
+      "id": "frans-hals-singing-boy-with-flute",
+      "title": "File:Frans Hals (1582-83 - 1666) - Boy with Flute - 801A - Gem\u00e4ldegalerie.jpg",
+      "kind": "face",
+      "name": "Singing Boy with Flute",
+      "artist": "Frans Hals",
+      "year": "1623",
+      "license": "Public domain",
+      "credit": "Staatliche Museen zu Berlin",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFrans%20Hals%20(1582-83%20-%201666)%20-%20Boy%20with%20Flute%20-%20801A%20-%20Gem%C3%A4ldegalerie.jpg",
+      "file": "frans-hals-singing-boy-with-flute.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.5,
+          "y": 0.3506,
+          "r": 0.0742
+        },
+        {
+          "x": 0.5,
+          "y": 0.6416,
+          "r": 0.0726
+        },
+        {
+          "x": 0.5032,
+          "y": 0.8091,
+          "r": 0.0532
+        }
+      ],
+      "blob": {
+        "x": 0.5,
+        "y": 0.3506,
+        "r": 0.0742
+      },
+      "graftable": true,
+      "aspect": 1.2419
+    },
+    {
+      "id": "frans-hals-bildnis-eines-mannes-portrait-of-a-man",
+      "title": "File:Frans Hals (1582-83 - 1666) - Portrait of a Man - 766 - Gem\u00e4ldegalerie.jpg",
+      "kind": "face",
+      "name": "Bildnis eines Mannes Portrait of a man",
+      "artist": "Frans Hals",
+      "year": "1627",
+      "license": "Public domain",
+      "credit": "Staatliche Museen zu Berlin",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFrans%20Hals%20(1582-83%20-%201666)%20-%20Portrait%20of%20a%20Man%20-%20766%20-%20Gem%C3%A4ldegalerie.jpg",
+      "file": "frans-hals-bildnis-eines-mannes-portrait-of-a-man.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.7435,
+          "y": 0.8502,
+          "r": 0.0323
+        },
+        {
+          "x": 0.7758,
+          "y": 0.8434,
+          "r": 0.021
+        },
+        {
+          "x": 0.7468,
+          "y": 0.8275,
+          "r": 0.0194
+        }
+      ],
+      "blob": {
+        "x": 0.7435,
+        "y": 0.8502,
+        "r": 0.0323
+      },
+      "graftable": false,
+      "aspect": 1.421
+    },
+    {
+      "id": "diego-vel-zquez-portrait-of-maria-anna-of-austria",
+      "title": "File:Diego Vel\u00e1zquez - Maria Anna of Spain - Prado.jpg",
+      "kind": "face",
+      "name": "Portrait of Maria Anna of Austria",
+      "artist": "Diego Vel\u00e1zquez",
+      "year": "1630",
+      "license": "Public domain",
+      "credit": "The Yorck Project (2002) 10.000 Meisterwerke der Malerei (DVD-ROM), distributed by DIRECTM",
+      "source": "https://commons.wikimedia.org/wiki/File%3ADiego%20Vel%C3%A1zquez%20-%20Maria%20Anna%20of%20Spain%20-%20Prado.jpg",
+      "file": "diego-vel-zquez-portrait-of-maria-anna-of-austria.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.2161,
+          "y": 0.7544,
+          "r": 0.0532
+        },
+        {
+          "x": 0.6694,
+          "y": 0.8327,
+          "r": 0.05
+        },
+        {
+          "x": 0.7177,
+          "y": 0.7782,
+          "r": 0.05
+        }
+      ],
+      "blob": {
+        "x": 0.2161,
+        "y": 0.7544,
+        "r": 0.0532
+      },
+      "graftable": true,
+      "aspect": 1.3597
+    },
+    {
+      "id": "diego-vel-zquez-ritratto-di-innocenzo-x-portrait-of-innocent",
+      "title": "File:Diego Vel\u00e1zquez 048.jpg",
+      "kind": "face",
+      "name": "Ritratto di Innocenzo X Portrait of Innocent X",
+      "artist": "Diego Vel\u00e1zquez",
+      "year": "1649",
+      "license": "Public domain",
+      "credit": "The Yorck Project (2002) 10.000 Meisterwerke der Malerei (DVD-ROM), distributed by DIRECTM",
+      "source": "https://commons.wikimedia.org/wiki/File%3ADiego%20Vel%C3%A1zquez%20048.jpg",
+      "file": "diego-vel-zquez-ritratto-di-innocenzo-x-portrait-of-innocent.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.4419,
+          "y": 0.4993,
+          "r": 0.1419
+        },
+        {
+          "x": 0.3081,
+          "y": 0.4577,
+          "r": 0.0871
+        },
+        {
+          "x": 0.5774,
+          "y": 0.5369,
+          "r": 0.079
+        }
+      ],
+      "blob": {
+        "x": 0.4419,
+        "y": 0.4993,
+        "r": 0.1419
+      },
+      "graftable": true,
+      "aspect": 1.2016
+    },
+    {
+      "id": "diego-vel-zquez-self-portrait-atribuido-a-vel-zquez-rechazad",
+      "title": "File:Self-portrait by Diego Vel\u00e1zquez.jpg",
+      "kind": "face",
+      "name": "Self-portrait atribuido a Vel\u00e1zquez, rechazado por la mayor parte de la cr\u00edtica",
+      "artist": "Diego Vel\u00e1zquez",
+      "year": "1645",
+      "license": "Public domain",
+      "credit": "Selected work 17 from Self Portrait: Renaissance to Contemporary (Anthony Bond, Joanna Woo",
+      "source": "https://commons.wikimedia.org/wiki/File%3ASelf-portrait%20by%20Diego%20Vel%C3%A1zquez.jpg",
+      "file": "diego-vel-zquez-self-portrait-atribuido-a-vel-zquez-rechazad.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.8081,
+          "y": 0.5874,
+          "r": 0.0226
+        },
+        {
+          "x": 0.8161,
+          "y": 0.569,
+          "r": 0.0161
+        },
+        {
+          "x": 0.7968,
+          "y": 0.6045,
+          "r": 0.0161
+        }
+      ],
+      "blob": {
+        "x": 0.8081,
+        "y": 0.5874,
+        "r": 0.0226
+      },
+      "graftable": false,
+      "aspect": 1.2274
+    },
+    {
+      "id": "diego-vel-zquez-portrait-of-innocent-x",
+      "title": "File:Diego Vel\u00e1zquez - Portrait of Innocent X - WGA24443.jpg",
+      "kind": "face",
+      "name": "Portrait of Innocent X",
+      "artist": "Diego Vel\u00e1zquez",
+      "year": "1649",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3ADiego%20Vel%C3%A1zquez%20-%20Portrait%20of%20Innocent%20X%20-%20WGA24443.jpg",
+      "file": "diego-vel-zquez-portrait-of-innocent-x.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3726,
+          "y": 0.4481,
+          "r": 0.0677
+        },
+        {
+          "x": 0.6371,
+          "y": 0.5598,
+          "r": 0.0645
+        },
+        {
+          "x": 0.2887,
+          "y": 0.4109,
+          "r": 0.0645
+        }
+      ],
+      "blob": {
+        "x": 0.3726,
+        "y": 0.4481,
+        "r": 0.0677
+      },
+      "graftable": true,
+      "aspect": 1.2129
+    },
+    {
+      "id": "diego-vel-zquez-el-buf-n-el-primo-portrait-of-sebasti-n-de-m",
+      "title": "File:Diego Vel\u00e1zquez \u2013 El buf\u00f3n el Primo (Museo del Prado, 1644).jpg",
+      "kind": "face",
+      "name": "El buf\u00f3n el Primo Portrait of Sebasti\u00e1n de Morra",
+      "artist": "Diego Vel\u00e1zquez",
+      "year": "1644",
+      "license": "Public domain",
+      "credit": "Museo del Prado",
+      "source": "https://commons.wikimedia.org/wiki/File%3ADiego%20Vel%C3%A1zquez%20%E2%80%93%20El%20buf%C3%B3n%20el%20Primo%20(Museo%20del%20Prado%2C%201644).jpg",
+      "file": "diego-vel-zquez-el-buf-n-el-primo-portrait-of-sebasti-n-de-m.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.65,
+          "y": 0.4548,
+          "r": 0.0774
+        },
+        {
+          "x": 0.321,
+          "y": 0.4668,
+          "r": 0.0742
+        },
+        {
+          "x": 0.7871,
+          "y": 0.6852,
+          "r": 0.0452
+        }
+      ],
+      "blob": {
+        "x": 0.65,
+        "y": 0.4548,
+        "r": 0.0774
+      },
+      "graftable": true,
+      "aspect": 1.3371
+    },
+    {
+      "id": "anthony-van-dyck-equestrian-portrait-of-charles-i",
+      "title": "File:Anthonis van Dyck - Equestrian Portrait of Charles I - National Gallery, London.jpg",
+      "kind": "face",
+      "name": "Equestrian Portrait of Charles I",
+      "artist": "Anthony van Dyck",
+      "year": "1637",
+      "license": "Public domain",
+      "credit": "National Gallery, London - online catalogue .",
+      "source": "https://commons.wikimedia.org/wiki/File%3AAnthonis%20van%20Dyck%20-%20Equestrian%20Portrait%20of%20Charles%20I%20-%20National%20Gallery%2C%20London.jpg",
+      "file": "anthony-van-dyck-equestrian-portrait-of-charles-i.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7387,
+          "y": 0.6049,
+          "r": 0.0935
+        },
+        {
+          "x": 0.3516,
+          "y": 0.5972,
+          "r": 0.0871
+        },
+        {
+          "x": 0.3661,
+          "y": 0.5281,
+          "r": 0.0806
+        }
+      ],
+      "blob": {
+        "x": 0.7387,
+        "y": 0.6049,
+        "r": 0.0935
+      },
+      "graftable": true,
+      "aspect": 1.2613
+    },
+    {
+      "id": "anthony-van-dyck-k-nig-karl-i-1600-1649-von-england-dreivier",
+      "title": "File:Anthony van Dyck - King Charles I of England, three-quarter portrait.jpg",
+      "kind": "face",
+      "name": "K\u00f6nig Karl I. (1600-1649) von England, Dreiviertelportr\u00e4t King Charles I of England (1600-",
+      "artist": "Anthony van Dyck",
+      "year": "1632",
+      "license": "Public domain",
+      "credit": "Kunsthistorisches Museum Wien, Bilddatenbank .",
+      "source": "https://commons.wikimedia.org/wiki/File%3AAnthony%20van%20Dyck%20-%20King%20Charles%20I%20of%20England%2C%20three-quarter%20portrait.jpg",
+      "file": "anthony-van-dyck-k-nig-karl-i-1600-1649-von-england-dreivier.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.4032,
+          "y": 0.8092,
+          "r": 0.029
+        },
+        {
+          "x": 0.4774,
+          "y": 0.831,
+          "r": 0.029
+        },
+        {
+          "x": 0.4097,
+          "y": 0.8387,
+          "r": 0.0274
+        }
+      ],
+      "blob": {
+        "x": 0.4032,
+        "y": 0.8092,
+        "r": 0.029
+      },
+      "graftable": false,
+      "aspect": 1.2597
+    },
+    {
+      "id": "anthony-van-dyck-portrait-of-a-woman-possibly-luigia-cattane",
+      "title": "File:Luigia Cattaneo-Gentile mg 0061.jpg",
+      "kind": "face",
+      "name": "Portrait of a woman, possibly Luigia Cattaneo Gentile (?-?)",
+      "artist": "Anthony van Dyck",
+      "year": "1622",
+      "license": "Public domain",
+      "credit": "Own work , Rama",
+      "source": "https://commons.wikimedia.org/wiki/File%3ALuigia%20Cattaneo-Gentile%20mg%200061.jpg",
+      "file": "anthony-van-dyck-portrait-of-a-woman-possibly-luigia-cattane.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.5484,
+          "y": 0.3345,
+          "r": 0.0403
+        },
+        {
+          "x": 0.4565,
+          "y": 0.6272,
+          "r": 0.0355
+        },
+        {
+          "x": 0.7984,
+          "y": 0.3465,
+          "r": 0.0339
+        }
+      ],
+      "blob": {
+        "x": 0.5484,
+        "y": 0.3345,
+        "r": 0.0403
+      },
+      "graftable": true,
+      "aspect": 1.35
+    },
+    {
+      "id": "sir-anthony-van-dyck-1599-1641-details-on-google-art-project",
+      "title": "File:Sir Anthony Van Dyck - Charles I (1600-49) - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Charles I (1600-49)",
+      "artist": "Sir Anthony Van Dyck (1599 - 1641) Details on Google Art Project",
+      "year": "1635",
+      "license": "Public domain",
+      "credit": "BQHR9te2WWtyOA at Google Cultural Institute maximum zoom level",
+      "source": "https://commons.wikimedia.org/wiki/File%3ASir%20Anthony%20Van%20Dyck%20-%20Charles%20I%20(1600-49)%20-%20Google%20Art%20Project.jpg",
+      "file": "sir-anthony-van-dyck-1599-1641-details-on-google-art-project.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.5,
+          "y": 0.6204,
+          "r": 0.0194
+        },
+        {
+          "x": 0.4661,
+          "y": 0.8362,
+          "r": 0.0194
+        },
+        {
+          "x": 0.3516,
+          "y": 0.8478,
+          "r": 0.0194
+        }
+      ],
+      "blob": {
+        "x": 0.5,
+        "y": 0.6204,
+        "r": 0.0194
+      },
+      "graftable": false,
+      "aspect": 0.8371
+    },
+    {
+      "id": "anthony-van-dyck-charles-i-1600-1649-with-m-de-st-antoine",
+      "title": "File:Anthony van Dyck - Charles I (1600-49) with M. de St Antoine - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Charles I (1600-1649) with M. de St Antoine",
+      "artist": "Anthony van Dyck",
+      "year": "1633",
+      "license": "Public domain",
+      "credit": "Google Arts & Culture \u2014 HgEx40kfRvtojQ",
+      "source": "https://commons.wikimedia.org/wiki/File%3AAnthony%20van%20Dyck%20-%20Charles%20I%20(1600-49)%20with%20M.%20de%20St%20Antoine%20-%20Google%20Art%20Project.jpg",
+      "file": "anthony-van-dyck-charles-i-1600-1649-with-m-de-st-antoine.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7903,
+          "y": 0.6084,
+          "r": 0.0403
+        },
+        {
+          "x": 0.5597,
+          "y": 0.8488,
+          "r": 0.0355
+        },
+        {
+          "x": 0.3823,
+          "y": 0.8499,
+          "r": 0.0339
+        }
+      ],
+      "blob": {
+        "x": 0.7903,
+        "y": 0.6084,
+        "r": 0.0403
+      },
+      "graftable": true,
+      "aspect": 1.3758
+    },
+    {
+      "id": "anthony-van-dyck-nicolas-lanier",
+      "title": "File:Anton van Dyck - Nicolas Lanier - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Nicolas Lanier",
+      "artist": "Anthony van Dyck",
+      "year": "1628",
+      "license": "Public domain",
+      "credit": "OAFZKzhUqS5cwg at Google Cultural Institute maximum zoom level",
+      "source": "https://commons.wikimedia.org/wiki/File%3AAnton%20van%20Dyck%20-%20Nicolas%20Lanier%20-%20Google%20Art%20Project.jpg",
+      "file": "anthony-van-dyck-nicolas-lanier.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.7161,
+          "y": 0.6785,
+          "r": 0.0484
+        },
+        {
+          "x": 0.6742,
+          "y": 0.6975,
+          "r": 0.0403
+        },
+        {
+          "x": 0.4887,
+          "y": 0.8025,
+          "r": 0.0194
+        }
+      ],
+      "blob": {
+        "x": 0.7161,
+        "y": 0.6785,
+        "r": 0.0484
+      },
+      "graftable": true,
+      "aspect": 1.2742
+    },
+    {
+      "id": "anthony-van-dyck-portrait-of-the-one-armed-painter-martin-ry",
+      "title": "File:Van dyck-el pintor martin ryckaert-prado.jpg",
+      "kind": "face",
+      "name": "Portrait of the one-armed painter Martin Ryckaert in Polish dress",
+      "artist": "Anthony van Dyck",
+      "year": "1627",
+      "license": "Public domain",
+      "credit": "Museo del Prado, Madrid",
+      "source": "https://commons.wikimedia.org/wiki/File%3AVan%20dyck-el%20pintor%20martin%20ryckaert-prado.jpg",
+      "file": "anthony-van-dyck-portrait-of-the-one-armed-painter-martin-ry.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.4661,
+          "y": 0.56,
+          "r": 0.0806
+        },
+        {
+          "x": 0.4919,
+          "y": 0.4767,
+          "r": 0.0677
+        },
+        {
+          "x": 0.2274,
+          "y": 0.5858,
+          "r": 0.0597
+        }
+      ],
+      "blob": {
+        "x": 0.4661,
+        "y": 0.56,
+        "r": 0.0806
+      },
+      "graftable": true,
+      "aspect": 1.3161
+    },
+    {
+      "id": "didier-descouens-agen-esquisse-pour-le-portrait-de-l-archite",
+      "title": "File:(Agen) Esquisse pour le portrait de l'architecte Inigo Jones 1632 - Antoine van Dyck - Mus\u00e9e des Beaux-Arts d'Agen.jpg",
+      "kind": "face",
+      "name": "(Agen) Esquisse pour le portrait de l'architecte Inigo Jones 1632 - Antoine van Dyck - Mus",
+      "artist": "Didier Descouens",
+      "year": "2019",
+      "license": "Public domain",
+      "credit": "Own work",
+      "source": "https://commons.wikimedia.org/wiki/File%3A(Agen)%20Esquisse%20pour%20le%20portrait%20de%20l'architecte%20Inigo%20Jones%201632%20-%20Antoine%20van%20Dyck%20-%20Mus%C3%A9e%20des%20Beaux-Arts%20d'Agen.jpg",
+      "file": "didier-descouens-agen-esquisse-pour-le-portrait-de-l-archite.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.7419,
+          "y": 0.7855,
+          "r": 0.0839
+        },
+        {
+          "x": 0.5613,
+          "y": 0.8258,
+          "r": 0.0613
+        },
+        {
+          "x": 0.7887,
+          "y": 0.8362,
+          "r": 0.0419
+        }
+      ],
+      "blob": {
+        "x": 0.7419,
+        "y": 0.7855,
+        "r": 0.0839
+      },
+      "graftable": true,
+      "aspect": 1.3984
+    },
+    {
+      "id": "hans-holbein-the-younger-portrait-of-anne-of-cleves",
+      "title": "File:Portrait Anne of Cleves by Hans Holbein the Younger (Louvre).jpg",
+      "kind": "face",
+      "name": "Portrait of Anne of Cleves",
+      "artist": "Hans Holbein the Younger",
+      "year": "1539",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3APortrait%20Anne%20of%20Cleves%20by%20Hans%20Holbein%20the%20Younger%20(Louvre).jpg",
+      "file": "hans-holbein-the-younger-portrait-of-anne-of-cleves.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.5258,
+          "y": 0.7146,
+          "r": 0.1581
+        },
+        {
+          "x": 0.5274,
+          "y": 0.5345,
+          "r": 0.1548
+        },
+        {
+          "x": 0.3161,
+          "y": 0.734,
+          "r": 0.1081
+        }
+      ],
+      "blob": {
+        "x": 0.5258,
+        "y": 0.7146,
+        "r": 0.1581
+      },
+      "graftable": true,
+      "aspect": 1.3339
+    },
+    {
+      "id": "workshop-of-hans-holbein-the-younger-portrait-of-margaret-wy",
+      "title": "File:Workshop of Hans Holbein the Younger - Portrait of Margaret Wyatt, Lady Lee (1540).jpg",
+      "kind": "face",
+      "name": "Portrait of Margaret Wyatt, Lady Lee",
+      "artist": "Workshop of Hans Holbein the Younger",
+      "year": "1540",
+      "license": "Public domain",
+      "credit": "Metropolitan Museum of Art",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWorkshop%20of%20Hans%20Holbein%20the%20Younger%20-%20Portrait%20of%20Margaret%20Wyatt%2C%20Lady%20Lee%20(1540).jpg",
+      "file": "workshop-of-hans-holbein-the-younger-portrait-of-margaret-wy.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.25,
+          "y": 0.8102,
+          "r": 0.0565
+        },
+        {
+          "x": 0.2694,
+          "y": 0.769,
+          "r": 0.0403
+        },
+        {
+          "x": 0.5048,
+          "y": 0.412,
+          "r": 0.0387
+        }
+      ],
+      "blob": {
+        "x": 0.25,
+        "y": 0.8102,
+        "r": 0.0565
+      },
+      "graftable": true,
+      "aspect": 1.2919
+    },
+    {
+      "id": "hans-holbein-the-younger-portrait-of-sir-richard-southwell",
+      "title": "File:Hans Holbein d. J. 060.jpg",
+      "kind": "face",
+      "name": "Portrait of Sir Richard Southwell",
+      "artist": "Hans Holbein the Younger",
+      "year": "1536",
+      "license": "Public domain",
+      "credit": "The Yorck Project (2002) 10.000 Meisterwerke der Malerei (DVD-ROM), distributed by DIRECTM",
+      "source": "https://commons.wikimedia.org/wiki/File%3AHans%20Holbein%20d.%20J.%20060.jpg",
+      "file": "hans-holbein-the-younger-portrait-of-sir-richard-southwell.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.5355,
+          "y": 0.417,
+          "r": 0.0629
+        },
+        {
+          "x": 0.4774,
+          "y": 0.3977,
+          "r": 0.0403
+        },
+        {
+          "x": 0.5645,
+          "y": 0.462,
+          "r": 0.0355
+        }
+      ],
+      "blob": {
+        "x": 0.5355,
+        "y": 0.417,
+        "r": 0.0629
+      },
+      "graftable": true,
+      "aspect": 1.2532
+    },
+    {
+      "id": "hans-holbein-the-younger-portrait-of-sir-thomas-more",
+      "title": "File:Portrait of Thomas More by Hans Holbein d. J. in the Frick Collection.jpg",
+      "kind": "face",
+      "name": "Portrait of Sir Thomas More",
+      "artist": "Hans Holbein the Younger",
+      "year": "1527",
+      "license": "Public domain",
+      "credit": "The Yorck Project (2002) 10.000 Meisterwerke der Malerei (DVD-ROM), distributed by DIRECTM",
+      "source": "https://commons.wikimedia.org/wiki/File%3APortrait%20of%20Thomas%20More%20by%20Hans%20Holbein%20d.%20J.%20in%20the%20Frick%20Collection.jpg",
+      "file": "hans-holbein-the-younger-portrait-of-sir-thomas-more.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6919,
+          "y": 0.5974,
+          "r": 0.0677
+        },
+        {
+          "x": 0.75,
+          "y": 0.5282,
+          "r": 0.0597
+        },
+        {
+          "x": 0.5306,
+          "y": 0.45,
+          "r": 0.0581
+        }
+      ],
+      "blob": {
+        "x": 0.6919,
+        "y": 0.5974,
+        "r": 0.0677
+      },
+      "graftable": true,
+      "aspect": 1.2581
+    },
+    {
+      "id": "after-hans-holbein-the-younger-nicholas-kratzer",
+      "title": "File:Nicholas Kratzer by Hans Holbein the Younger.jpg",
+      "kind": "face",
+      "name": "Nicholas Kratzer",
+      "artist": "After Hans Holbein the Younger",
+      "year": "",
+      "license": "Public domain",
+      "credit": "one or more third parties have made copyright claims against Wikimedia Commons in relation",
+      "source": "https://commons.wikimedia.org/wiki/File%3ANicholas%20Kratzer%20by%20Hans%20Holbein%20the%20Younger.jpg",
+      "file": "after-hans-holbein-the-younger-nicholas-kratzer.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.7548,
+          "y": 0.771,
+          "r": 0.0758
+        },
+        {
+          "x": 0.7387,
+          "y": 0.8295,
+          "r": 0.0355
+        },
+        {
+          "x": 0.7194,
+          "y": 0.7176,
+          "r": 0.0258
+        }
+      ],
+      "blob": {
+        "x": 0.7548,
+        "y": 0.771,
+        "r": 0.0758
+      },
+      "graftable": true,
+      "aspect": 1.2677
+    },
+    {
+      "id": "hans-holbein-the-younger-portrait-of-henry-viii",
+      "title": "File:Hans Holbein, the Younger, Around 1497-1543 - Portrait of Henry VIII of England - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Portrait of Henry VIII",
+      "artist": "Hans Holbein the Younger",
+      "year": "1537",
+      "license": "Public domain",
+      "credit": "Google Arts & Culture \u2014 bwFsEOEPkei3Lw",
+      "source": "https://commons.wikimedia.org/wiki/File%3AHans%20Holbein%2C%20the%20Younger%2C%20Around%201497-1543%20-%20Portrait%20of%20Henry%20VIII%20of%20England%20-%20Google%20Art%20Project.jpg",
+      "file": "hans-holbein-the-younger-portrait-of-henry-viii.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.4306,
+          "y": 0.4506,
+          "r": 0.0306
+        },
+        {
+          "x": 0.3984,
+          "y": 0.4414,
+          "r": 0.0274
+        },
+        {
+          "x": 0.4613,
+          "y": 0.4609,
+          "r": 0.0242
+        }
+      ],
+      "blob": {
+        "x": 0.4306,
+        "y": 0.4506,
+        "r": 0.0306
+      },
+      "graftable": false,
+      "aspect": 1.4032
+    },
+    {
+      "id": "hans-holbein-the-younger-charles-de-solier-sieur-de-morette-",
+      "title": "File:Hans Holbein the Younger - Charles de Solier, Sieur de Morette - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Charles de Solier, Sieur de Morette (1480\u20131552) Charles de Solier, Sieur de Morette",
+      "artist": "Hans Holbein the Younger",
+      "year": "1534",
+      "license": "Public domain",
+      "credit": "Google Arts & Culture \u2014 nQGNrw6Er5iF9w",
+      "source": "https://commons.wikimedia.org/wiki/File%3AHans%20Holbein%20the%20Younger%20-%20Charles%20de%20Solier%2C%20Sieur%20de%20Morette%20-%20Google%20Art%20Project.jpg",
+      "file": "hans-holbein-the-younger-charles-de-solier-sieur-de-morette-.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3629,
+          "y": 0.8357,
+          "r": 0.0419
+        },
+        {
+          "x": 0.4048,
+          "y": 0.8447,
+          "r": 0.0226
+        },
+        {
+          "x": 0.571,
+          "y": 0.8588,
+          "r": 0.0194
+        }
+      ],
+      "blob": {
+        "x": 0.3629,
+        "y": 0.8357,
+        "r": 0.0419
+      },
+      "graftable": true,
+      "aspect": 1.2565
+    },
+    {
+      "id": "hans-holbein-the-younger-jane-seymour-jane-seymour",
+      "title": "File:Hans Holbein the Younger - Jane Seymour, Queen of England - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Jane Seymour Jane Seymour",
+      "artist": "Hans Holbein the Younger",
+      "year": "1536",
+      "license": "Public domain",
+      "credit": "Google Arts & Culture \u2014 egE1bExAbnBDgg",
+      "source": "https://commons.wikimedia.org/wiki/File%3AHans%20Holbein%20the%20Younger%20-%20Jane%20Seymour%2C%20Queen%20of%20England%20-%20Google%20Art%20Project.jpg",
+      "file": "hans-holbein-the-younger-jane-seymour-jane-seymour.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6645,
+          "y": 0.5992,
+          "r": 0.1677
+        },
+        {
+          "x": 0.2758,
+          "y": 0.5641,
+          "r": 0.1387
+        },
+        {
+          "x": 0.7306,
+          "y": 0.6954,
+          "r": 0.1016
+        }
+      ],
+      "blob": {
+        "x": 0.6645,
+        "y": 0.5992,
+        "r": 0.1677
+      },
+      "graftable": true,
+      "aspect": 1.6097
+    },
+    {
+      "id": "hans-holbein-the-younger-der-kaufmann-georg-gisze-the-mercha",
+      "title": "File:Hans Holbein der J\u00fcngere - Der Kaufmann Georg Gisze - Google Art Project.jpg",
+      "kind": "face",
+      "name": "Der Kaufmann Georg Gisze The Merchant Georg Gisze",
+      "artist": "Hans Holbein the Younger",
+      "year": "1532",
+      "license": "Public domain",
+      "credit": "Google Arts & Culture \u2014 VwFTBKeaJVASog",
+      "source": "https://commons.wikimedia.org/wiki/File%3AHans%20Holbein%20der%20J%C3%BCngere%20-%20Der%20Kaufmann%20Georg%20Gisze%20-%20Google%20Art%20Project.jpg",
+      "file": "hans-holbein-the-younger-der-kaufmann-georg-gisze-the-mercha.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.5258,
+          "y": 0.7698,
+          "r": 0.0565
+        },
+        {
+          "x": 0.5823,
+          "y": 0.7782,
+          "r": 0.05
+        },
+        {
+          "x": 0.4355,
+          "y": 0.7345,
+          "r": 0.0355
+        }
+      ],
+      "blob": {
+        "x": 0.5258,
+        "y": 0.7698,
+        "r": 0.0565
+      },
+      "graftable": true,
+      "aspect": 1.1419
+    },
+    {
+      "id": "thomas-gainsborough-self-portrait-of-thomas-gainsborough-r-a",
+      "title": "File:Thomas Gainsborough 023.jpg",
+      "kind": "face",
+      "name": "Self-portrait of Thomas Gainsborough, R.A.",
+      "artist": "Thomas Gainsborough",
+      "year": "1787",
+      "license": "Public domain",
+      "credit": "The Yorck Project (2002) 10.000 Meisterwerke der Malerei (DVD-ROM), distributed by DIRECTM",
+      "source": "https://commons.wikimedia.org/wiki/File%3AThomas%20Gainsborough%20023.jpg",
+      "file": "thomas-gainsborough-self-portrait-of-thomas-gainsborough-r-a.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6403,
+          "y": 0.628,
+          "r": 0.0339
+        },
+        {
+          "x": 0.6177,
+          "y": 0.6076,
+          "r": 0.029
+        },
+        {
+          "x": 0.6581,
+          "y": 0.651,
+          "r": 0.029
+        }
+      ],
+      "blob": {
+        "x": 0.6403,
+        "y": 0.628,
+        "r": 0.0339
+      },
+      "graftable": true,
+      "aspect": 1.2661
+    },
+    {
+      "id": "thomas-gainsborough-portrait-of-johann-christian-bach",
+      "title": "File:Johann Christian Bach by Thomas Gainsborough.jpg",
+      "kind": "face",
+      "name": "Portrait of Johann Christian Bach",
+      "artist": "Thomas Gainsborough",
+      "year": "1776",
+      "license": "Public domain",
+      "credit": "one or more third parties have made copyright claims against Wikimedia Commons in relation",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJohann%20Christian%20Bach%20by%20Thomas%20Gainsborough.jpg",
+      "file": "thomas-gainsborough-portrait-of-johann-christian-bach.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6258,
+          "y": 0.8283,
+          "r": 0.0548
+        },
+        {
+          "x": 0.7806,
+          "y": 0.7992,
+          "r": 0.0516
+        },
+        {
+          "x": 0.321,
+          "y": 0.6248,
+          "r": 0.0403
+        }
+      ],
+      "blob": {
+        "x": 0.6258,
+        "y": 0.8283,
+        "r": 0.0548
+      },
+      "graftable": true,
+      "aspect": 1.221
+    },
+    {
+      "id": "thomas-gainsborough-self-portrait",
+      "title": "File:Thomas Gainsborough by Thomas Gainsborough.jpg",
+      "kind": "face",
+      "name": "Self-portrait",
+      "artist": "Thomas Gainsborough",
+      "year": "1758",
+      "license": "Public domain",
+      "credit": "one or more third parties have made copyright claims against Wikimedia Commons in relation",
+      "source": "https://commons.wikimedia.org/wiki/File%3AThomas%20Gainsborough%20by%20Thomas%20Gainsborough.jpg",
+      "file": "thomas-gainsborough-self-portrait.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.6645,
+          "y": 0.5798,
+          "r": 0.0548
+        },
+        {
+          "x": 0.7194,
+          "y": 0.5731,
+          "r": 0.0306
+        },
+        {
+          "x": 0.6806,
+          "y": 0.625,
+          "r": 0.029
+        }
+      ],
+      "blob": {
+        "x": 0.6645,
+        "y": 0.5798,
+        "r": 0.0548
+      },
+      "graftable": true,
+      "aspect": 1.2129
+    },
+    {
+      "id": "thomas-gainsborough-mr-and-mrs-andrews",
+      "title": "File:Thomas Gainsborough - Mr and Mrs Andrews.jpg",
+      "kind": "face",
+      "name": "Mr. and Mrs. Andrews",
+      "artist": "Thomas Gainsborough",
+      "year": "1748",
+      "license": "Public domain",
+      "credit": "The National Gallery",
+      "source": "https://commons.wikimedia.org/wiki/File%3AThomas%20Gainsborough%20-%20Mr%20and%20Mrs%20Andrews.jpg",
+      "file": "thomas-gainsborough-mr-and-mrs-andrews.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7855,
+          "y": 0.7103,
+          "r": 0.0468
+        },
+        {
+          "x": 0.8,
+          "y": 0.7883,
+          "r": 0.0323
+        },
+        {
+          "x": 0.7435,
+          "y": 0.6741,
+          "r": 0.0242
+        }
+      ],
+      "blob": {
+        "x": 0.7855,
+        "y": 0.7103,
+        "r": 0.0468
+      },
+      "graftable": true,
+      "aspect": 0.579
+    },
+    {
+      "id": "balthasar-van-der-ast-fruit-still-life-with-shells-and-tulip",
+      "title": "File:Fruit still life with shells.jpg",
+      "kind": "still",
+      "name": "Fruit Still Life with Shells and Tulip",
+      "artist": "Balthasar van der Ast",
+      "year": "1620",
+      "license": "Public domain",
+      "credit": "1. www.ibiblio.org : Home : Info : Pic 2. Unknown source Unknown source 3. The Athenaeum: ",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFruit%20still%20life%20with%20shells.jpg",
+      "file": "balthasar-van-der-ast-fruit-still-life-with-shells-and-tulip.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.1968,
+          "y": 0.6575,
+          "r": 0.0435
+        },
+        {
+          "x": 0.7613,
+          "y": 0.708,
+          "r": 0.0323
+        },
+        {
+          "x": 0.5403,
+          "y": 0.3609,
+          "r": 0.0323
+        }
+      ],
+      "blob": {
+        "x": 0.1968,
+        "y": 0.6575,
+        "r": 0.0435
+      },
+      "graftable": true,
+      "aspect": 0.7016
+    },
+    {
+      "id": "balthasar-van-der-ast-still-life-with-fruit-flowers-shells-a",
+      "title": "File:Still-life-dish-fruit.jpg",
+      "kind": "still",
+      "name": "Still Life with fruit, flowers, shells and insects",
+      "artist": "Balthasar van der Ast",
+      "year": "1623",
+      "license": "Public domain",
+      "credit": "http://www.photo.rmn.fr/archive/97-005507-2C6NU0S48WK9.html",
+      "source": "https://commons.wikimedia.org/wiki/File%3AStill-life-dish-fruit.jpg",
+      "file": "balthasar-van-der-ast-still-life-with-fruit-flowers-shells-a.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3855,
+          "y": 0.6175,
+          "r": 0.0258
+        },
+        {
+          "x": 0.3597,
+          "y": 0.623,
+          "r": 0.021
+        },
+        {
+          "x": 0.8145,
+          "y": 0.8115,
+          "r": 0.0177
+        }
+      ],
+      "blob": {
+        "x": 0.3855,
+        "y": 0.6175,
+        "r": 0.0258
+      },
+      "graftable": false,
+      "aspect": 0.5903
+    },
+    {
+      "id": "abraham-van-beijeren-still-life",
+      "title": "File:Beijeren, Abraham van; Luxurious Still life with Fruit and silver Tazza.jpg",
+      "kind": "still",
+      "name": "Still Life",
+      "artist": "Abraham van Beijeren",
+      "year": "1665",
+      "license": "Public domain",
+      "credit": "Geheugen van Nederland : Home : Info : Pic",
+      "source": "https://commons.wikimedia.org/wiki/File%3ABeijeren%2C%20Abraham%20van%3B%20Luxurious%20Still%20life%20with%20Fruit%20and%20silver%20Tazza.jpg",
+      "file": "abraham-van-beijeren-still-life.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.5919,
+          "y": 0.657,
+          "r": 0.0419
+        },
+        {
+          "x": 0.421,
+          "y": 0.5207,
+          "r": 0.0403
+        },
+        {
+          "x": 0.5,
+          "y": 0.573,
+          "r": 0.0371
+        }
+      ],
+      "blob": {
+        "x": 0.5919,
+        "y": 0.657,
+        "r": 0.0419
+      },
+      "graftable": true,
+      "aspect": 1.171
+    },
+    {
+      "id": "balthasar-van-der-ast-still-life-with-dish-of-fruit",
+      "title": "File:Balthasar van der Ast Still-Life with Dish of Fruit.jpg",
+      "kind": "still",
+      "name": "Still-life with Dish of Fruit",
+      "artist": "Balthasar van der Ast",
+      "year": "1650",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3ABalthasar%20van%20der%20Ast%20Still-Life%20with%20Dish%20of%20Fruit.jpg",
+      "file": "balthasar-van-der-ast-still-life-with-dish-of-fruit.jpg",
+      "hasFace": true,
+      "blobs": [
+        {
+          "x": 0.3855,
+          "y": 0.6175,
+          "r": 0.0258
+        },
+        {
+          "x": 0.3597,
+          "y": 0.623,
+          "r": 0.021
+        },
+        {
+          "x": 0.8145,
+          "y": 0.8115,
+          "r": 0.0177
+        }
+      ],
+      "blob": {
+        "x": 0.3855,
+        "y": 0.6175,
+        "r": 0.0258
+      },
+      "graftable": false,
+      "aspect": 0.5903
+    },
+    {
+      "id": "jan-davidsz-de-heem-still-life-with-fruit-and-lobster",
+      "title": "File:Jan Davidsz. de Heem - Still-Life with Fruit and Lobster - WGA11288.jpg",
+      "kind": "still",
+      "name": "Still-Life with Fruit and Lobster",
+      "artist": "Jan Davidsz. de Heem",
+      "year": "1648",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJan%20Davidsz.%20de%20Heem%20-%20Still-Life%20with%20Fruit%20and%20Lobster%20-%20WGA11288.jpg",
+      "file": "jan-davidsz-de-heem-still-life-with-fruit-and-lobster.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.6339,
+          "y": 0.7318,
+          "r": 0.0371
+        },
+        {
+          "x": 0.6677,
+          "y": 0.711,
+          "r": 0.0339
+        },
+        {
+          "x": 0.7032,
+          "y": 0.6965,
+          "r": 0.0323
+        }
+      ],
+      "blob": {
+        "x": 0.6339,
+        "y": 0.7318,
+        "r": 0.0371
+      },
+      "graftable": true,
+      "aspect": 0.7758
+    },
+    {
+      "id": "willem-kalf-still-life-with-glass-goblet-and-fruit",
+      "title": "File:Willem Kalf - Still-Life with Glass Goblet and Fruit - WGA12086.jpg",
+      "kind": "still",
+      "name": "Still-Life with Glass Goblet and Fruit",
+      "artist": "Willem Kalf",
+      "year": "1655",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWillem%20Kalf%20-%20Still-Life%20with%20Glass%20Goblet%20and%20Fruit%20-%20WGA12086.jpg",
+      "file": "willem-kalf-still-life-with-glass-goblet-and-fruit.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.5387,
+          "y": 0.559,
+          "r": 0.0806
+        },
+        {
+          "x": 0.3935,
+          "y": 0.5787,
+          "r": 0.05
+        },
+        {
+          "x": 0.3935,
+          "y": 0.6222,
+          "r": 0.0387
+        }
+      ],
+      "blob": {
+        "x": 0.5387,
+        "y": 0.559,
+        "r": 0.0806
+      },
+      "graftable": true,
+      "aspect": 1.1484
+    },
+    {
+      "id": "floris-van-dyck-still-life-with-fruit-nuts-and-cheese",
+      "title": "File:Floris van Dyck - Still-Life with Fruit, Nuts and Cheese - WGA06346.jpg",
+      "kind": "still",
+      "name": "Still-Life with Fruit, Nuts and Cheese",
+      "artist": "Floris van Dyck",
+      "year": "1613",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFloris%20van%20Dyck%20-%20Still-Life%20with%20Fruit%2C%20Nuts%20and%20Cheese%20-%20WGA06346.jpg",
+      "file": "floris-van-dyck-still-life-with-fruit-nuts-and-cheese.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.4629,
+          "y": 0.445,
+          "r": 0.0774
+        },
+        {
+          "x": 0.3629,
+          "y": 0.4267,
+          "r": 0.0774
+        },
+        {
+          "x": 0.5387,
+          "y": 0.4136,
+          "r": 0.0613
+        }
+      ],
+      "blob": {
+        "x": 0.4629,
+        "y": 0.445,
+        "r": 0.0774
+      },
+      "graftable": true,
+      "aspect": 0.6161
+    },
+    {
+      "id": "claes-van-heussen-claes-van-heussen-still-life-with-fruit-an",
+      "title": "File:Claes van Heussen - still life with fruit and butterflies 1610-1633 FHM01 OS-I-152.jpg",
+      "kind": "still",
+      "name": "Claes van Heussen - still life with fruit and butterflies 1610-1633 FHM01 OS-I-152",
+      "artist": "Claes van Heussen",
+      "year": "1610",
+      "license": "Public domain",
+      "credit": "Geheugen van Nederland",
+      "source": "https://commons.wikimedia.org/wiki/File%3AClaes%20van%20Heussen%20-%20still%20life%20with%20fruit%20and%20butterflies%201610-1633%20FHM01%20OS-I-152.jpg",
+      "file": "claes-van-heussen-claes-van-heussen-still-life-with-fruit-an.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7081,
+          "y": 0.4194,
+          "r": 0.0694
+        },
+        {
+          "x": 0.629,
+          "y": 0.6129,
+          "r": 0.0435
+        },
+        {
+          "x": 0.7452,
+          "y": 0.6742,
+          "r": 0.0419
+        }
+      ],
+      "blob": {
+        "x": 0.7081,
+        "y": 0.4194,
+        "r": 0.0694
+      },
+      "graftable": true,
+      "aspect": 0.5
+    },
+    {
+      "id": "cornelis-de-heem-fruitstilleven-fruit-still-life",
+      "title": "File:Fruit Still Life by Cornelis de Heem Mauritshuis 50.jpg",
+      "kind": "still",
+      "name": "Fruitstilleven. Fruit still-life",
+      "artist": "Cornelis de Heem",
+      "year": "1670",
+      "license": "Public domain",
+      "credit": "https://www.mauritshuis.nl/en/explore/the-collection/artworks/fruit-still-life-50/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFruit%20Still%20Life%20by%20Cornelis%20de%20Heem%20Mauritshuis%2050.jpg",
+      "file": "cornelis-de-heem-fruitstilleven-fruit-still-life.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7371,
+          "y": 0.7651,
+          "r": 0.079
+        },
+        {
+          "x": 0.6532,
+          "y": 0.7497,
+          "r": 0.0726
+        },
+        {
+          "x": 0.4468,
+          "y": 0.7728,
+          "r": 0.0516
+        }
+      ],
+      "blob": {
+        "x": 0.7371,
+        "y": 0.7651,
+        "r": 0.079
+      },
+      "graftable": true,
+      "aspect": 1.2565
+    },
+    {
+      "id": "balthasar-van-der-ast-stilleven-van-vruchten-in-een-porselei",
+      "title": "File:Still Life of Fruit by Balthasar van der Ast Centraal Museum 5096 a.jpg",
+      "kind": "still",
+      "name": "Stilleven van vruchten in een porseleinen kom, met rozen, schelpen en insekten Still Life ",
+      "artist": "Balthasar van der Ast",
+      "year": "1623",
+      "license": "Public domain",
+      "credit": "www.centraalmuseum.nl : Home : Info : Pic",
+      "source": "https://commons.wikimedia.org/wiki/File%3AStill%20Life%20of%20Fruit%20by%20Balthasar%20van%20der%20Ast%20Centraal%20Museum%205096%20a.jpg",
+      "file": "balthasar-van-der-ast-stilleven-van-vruchten-in-een-porselei.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.35,
+          "y": 0.4357,
+          "r": 0.0742
+        },
+        {
+          "x": 0.4065,
+          "y": 0.3704,
+          "r": 0.0548
+        },
+        {
+          "x": 0.4871,
+          "y": 0.488,
+          "r": 0.0452
+        }
+      ],
+      "blob": {
+        "x": 0.35,
+        "y": 0.4357,
+        "r": 0.0742
+      },
+      "graftable": true,
+      "aspect": 0.7403
+    },
+    {
+      "id": "abraham-van-beijeren-stilleben-mit-fr-chten-und-prunkgef-en-",
+      "title": "File:Abraham van Beyeren - Still life with Fruit and Vessels.jpg",
+      "kind": "still",
+      "name": "Stilleben mit Fr\u00fcchten und Prunkgef\u00e4\u00dfen Still life on a draped table with a sculpture of V",
+      "artist": "Abraham van Beijeren",
+      "year": "1650",
+      "license": "Public domain",
+      "credit": "https://www.pubhist.com/w5715",
+      "source": "https://commons.wikimedia.org/wiki/File%3AAbraham%20van%20Beyeren%20-%20Still%20life%20with%20Fruit%20and%20Vessels.jpg",
+      "file": "abraham-van-beijeren-stilleben-mit-fr-chten-und-prunkgef-en-.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.6919,
+          "y": 0.483,
+          "r": 0.0371
+        },
+        {
+          "x": 0.2581,
+          "y": 0.6667,
+          "r": 0.0306
+        },
+        {
+          "x": 0.8016,
+          "y": 0.4932,
+          "r": 0.0306
+        }
+      ],
+      "blob": {
+        "x": 0.6919,
+        "y": 0.483,
+        "r": 0.0371
+      },
+      "graftable": true,
+      "aspect": 0.9484
+    },
+    {
+      "id": "willem-kalf-still-life-with-a-silver-jug-and-a-porcelain-bow",
+      "title": "File:Willem Kalf 003.jpg",
+      "kind": "still",
+      "name": "Still Life with a Silver Jug and a Porcelain Bowl",
+      "artist": "Willem Kalf",
+      "year": "1656",
+      "license": "Public domain",
+      "credit": "The Yorck Project (2002) 10.000 Meisterwerke der Malerei (DVD-ROM), distributed by DIRECTM",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWillem%20Kalf%20003.jpg",
+      "file": "willem-kalf-still-life-with-a-silver-jug-and-a-porcelain-bow.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.6419,
+          "y": 0.709,
+          "r": 0.0435
+        },
+        {
+          "x": 0.6032,
+          "y": 0.7725,
+          "r": 0.0355
+        },
+        {
+          "x": 0.4903,
+          "y": 0.836,
+          "r": 0.0274
+        }
+      ],
+      "blob": {
+        "x": 0.6419,
+        "y": 0.709,
+        "r": 0.0435
+      },
+      "graftable": true,
+      "aspect": 1.2194
+    },
+    {
+      "id": "willem-kalf-still-life-with-porcelain-and-a-nautilus-cup",
+      "title": "File:Willem Kalf - Still-Life with Porcelain and a Nautilus Cup - WGA12083.jpg",
+      "kind": "still",
+      "name": "Still-Life with Porcelain and a Nautilus Cup",
+      "artist": "Willem Kalf",
+      "year": "1660",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWillem%20Kalf%20-%20Still-Life%20with%20Porcelain%20and%20a%20Nautilus%20Cup%20-%20WGA12083.jpg",
+      "file": "willem-kalf-still-life-with-porcelain-and-a-nautilus-cup.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.6645,
+          "y": 0.5557,
+          "r": 0.0694
+        },
+        {
+          "x": 0.6129,
+          "y": 0.5956,
+          "r": 0.05
+        },
+        {
+          "x": 0.7306,
+          "y": 0.575,
+          "r": 0.05
+        }
+      ],
+      "blob": {
+        "x": 0.6645,
+        "y": 0.5557,
+        "r": 0.0694
+      },
+      "graftable": true,
+      "aspect": 1.1726
+    },
+    {
+      "id": "willem-kalf-stilleben-mit-silberschale-k-ln-still-life-with-",
+      "title": "File:Willem Kalf - Still Life with Silver Bowl, Glasses, and Fruit - WGA12084.jpg",
+      "kind": "still",
+      "name": "Stilleben mit Silberschale K\u00f6ln Still life with fruit, glasses and a silver auricular styl",
+      "artist": "Willem Kalf",
+      "year": "1658",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWillem%20Kalf%20-%20Still%20Life%20with%20Silver%20Bowl%2C%20Glasses%2C%20and%20Fruit%20-%20WGA12084.jpg",
+      "file": "willem-kalf-stilleben-mit-silberschale-k-ln-still-life-with-.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7339,
+          "y": 0.7129,
+          "r": 0.0726
+        },
+        {
+          "x": 0.3355,
+          "y": 0.6566,
+          "r": 0.0371
+        },
+        {
+          "x": 0.4258,
+          "y": 0.5241,
+          "r": 0.0323
+        }
+      ],
+      "blob": {
+        "x": 0.7339,
+        "y": 0.7129,
+        "r": 0.0726
+      },
+      "graftable": true,
+      "aspect": 0.8032
+    },
+    {
+      "id": "willem-kalf-still-life",
+      "title": "File:Willem Kalf - Still-Life - WGA12090.jpg",
+      "kind": "still",
+      "name": "Still life",
+      "artist": "Willem Kalf",
+      "year": "1653",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWillem%20Kalf%20-%20Still-Life%20-%20WGA12090.jpg",
+      "file": "willem-kalf-still-life.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.6871,
+          "y": 0.643,
+          "r": 0.0581
+        },
+        {
+          "x": 0.7758,
+          "y": 0.6403,
+          "r": 0.0565
+        },
+        {
+          "x": 0.6726,
+          "y": 0.8282,
+          "r": 0.0548
+        }
+      ],
+      "blob": {
+        "x": 0.6871,
+        "y": 0.643,
+        "r": 0.0581
+      },
+      "graftable": true,
+      "aspect": 1.2016
+    },
+    {
+      "id": "willem-kalf-still-life-with-shell-cup-glasses-and-a-lemon",
+      "title": "File:Willem Kalf - Still Life with a Nautilus Cup.jpg",
+      "kind": "still",
+      "name": "Still life with shell cup, glasses and a lemon",
+      "artist": "Willem Kalf",
+      "year": "1663",
+      "license": "Public domain",
+      "credit": "https://rkd.nl/explore/images/202494",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWillem%20Kalf%20-%20Still%20Life%20with%20a%20Nautilus%20Cup.jpg",
+      "file": "willem-kalf-still-life-with-shell-cup-glasses-and-a-lemon.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.2355,
+          "y": 0.8071,
+          "r": 0.0371
+        },
+        {
+          "x": 0.6258,
+          "y": 0.6697,
+          "r": 0.0339
+        },
+        {
+          "x": 0.3177,
+          "y": 0.8203,
+          "r": 0.0339
+        }
+      ],
+      "blob": {
+        "x": 0.2355,
+        "y": 0.8071,
+        "r": 0.0371
+      },
+      "graftable": true,
+      "aspect": 1.221
+    },
+    {
+      "id": "willem-kalf-pronkstilleven-pronk-still-life",
+      "title": "File:Willem Kalf - Still Life with Ewers. Plate, Watch and Tazza.jpg",
+      "kind": "still",
+      "name": "Pronkstilleven Pronk still life",
+      "artist": "Willem Kalf",
+      "year": "1643",
+      "license": "Public domain",
+      "credit": "https://rkd.nl/explore/images/202075",
+      "source": "https://commons.wikimedia.org/wiki/File%3AWillem%20Kalf%20-%20Still%20Life%20with%20Ewers.%20Plate%2C%20Watch%20and%20Tazza.jpg",
+      "file": "willem-kalf-pronkstilleven-pronk-still-life.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.6452,
+          "y": 0.642,
+          "r": 0.0468
+        },
+        {
+          "x": 0.6597,
+          "y": 0.5443,
+          "r": 0.0435
+        },
+        {
+          "x": 0.7742,
+          "y": 0.4864,
+          "r": 0.0419
+        }
+      ],
+      "blob": {
+        "x": 0.6452,
+        "y": 0.642,
+        "r": 0.0468
+      },
+      "graftable": true,
+      "aspect": 1.4194
+    },
+    {
+      "id": "pieter-claesz-still-life-with-musical-instruments-on-a-laid-",
+      "title": "File:Claesz., Pieter - Still Life with Musical Instruments - 1623.jpg",
+      "kind": "still",
+      "name": "Still life with musical instruments on a laid table",
+      "artist": "Pieter Claesz",
+      "year": "1623",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AClaesz.%2C%20Pieter%20-%20Still%20Life%20with%20Musical%20Instruments%20-%201623.jpg",
+      "file": "pieter-claesz-still-life-with-musical-instruments-on-a-laid-.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.7581,
+          "y": 0.7302,
+          "r": 0.0742
+        },
+        {
+          "x": 0.6226,
+          "y": 0.7507,
+          "r": 0.0629
+        },
+        {
+          "x": 0.7758,
+          "y": 0.5337,
+          "r": 0.0565
+        }
+      ],
+      "blob": {
+        "x": 0.7581,
+        "y": 0.7302,
+        "r": 0.0742
+      },
+      "graftable": true,
+      "aspect": 0.55
+    },
+    {
+      "id": "pieter-claesz-still-life",
+      "title": "File:Pieter Claesz - Still life - M.Ob.2717 MNW - National Museum in Warsaw.jpg",
+      "kind": "still",
+      "name": "Still life",
+      "artist": "Pieter Claesz",
+      "year": "",
+      "license": "Public domain",
+      "credit": "National Museum in Warsaw",
+      "source": "https://commons.wikimedia.org/wiki/File%3APieter%20Claesz%20-%20Still%20life%20-%20M.Ob.2717%20MNW%20-%20National%20Museum%20in%20Warsaw.jpg",
+      "file": "pieter-claesz-still-life.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.3952,
+          "y": 0.3855,
+          "r": 0.0629
+        },
+        {
+          "x": 0.4677,
+          "y": 0.4242,
+          "r": 0.0613
+        },
+        {
+          "x": 0.2161,
+          "y": 0.4548,
+          "r": 0.0452
+        }
+      ],
+      "blob": {
+        "x": 0.3952,
+        "y": 0.3855,
+        "r": 0.0629
+      },
+      "graftable": true,
+      "aspect": 1.0
+    },
+    {
+      "id": "pieter-claesz-still-life-with-a-self-portrait",
+      "title": "File:Pieter Claesz. - Still Life with a Self-portrait.jpg",
+      "kind": "still",
+      "name": "Still Life with a Self-portrait",
+      "artist": "Pieter Claesz",
+      "year": "1628",
+      "license": "Public domain",
+      "credit": "http://objektkatalog.gnm.de/objekt/Gm1409",
+      "source": "https://commons.wikimedia.org/wiki/File%3APieter%20Claesz.%20-%20Still%20Life%20with%20a%20Self-portrait.jpg",
+      "file": "pieter-claesz-still-life-with-a-self-portrait.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.721,
+          "y": 0.4119,
+          "r": 0.0661
+        },
+        {
+          "x": 0.4823,
+          "y": 0.7236,
+          "r": 0.0435
+        },
+        {
+          "x": 0.4145,
+          "y": 0.5827,
+          "r": 0.0403
+        }
+      ],
+      "blob": {
+        "x": 0.721,
+        "y": 0.4119,
+        "r": 0.0661
+      },
+      "graftable": true,
+      "aspect": 0.5952
+    },
+    {
+      "id": "jan-davidsz-de-heem-fruit-still-life",
+      "title": "File:Jan Davidsz de Heem - Fruit Still Life 035L15033 869GF.jpg",
+      "kind": "still",
+      "name": "Fruit Still Life",
+      "artist": "Jan Davidsz. de Heem",
+      "year": "1650",
+      "license": "Public domain",
+      "credit": "http://www.sothebys.com/en/auctions/ecatalogue/2015/old-master-british-paintings-evening-s",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJan%20Davidsz%20de%20Heem%20-%20Fruit%20Still%20Life%20035L15033%20869GF.jpg",
+      "file": "jan-davidsz-de-heem-fruit-still-life.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.3839,
+          "y": 0.7958,
+          "r": 0.05
+        },
+        {
+          "x": 0.5,
+          "y": 0.5958,
+          "r": 0.0484
+        },
+        {
+          "x": 0.5242,
+          "y": 0.6505,
+          "r": 0.0435
+        }
+      ],
+      "blob": {
+        "x": 0.3839,
+        "y": 0.7958,
+        "r": 0.05
+      },
+      "graftable": true,
+      "aspect": 0.7661
+    },
+    {
+      "id": "jan-davidsz-de-heem-breakfast-still-life",
+      "title": "File:Jan Davidsz. de Heem - Breakfast still life.jpg",
+      "kind": "still",
+      "name": "Breakfast still life",
+      "artist": "Jan Davidsz. de Heem",
+      "year": "1635",
+      "license": "Public domain",
+      "credit": "https://www.khm.at/objektdb/detail/896",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJan%20Davidsz.%20de%20Heem%20-%20Breakfast%20still%20life.jpg",
+      "file": "jan-davidsz-de-heem-breakfast-still-life.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.3355,
+          "y": 0.6654,
+          "r": 0.0516
+        },
+        {
+          "x": 0.7419,
+          "y": 0.4926,
+          "r": 0.05
+        },
+        {
+          "x": 0.6645,
+          "y": 0.5062,
+          "r": 0.0484
+        }
+      ],
+      "blob": {
+        "x": 0.3355,
+        "y": 0.6654,
+        "r": 0.0516
+      },
+      "graftable": true,
+      "aspect": 1.3065
+    },
+    {
+      "id": "jan-davidsz-de-heem-still-life-with-fruit-and-a-self-portrai",
+      "title": "File:Jan Davidsz. de Heem - Still life with fruit and a self-portrait.jpg",
+      "kind": "still",
+      "name": "Still life with fruit and a self-portrait",
+      "artist": "Jan Davidsz. de Heem",
+      "year": "1628",
+      "license": "Public domain",
+      "credit": "https://www.snijdersrockoxhuis.be/gids/zaal-1/stilleven-met-fruit-en-een-zelfportretje",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJan%20Davidsz.%20de%20Heem%20-%20Still%20life%20with%20fruit%20and%20a%20self-portrait.jpg",
+      "file": "jan-davidsz-de-heem-still-life-with-fruit-and-a-self-portrai.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.5081,
+          "y": 0.4622,
+          "r": 0.0452
+        },
+        {
+          "x": 0.4645,
+          "y": 0.5717,
+          "r": 0.0323
+        },
+        {
+          "x": 0.5339,
+          "y": 0.4163,
+          "r": 0.029
+        }
+      ],
+      "blob": {
+        "x": 0.5081,
+        "y": 0.4622,
+        "r": 0.0452
+      },
+      "graftable": true,
+      "aspect": 0.8097
+    },
+    {
+      "id": "jan-davidsz-de-heem-still-life-with-oysters-and-a-boiled-ox-",
+      "title": "File:Jan Davidsz. de Heem - Still life with oysters and a boiled ox tongue.jpg",
+      "kind": "still",
+      "name": "Still life with oysters and a boiled ox tongue",
+      "artist": "Jan Davidsz. de Heem",
+      "year": "1646",
+      "license": "Public domain",
+      "credit": "https://www.snijdersrockoxhuis.be/gids/zaal-9/stilleven-met-oesters-en-een-gekookte-ossent",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJan%20Davidsz.%20de%20Heem%20-%20Still%20life%20with%20oysters%20and%20a%20boiled%20ox%20tongue.jpg",
+      "file": "jan-davidsz-de-heem-still-life-with-oysters-and-a-boiled-ox-.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.5968,
+          "y": 0.5315,
+          "r": 0.0452
+        },
+        {
+          "x": 0.6468,
+          "y": 0.5551,
+          "r": 0.0419
+        },
+        {
+          "x": 0.5048,
+          "y": 0.6811,
+          "r": 0.0419
+        }
+      ],
+      "blob": {
+        "x": 0.5968,
+        "y": 0.5315,
+        "r": 0.0452
+      },
+      "graftable": true,
+      "aspect": 0.8194
+    },
+    {
+      "id": "jan-davidsz-de-heem-still-life-in-a-landscape-jan-davidsz-de",
+      "title": "File:Still life in a Landscape Jan Davidsz. De Heem Israel Museum.jpg",
+      "kind": "still",
+      "name": "Still life in a Landscape Jan Davidsz. De Heem Israel Museum",
+      "artist": "Jan Davidsz. de Heem",
+      "year": "1685",
+      "license": "Public domain",
+      "credit": "Own work",
+      "source": "https://commons.wikimedia.org/wiki/File%3AStill%20life%20in%20a%20Landscape%20Jan%20Davidsz.%20De%20Heem%20Israel%20Museum.jpg",
+      "file": "jan-davidsz-de-heem-still-life-in-a-landscape-jan-davidsz-de.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.6516,
+          "y": 0.6041,
+          "r": 0.0452
+        },
+        {
+          "x": 0.5403,
+          "y": 0.6103,
+          "r": 0.0387
+        },
+        {
+          "x": 0.7935,
+          "y": 0.6928,
+          "r": 0.0387
+        }
+      ],
+      "blob": {
+        "x": 0.6516,
+        "y": 0.6041,
+        "r": 0.0452
+      },
+      "graftable": true,
+      "aspect": 0.7823
+    },
+    {
+      "id": "jean-baptiste-sim-on-chardin-still-life-with-cat-and-rayfish",
+      "title": "File:Jean Sim\u00e9on Chardin - Still-Life with Cat and Rayfish - WGA04740.jpg",
+      "kind": "still",
+      "name": "Still-Life with Cat and Rayfish",
+      "artist": "Jean-Baptiste-Sim\u00e9on Chardin",
+      "year": "1728",
+      "license": "Public domain",
+      "credit": "Web Gallery of Art : Image Info about artwork wga",
+      "source": "https://commons.wikimedia.org/wiki/File%3AJean%20Sim%C3%A9on%20Chardin%20-%20Still-Life%20with%20Cat%20and%20Rayfish%20-%20WGA04740.jpg",
+      "file": "jean-baptiste-sim-on-chardin-still-life-with-cat-and-rayfish.jpg",
+      "hasFace": false,
+      "blobs": [
+        {
+          "x": 0.3565,
+          "y": 0.8067,
+          "r": 0.079
+        },
+        {
+          "x": 0.2742,
+          "y": 0.4264,
+          "r": 0.0774
+        },
+        {
+          "x": 0.5468,
+          "y": 0.7631,
+          "r": 0.0742
+        }
+      ],
+      "blob": {
+        "x": 0.3565,
+        "y": 0.8067,
+        "r": 0.079
+      },
+      "graftable": true,
+      "aspect": 1.2597
+    }
+  ],
+  "curated": "2026-09-22T17:03:04.322381Z"
+}
