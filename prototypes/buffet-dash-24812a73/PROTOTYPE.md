@@ -2,12 +2,13 @@
 
 A Canvas buffet game with a 100-second round. Fully eat portions at the home table to bank points. Bronze: 200; silver: 320; gold: 450. Timeout ends every run regardless of target.
 
-## Controls
-- Start begins the clock. Restart immediately starts a fresh run.
-- WASD / arrows move. Click or tap the room to walk to a destination.
-- Near a station, Q / Serve selects its portion. Click a plate cell to place its top-left corner, or Auto-place for the first available fit. Rotate swaps width and height.
-- Cancel / Escape abandons selection, serving, or eating. Moving cancels an unfinished serve without adding food.
-- E / Eat at home consumes portions in pickup order. Movement stops eating. Partial eating progress is retained; press Eat at home to resume.
+## Controls (keyboard, plus touch inside the plate popup)
+- Enter starts a round (also "play again" after time-out). Backspace restarts at any time. H toggles Help (Esc also closes it).
+- WASD / arrows move.
+- Next to a counter, standing still for 1 second, or pressing E, fills a ring around the player; when full the plate popup opens (also when the plate is full: no room check). Movement is locked while it is open. Drag the food (touch or mouse) or use WASD / arrows to move it; tap the food or press E to place. R rotates, F auto-places, Esc cancels. After a cancel or a completed serve the ring only restarts after moving or pressing E.
+- E, or tapping the round on-screen EAT button, eats portions in pickup order at home. Moving pauses eating; partial bites resume.
+- After placing, the plate popup stays open while the portion is served; the portion fills and a progress bar runs on the popup. Movement is locked until it is packed; Esc cancels (nothing is added).
+- Pointer input exists only inside the plate popup (drag / tap the food) and on the on-screen EAT button. No other buttons and no tap-to-walk.
 
 ## Implemented mechanics
 The visible 4×3 plate checks exact clicked cells for bounds and overlaps. Dashed outlines show suggested placement or pointer fit feedback. Invalid placements lose no food; the round clock continues. Serving reserves cells and adds food only after completion. Completed eating credits points and frees cells. Unfinished portions never score. Restart clears inventory, progress, destination, held keys, score, and timers.
@@ -57,3 +58,45 @@ Other changes in this pass:
 - `ui()` now only writes DOM text and plate-cell attributes when their values change, instead of on every frame.
 
 Verified 2026-10-22: strict TypeScript / production build passed. Headless Chromium at 1280x720 and 568x320 covered start, keyboard and tap movement, Q serve, auto-place, return home, eat to bank points and restart, with no page errors. Visual quality, readability and balance remain playtest questions.
+
+## Hall layout, walls, pathing and placement popup (2026-10-22)
+
+- World is now a 1440x880 hall viewed through the same 900x520 canvas; the camera follows the player and clamps at the edges. A minimap (top right) shows walls, stations, table, player and the current view; tapping it walks there.
+- Layout (`src/world.ts`): bakery wing on the left (Golden rolls, open to the south), Green skewers top centre, Sushi bar room top right (entered from the carvery through a doorway on its south-east side), carvery wing bottom right (Royal roast, door at y 580-700), Berry bites bottom left, home table in the central dining area with two pillars.
+- Walls, counters, the table and its chairs are solid. Keyboard movement slides along obstacles (axis-separated collision, player radius 12). Tap-to-walk uses 8-way grid A* (20-unit cells, no corner cutting) with line-of-sight smoothing; taps on obstacles walk to the nearest reachable point. This replaces the earlier "furniture is decorative and traversable" assumption.
+- Placement is a canvas popup instead of the side-panel-only grid. While it is open the player cannot move; movement keys move the cursor and E / Place confirms. The side-panel plate stays as a live view and its cells also move the cursor.
+- Balance: travel distances are roughly 1.5-2x longer than the previous room (for example home to Sushi now runs through two doorways). Movement speed, ranges, food values and medal goals are unchanged, so medal targets likely need retuning after playtesting.
+
+Verified 2026-10-22: strict TypeScript / production build passed. Headless Chromium at 1280x720 and 568x320 pathed (via minimap taps) to all five stations and home, opened the popup at each, confirmed movement keys do not move the player while it is open, placed with E or Auto-place, and banked 76 and 56 points across two rounds with no page errors.
+
+## Keyboard-only HUD pass (2026-10-22)
+
+- Side panel removed. The plate (value, free cells, 4x3 grid, serving reservation, activity text and progress bar) is drawn on the canvas directly under the minimap. The camera keeps the player in the area left of that column, so the HUD never covers them.
+- All pointer input removed (canvas/minimap taps, popup cell taps, Start/Help/Restart/Serve/Eat/Rotate/Auto-place/Cancel buttons). Every action has a hotkey (see Controls). Pathfinding is still used for 1–5 and Space auto-walk.
+- Key indicators: keycaps on each counter's nameplate (1–5) and on the home table (Space); station numbers on the minimap; a contextual prompt above the player ("Q Serve" at a counter, "E Eat" at home with food); key rows in the plate popup and the start/end dialogue; kbd chips in the header (H, Backspace) and a key legend under the map. On short screens the legend shrinks and the contextual text line under the map is hidden.
+- Touch-only devices can no longer play. This supersedes the touch requirements in "Landscape and touch shell (2026-10-19)" above; the landscape fitting and Help/portrait pause still apply.
+
+Verified 2026-10-22: strict TypeScript / production build passed. Headless Chromium at 1280x720 and 568x320: no buttons or clickable elements in the DOM; a canvas click does not start the round; Enter starts; H opens and closes Help; 5 and 4 auto-walk to Royal roast and Sushi pair; Q opens the popup; movement keys move only the cursor; F auto-places; Space walks home; E eats and banks 76; Backspace restarts; 3 then Q, E places from the popup. No page errors.
+
+## Dwell-to-serve ring and popup touch (2026-10-22)
+
+- Standing still within serving range of a station with room on the plate fills a 1-second ring (in the station's colour) around the player; when full, the plate popup opens. Q still opens it instantly. Any movement resets the ring. Cancelling or finishing a serve locks the ring until the player moves, so it does not reopen in a loop. If the default orientation has no fit but the rotated one does, the popup opens rotated.
+- Inside the popup, pointer/touch is back: drag the food to move it (it keeps the grab offset), tap an empty cell to move it there, tap the food without dragging to place it. Keyboard controls are unchanged.
+
+## On-screen EAT button (2026-10-22)
+
+- A round EAT button (fork + plate glyph, "E" keycap) sits at the bottom-right of the play area, left of the minimap/plate column, at least ~64 CSS px across. It is dimmed unless the player is at home with food and not serving; it pulses when tapping will start eating, and shows percentage plus a progress ring while eating. Tap or click it to eat; it is hidden while the plate popup is open.
+
+## Serving inside the popup (2026-10-22)
+
+- Placing no longer closes the plate popup. The popup switches to a serving view: title with time left, the placed portion filling bottom-up in its colour, a progress bar under the grid, and an Esc Cancel key row. It closes when the portion is packed. Movement, auto-walk, pointer input and the EAT button are disabled while serving, so "moving cancels serving" no longer applies; Esc is the only cancel.
+
+## Auto-walk removed for the player (2026-10-22)
+
+- The 1–5 (walk to station) and Space (walk home) hotkeys, the path-following in the movement loop, the destination marker, and the 1–5 / Space keycaps and minimap numbers are removed. The player moves only with WASD / arrows.
+- The A* system is kept in `src/world.ts` (`setObstacles` builds the walkable grid; `findPath(from, goal)` returns smoothed waypoints) for future use such as NPCs; nothing in `main.ts` calls `findPath` now. Earlier sections that mention tap-to-walk, minimap taps or 1–5 / Space auto-walk describe superseded behaviour.
+
+## E replaces Q for serving (2026-10-22)
+
+- Q is removed. E is context-sensitive: at a counter it starts the 1-second ring (even right after a cancel or serve), in the popup it places, at home it eats. The contextual prompt now reads "E Serve" at counters.
+- The ring and E no longer check for room on the plate before opening the popup; if nothing fits, the popup shows the red ✕ cursor and Esc closes it.

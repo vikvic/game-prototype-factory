@@ -7,8 +7,8 @@ export function mountShell(aspect: number, clearInput: () => void) {
  const paused=()=>dialog.open||portrait.matches;
  function fit(){const w=Math.min(arena.clientWidth,arena.clientHeight*aspect);canvas.style.width=`${w}px`;canvas.style.height=`${w/aspect}px`;}
  new ResizeObserver(fit).observe(arena);fit();
- document.querySelector('#help')!.addEventListener('click',()=>{clearInput();dialog.showModal();});
- document.querySelector('#help-close')!.addEventListener('click',()=>dialog.close());
+ // H toggles Help (keyboard only); Esc also closes it natively.
+ window.addEventListener('keydown',e=>{if(e.key.toLowerCase()!=='h'||e.repeat)return;e.preventDefault();if(dialog.open)dialog.close();else{clearInput();dialog.showModal();}});
  dialog.addEventListener('close',()=>{clearInput();canvas.focus({preventScroll:true});});
  portrait.addEventListener('change',clearInput);
  return paused;
