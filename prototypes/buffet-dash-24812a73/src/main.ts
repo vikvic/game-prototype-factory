@@ -3,8 +3,17 @@ import { mountShell } from './shell';
 import { drawRoom, drawWall, drawRange, drawStation, drawTable, drawPlayer, drawKeyPrompt, drawDialog, drawMinimap, minimapRect, plateLayout, drawPlatePopup, drawPlateHud, drawRing, eatButton, drawEatButton, drawJoystick, text, type Facing } from './art';
 import { WORLD, VIEW, walls, signs, counterRect, tableRects, setObstacles, move } from './world'; // world.ts also exports findPath (A*), kept for future use
 type Point = {x:number;y:number};
-type Food = Point & {name:string;color:string;w:number;h:number;value:number;serve:number;eat:number;role:string};
-type Portion = {food:Food;x:number;y:number;w:number;h:number;eaten:number;bonus:boolean};
+type Cells = [number,number][];
+// cells (optional): footprint cells inside the w×h box for non-rectangular food; omitted = full rectangle.
+type Food = Point & {name:string;color:string;w:number;h:number;cells?:Cells;value:number;serve:number;eat:number;role:string};
+type Portion = {food:Food;x:number;y:number;w:number;h:number;cells:Cells;eaten:number;bonus:boolean};
+type Shape = {w:number;h:number;cells:Cells};
+const rectCells=(w:number,h:number):Cells=>Array.from({length:w*h},(_,i)=>[i%w,Math.floor(i/w)] as [number,number]);
+const turn=(s:Shape):Shape=>({w:s.h,h:s.w,cells:s.cells.map(([x,y])=>[s.h-1-y,x] as [number,number])}); // 90° clockwise
+const key=(s:Shape)=>s.cells.map(c=>c.join(',')).sort().join(' ');
+// Distinct orientations of a food: 1 (square), 2 (rectangle), 4 (L).
+function orientations(f:Food):Shape[]{const out:Shape[]=[];let s:Shape={w:f.w,h:f.h,cells:f.cells??rectCells(f.w,f.h)};for(let i=0;i<4;i++){if(!out.some(o=>key(o)===key(s)))out.push(s);s=turn(s);}return out;}
+const sizeLabel=(f:Food)=>f.cells?`${f.cells.length}-cell L`:`${f.w}×${f.h}`;
 // Full-plate bonus: when all 12 cells are filled, every portion on the plate scores ×FULL_BONUS (rounded per portion).
 // 1.25 ≈ break-even+: an average full plate is ~123 pts (84–168 over all packings); topping up the last cell with a
 // berry detour costs ~7 s ≈ 31 pts at Gold pace (4.5 pts/s) minus the berry's 7 → ~25 net, and 0.25×123 ≈ +31.
@@ -15,7 +24,9 @@ const foods:Food[] = [
  {name:'Berry bites',color:'#ef8293',x:260,y:690,w:1,h:1,value:7,serve:0.35,eat:1/3,role:'Nearby · gap filler'},
  {name:'Golden rolls',color:'#eec46b',x:240,y:190,w:2,h:1,value:19,serve:0.7,eat:2/3,role:'Quick staple'},
  {name:'Green skewers',color:'#a1c777',x:720,y:180,w:1,h:3,value:30,serve:0.9,eat:2.8/3,role:'Long & lean'},
- {name:'Sushi pair',color:'#7acac4',x:1200,y:150,w:2,h:1,value:28,serve:0.85,eat:2.3/3,role:'Far · efficient'},
+ // Chicken leg (thigh + drumstick) replaces Sushi pair: a 3-cell L in a 2×2 box at sushi's 14 pts/cell = 42;
+ // serve/eat scaled per cell from sushi (×3/2).
+ {name:'Chicken leg',color:'#e58a5a',x:1200,y:150,w:2,h:2,cells:[[0,0],[0,1],[1,1]],value:42,serve:0.85*3/2,eat:2.3/3*3/2,role:'Far · thigh & drumstick L'},
  {name:'Royal roast',color:'#c89bda',x:1220,y:720,w:2,h:2,value:48,serve:1.75,eat:5.2/3,role:'Premium · bulky'}
 ];
 const table:Point={x:720,y:650},spawn:Point={x:table.x,y:table.y-58}; // spawn just behind the table, inside home range
@@ -26,19 +37,21 @@ const keys=new Set<string>(),moves=['w','a','s','d','arrowup','arrowdown','arrow
 const steps:Record<string,[number,number]>={w:[0,-1],arrowup:[0,-1],s:[0,1],arrowdown:[0,1],a:[-1,0],arrowleft:[-1,0],d:[1,0],arrowright:[1,0]};
 let player={...spawn},state:'ready'|'playing'|'ended'='ready';
 let remaining=100,score=0,last=performance.now(),plate:Portion[]=[];
-let selected:Food|null=null,rotated=false,cursor=0,eating=false;
+let selected:Food|null=null,rot=0,cursor=0,eating=false;
 // Stand still next to a station for DWELL seconds to open the plate popup. Locked after cancel/serve until the player moves.
 const DWELL=1;let dwell=0,dwellLock=false;
 let drag:{dx:number;dy:number;moved:boolean;onFood:boolean}|null=null;
 // Touch mode: on for coarse pointers or after any touch; a keyboard key switches back. Desktop stays keyboard-only.
-let touchMode=false,joy:{id:number;ox:number;oy:number;x:number;y:number}|null=null;
+let touchMode=false,joy:{id:number;ox:number;oy:number;x:number;y:number;sx:number;sy:number;on:boolean}|null=null;
+// Joystick: start moving above JOY_ON of the radius, stop only below JOY_OFF (hysteresis), input lightly smoothed.
+const JOY_ON=0.25,JOY_OFF=0.12,JOY_SMOOTH=0.04;
 function setTouch(on:boolean){if(touchMode===on)return;touchMode=on;document.documentElement.classList.toggle('touch',on);joy=null;}
 setTouch(matchMedia('(pointer: coarse)').matches);
 document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||e.pointerType==='pen')setTouch(true);},{capture:true});
 let serving:{portion:Portion;elapsed:number}|null=null;
 let facing:Facing='down',walk=0,moving=false;
 let message='Press Enter to start. Collect → fit → return home → eat to score.';
-const paused=mountShell(VIEW.w/VIEW.h,()=>{keys.clear();last=performance.now();});
+const paused=mountShell(VIEW.w/VIEW.h,()=>{keys.clear();joy=null;last=performance.now();},()=>draw(performance.now()));
 const secs=(n:number)=>`${+n.toFixed(2)}s`; // eat times are thirds, show 2 decimals
 const dist=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
 const near=()=>foods.find(f=>dist(player,f)<102);
@@ -49,25 +62,33 @@ const medal=()=>score>=450?'GOLD':score>=320?'SILVER':score>=200?'BRONZE':'NO ME
 const txt=(id:string,v:string)=>{const e=$(id);if(e.textContent!==v)e.textContent=v;};
 const view=()=>({scale:canvas.clientWidth/VIEW.w,compact:canvas.clientWidth<600});
 // Camera keeps the player centred in the area left of the minimap/plate column, so the HUD never covers them.
-const camera=()=>{const {compact,scale}=view(),avail=VIEW.w-minimapRect(compact,scale,WORLD).w-20;
+// Usable width left of the HUD column. It depends on canvas scale, so a resize (mobile browser bar) changes it;
+// easing it avoids a one-frame camera jump. Player movement is still followed directly.
+let availS=-1;
+const availTarget=()=>{const {compact,scale}=view();return VIEW.w-minimapRect(compact,scale,WORLD).w-20;};
+function easeAvail(dt:number){const t=availTarget();availS=availS<0?t:availS+(t-availS)*Math.min(1,dt*10);}
+const camera=()=>{if(availS<0)easeAvail(0);const avail=availS;
  return {x:Math.max(0,Math.min(WORLD.w-avail,player.x-avail/2)),y:Math.max(0,Math.min(WORLD.h-VIEW.h,player.y-VIEW.h/2)),w:VIEW.w,h:VIEW.h};};
-const dimensions=()=>selected?{w:rotated?selected.h:selected.w,h:rotated?selected.w:selected.h}:{w:1,h:1};
-function fits(x:number,y:number,w:number,h:number){return x>=0&&y>=0&&x+w<=4&&y+h<=3&&!plate.some(p=>x<p.x+p.w&&x+w>p.x&&y<p.y+p.h&&y+h>p.y);}
-function suggestion(){const {w,h}=dimensions();for(let i=0;i<12;i++)if(fits(i%4,Math.floor(i/4),w,h))return i;return -1;}
+const dimensions=():Shape=>selected?orientations(selected)[rot%orientations(selected).length]:{w:1,h:1,cells:[[0,0]]};
+const used=()=>plate.reduce((n,p)=>n+p.cells.length,0);
+// A shape fits when every one of its cells is on the 4×3 plate and not already occupied.
+function fits(x:number,y:number,sh:Shape){const occ=new Set(plate.flatMap(p=>p.cells.map(([a,b])=>(p.y+b)*4+p.x+a)));
+ return sh.cells.every(([a,b])=>x+a>=0&&y+b>=0&&x+a<4&&y+b<3&&!occ.has((y+b)*4+x+a));}
+function suggestion(){const sh=dimensions();for(let i=0;i<12;i++)if(fits(i%4,Math.floor(i/4),sh))return i;return -1;}
 // Keep the cursor's footprint inside the 4x3 plate.
 function clampCursor(i:number){const {w,h}=dimensions();return Math.min(Math.floor(i/4),3-h)*4+Math.min(i%4,4-w);}
-function reset(start=false){state=start?'playing':'ready';remaining=100;score=0;player={...spawn};plate=[];selected=null;serving=null;eating=false;rotated=false;cursor=0;dwell=0;dwellLock=false;drag=null;keys.clear();facing='down';walk=0;moving=false;last=performance.now();message=start?'Walk to a station with WASD / arrows, then stand still or press E to serve.':'Press Enter to start. Collect → fit → return home → eat to score.';ui();}
+function reset(start=false){state=start?'playing':'ready';remaining=100;score=0;player={...spawn};plate=[];selected=null;serving=null;eating=false;rot=0;cursor=0;dwell=0;dwellLock=false;drag=null;keys.clear();facing='down';walk=0;moving=false;last=performance.now();message=start?'Walk to a station with WASD / arrows, then stand still or press E to serve.':'Press Enter to start. Collect → fit → return home → eat to score.';ui();}
 function cancel(){if(selected||serving){dwellLock=true;dwell=0;}selected=null;serving=null;eating=false;drag=null;message='Canceled. Food already on your plate is kept.';ui();}
 // Opening the placement popup locks movement until the food is placed or canceled.
-function choose(){const food=near();if(state!=='playing'||!food||serving)return;selected=food;rotated=false;eating=false;keys.clear();moving=false;dwell=0;let s=suggestion();if(s<0&&food.w!==food.h){rotated=true;s=suggestion();if(s<0)rotated=false;}cursor=clampCursor(s<0?0:s);message=`Place ${food.name}: drag the food or use WASD / arrows; tap it or press E to place. R rotates, F auto-places, Esc cancels.`;ui();}
-function rotate(){if(!selected||selected.w===selected.h)return;rotated=!rotated;cursor=clampCursor(cursor);ui();}
+function choose(){const food=near();if(state!=='playing'||!food||serving)return;selected=food;rot=0;eating=false;keys.clear();moving=false;dwell=0;let s=suggestion();for(let r=1;s<0&&r<orientations(food).length;r++){rot=r;s=suggestion();}if(s<0)rot=0;cursor=clampCursor(s<0?0:s);message=`Place ${food.name}: drag the food or use WASD / arrows; tap it or press E to place. R rotates, F auto-places, Esc cancels.`;ui();}
+function rotate(){if(!selected||orientations(selected).length<2)return;rot=(rot+1)%orientations(selected).length;cursor=clampCursor(cursor);ui();}
 function moveCursor(dx:number,dy:number){if(!selected)return;const {w,h}=dimensions();const x=Math.max(0,Math.min(4-w,cursor%4+dx)),y=Math.max(0,Math.min(3-h,Math.floor(cursor/4)+dy));cursor=y*4+x;ui();}
 function place(i:number){
  if(state!=='playing'||!selected||serving)return;
  if(dist(player,selected)>=102){message='Return to this station to serve.';ui();return;}
- const {w,h}=dimensions(),x=i%4,y=Math.floor(i/4);
- if(i<0||!fits(x,y,w,h)){message='Does not fit. Move the cursor, R to rotate, F to auto-place, or Esc. Nothing lost.';ui();return;}
- serving={portion:{food:selected,x,y,w,h,eaten:0,bonus:false},elapsed:0};selected=null;drag=null;message='Serving… hold on, the plate closes when it is ready. Esc cancels.';ui();
+ const sh=dimensions(),{w,h}=sh,x=i%4,y=Math.floor(i/4);
+ if(i<0||!fits(x,y,sh)){message='Does not fit. Move the cursor, R to rotate, F to auto-place, or Esc. Nothing lost.';ui();return;}
+ serving={portion:{food:selected,x,y,w,h,cells:sh.cells,eaten:0,bonus:false},elapsed:0};selected=null;drag=null;message='Serving… hold on, the plate closes when it is ready. Esc cancels.';ui();
 }
 function eat(){if(state!=='playing'||!home()||!plate.length||serving)return;selected=null;eating=true;message='Eating in pickup order. Each finished portion banks points.';ui();}
 // E / the Eat button doubles as Place while the popup is open.
@@ -90,14 +111,14 @@ canvas.onpointerdown=e=>{
  if(serving)return;
  if(selected){ // popup: drag the food (or tap a cell) to move it, tap the food to place it
   const c=cellAt(e);if(!c)return;e.preventDefault();canvas.setPointerCapture(e.pointerId);
-  const {w,h}=dimensions(),cx=cursor%4,cy=Math.floor(cursor/4),onFood=c.x>=cx&&c.x<cx+w&&c.y>=cy&&c.y<cy+h;
+  const cx=cursor%4,cy=Math.floor(cursor/4),onFood=dimensions().cells.some(([a,b])=>c.x===cx+a&&c.y===cy+b);
   if(onFood)drag={dx:c.x-cx,dy:c.y-cy,moved:false,onFood:true};else{drag={dx:0,dy:0,moved:true,onFood:false};cursor=clampCursor(c.y*4+c.x);ui();}
   return;
  }
  // Canvas action button (desktop / keyboard mode; touch mode uses the #t-action button on the right).
  const b=eatBtn();if(!touchMode&&Math.hypot(p.x-b.cx,p.y-b.cy)<=b.r*1.15){e.preventDefault();near()?startRing():eat();return;}
  // Floating joystick: touch anywhere on the map left of the HUD column.
- if(isTouch&&!joy&&p.x<playRight()){e.preventDefault();canvas.setPointerCapture(e.pointerId);joy={id:e.pointerId,ox:p.x,oy:p.y,x:p.x,y:p.y};}
+ if(isTouch&&!joy&&p.x<playRight()){e.preventDefault();canvas.setPointerCapture(e.pointerId);joy={id:e.pointerId,ox:p.x,oy:p.y,x:p.x,y:p.y,sx:0,sy:0,on:false};}
 };
 canvas.onpointermove=e=>{
  if(joy&&e.pointerId===joy.id){const p=screenPt(e);joy.x=p.x;joy.y=p.y;return;}
@@ -147,13 +168,13 @@ function ui(){
  txt('time',`${Math.ceil(remaining)}s`);txt('score',`${score}`);
  txt('status',message);
  if(canvas.dataset.phase!==state)canvas.dataset.phase=state;
- const f=near(),{w,h}=dimensions();
+ const f=near(),sh=dimensions(),{w,h}=sh;
  const tb=(id:string,show:boolean,dis=false)=>{const b=$<HTMLButtonElement>(id);if(b.hidden===show)b.hidden=!show;if(b.disabled!==dis)b.disabled=dis;};
  tb('t-start',state!=='playing');txt('t-start',state==='ended'?'Play again':'Start');
  {const nf=near(),show=state==='playing'&&!selected&&!serving;tb('t-action',show,!(nf||canEat()));
   txt('t-action',nf?'Serve':eating&&plate[0]?`Eating ${Math.round(plate[0].eaten/plate[0].food.eat*100)}%`:'Eat');}
- tb('t-place',!!selected,!(!!selected&&fits(cursor%4,Math.floor(cursor/4),w,h)));tb('t-rotate',!!selected,!selected||selected.w===selected.h);tb('t-auto',!!selected);tb('t-cancel',!!selected||!!serving);
- txt('prompt',state==='ready'?'Your table is home. Press Enter to start.':state==='ended'?`${medal()} · ${score} banked · ${value()} uneaten · Enter to play again`:selected?`Placing ${selected.name} · ${w}×${h}`:f?`${f.name} · ${f.value} pts · ${f.w}×${f.h} · E to serve`:home()?'Home table · E to eat':touchMode?'Drag on the map to walk to a counter or back to your table':'Walk with WASD / arrows to a station or back to your table');
+ tb('t-place',!!selected,!(!!selected&&fits(cursor%4,Math.floor(cursor/4),sh)));tb('t-rotate',!!selected,!selected||orientations(selected).length<2);tb('t-auto',!!selected);tb('t-cancel',!!selected||!!serving);
+ txt('prompt',state==='ready'?'Your table is home. Press Enter to start.':state==='ended'?`${medal()} · ${score} banked · ${value()} uneaten · Enter to play again`:selected?`Placing ${selected.name} · ${selected.cells?sizeLabel(selected):`${w}×${h}`}`:f?`${f.name} · ${f.value} pts · ${sizeLabel(f)} · E to serve`:home()?'Home table · E to eat':touchMode?'Drag on the map to walk to a counter or back to your table':'Walk with WASD / arrows to a station or back to your table');
 }
 // Which key to press right now, shown above the player.
 function keyHint():[string,string][]|null{
@@ -173,7 +194,7 @@ function draw(now:number){
  const items:{y:number;draw:()=>void}[]=walls.map(w=>({y:w.y+w.h,draw:()=>drawWall(ctx,w,compact,signs)}));
  for(const f of foods)items.push({y:f.y-10,draw:()=>{
   drawStation(ctx,f,compact,scale);
-  if(!compact){text(ctx,`${f.value} pts · ${f.w}×${f.h} · serve ${secs(f.serve)}`,f.x,f.y+56,12,'#4b5a52',600);text(ctx,`eat ${secs(f.eat)} · ${f.role}`,f.x,f.y+72,12,'#4b5a52',600);}
+  if(!compact){text(ctx,`${f.value} pts · ${sizeLabel(f)} · serve ${secs(f.serve)}`,f.x,f.y+56,12,'#4b5a52',600);text(ctx,`eat ${secs(f.eat)} · ${f.role}`,f.x,f.y+72,12,'#4b5a52',600);}
  }});
  items.push({y:table.y-10,draw:()=>{drawTable(ctx,table,compact,scale);if(!compact)text(ctx,'E / Eat to score',table.x,table.y+56,12,'#2f5d50',700);}});
  items.push({y:player.y+18,draw:()=>{
@@ -190,37 +211,44 @@ function draw(now:number){
  drawMinimap(ctx,m,WORLD,walls,foods.map(f=>({...counterRect(f),color:f.color})),tableRects(table)[0],player,cam);
  // Plate HUD sits directly under the minimap.
  const q=serving?.portion,progress=serving?serving.elapsed/serving.portion.food.serve:eating&&plate[0]?plate[0].eaten/plate[0].food.eat:0;
- drawPlateHud(ctx,{x:m.x,y:m.y+m.h+8,w:m.w},compact?10/scale:12,`${compact?'':'Plate '}${value()} pts · ${plate.some(p=>p.bonus)?`★×${FULL_BONUS}`:`${12-plate.reduce((n,p)=>n+p.w*p.h,0)}/12${compact?'':' free'}`}`,
-  plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${pts(p)}`})),q?{x:q.x,y:q.y,w:q.w,h:q.h}:null,
+ drawPlateHud(ctx,{x:m.x,y:m.y+m.h+8,w:m.w},compact?10/scale:12,`${compact?'':'Plate '}${value()} pts · ${plate.some(p=>p.bonus)?`★×${FULL_BONUS}`:`${12-used()}/12${compact?'':' free'}`}`,
+  plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,cells:p.cells,color:p.food.color,label:`${pts(p)}`,name:p.food.name})),q?{x:q.x,y:q.y,w:q.w,h:q.h,cells:q.cells}:null,
   serving?`Serving · ${Math.max(0,serving.portion.food.serve-serving.elapsed).toFixed(1)}s`:eating&&plate[0]?`Eating · ${Math.round(progress*100)}%`:plate.length?(home()?(touchMode?'Tap EAT':'Tap EAT or press E'):'Go home to eat'):'Empty plate',progress);
- const blocks=plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${pts(p)}`}));
+ const blocks=plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,cells:p.cells,color:p.food.color,label:`${pts(p)}`,name:p.food.name}));
  if(selected&&state==='playing'){
-  const {w,h}=dimensions(),x=cursor%4,y=Math.floor(cursor/4);
-  drawPlatePopup(ctx,plateLayout(compact,scale),`Place ${selected.name} · ${w}×${h} · ${selected.value} pts`,'Drag the food to move it · tap it to place',blocks,
-   {x,y,w,h,color:selected.color,label:`${selected.value}`,ok:fits(x,y,w,h)},
+  const sh=dimensions(),{w,h}=sh,x=cursor%4,y=Math.floor(cursor/4);
+  drawPlatePopup(ctx,plateLayout(compact,scale),`Place ${selected.name} · ${selected.cells?sizeLabel(selected):`${w}×${h}`} · ${selected.value} pts`,'Drag the food to move it · tap it to place',blocks,
+   {x,y,w,h,cells:sh.cells,color:selected.color,label:`${selected.value}`,name:selected.name,ok:fits(x,y,sh)},
    touchMode?[['','Buttons on the right: Place · Rotate · Auto · Cancel']]:[['WASD','Move'],['E','Place'],['R','Rotate'],['F','Auto'],['Esc','Cancel']],null,now);
  }else if(serving&&state==='playing'){ // popup stays up while serving, with the progress bar on it
   const q=serving.portion,left=Math.max(0,q.food.serve-serving.elapsed);
   drawPlatePopup(ctx,plateLayout(compact,scale),`Serving ${q.food.name} · ${left.toFixed(1)}s`,'Hold on, plating up…',blocks,
-   {x:q.x,y:q.y,w:q.w,h:q.h,color:q.food.color,label:`${q.food.value}`,ok:true},touchMode?[['','Cancel button on the right']]:[['Esc','Cancel']],serving.elapsed/q.food.serve,now);
+   {x:q.x,y:q.y,w:q.w,h:q.h,cells:q.cells,color:q.food.color,label:`${q.food.value}`,name:q.food.name,ok:true},touchMode?[['','Cancel button on the right']]:[['Esc','Cancel']],serving.elapsed/q.food.serve,now);
  }
  if(state!=='playing')drawDialog(ctx,state==='ready'?'100 seconds. One hungry diner.':`${medal()} · ${score} points banked`,state==='ready'?'Collect → fit → return home → eat to score.':`${value()} points left uneaten. Try another route.`,touchMode?[['',state==='ready'?'Tap to start':'Tap to play again']]:state==='ready'?[['Enter','Start'],['H','Help']]:[['Enter','Play again'],['H','Help']],now);
 }
 function frame(now:number){
- const elapsed=Math.max(0,(now-last)/1000);last=now;
+ const elapsed=Math.max(0,(now-last)/1000);last=now;easeAvail(elapsed);
  if(state==='playing'&&!paused()){
   const dt=Math.min(elapsed,remaining),moveDt=Math.min(dt,0.05);remaining=Math.max(0,remaining-dt);
   let dx=Number(keys.has('d')||keys.has('arrowright'))-Number(keys.has('a')||keys.has('arrowleft')),dy=Number(keys.has('s')||keys.has('arrowdown'))-Number(keys.has('w')||keys.has('arrowup'));
-  if(!dx&&!dy&&joy){const R=joyR(),vx=joy.x-joy.ox,vy=joy.y-joy.oy,l=Math.hypot(vx,vy);if(l>R*0.2){const m=Math.min(1,l/R);dx=vx/l*m;dy=vy/l*m;}}
+  if(joy){ // smooth the raw finger offset, then apply on/off hysteresis so a resting thumb can't toggle movement
+   const R=joyR(),k=1-Math.exp(-elapsed/JOY_SMOOTH);joy.sx+=(joy.x-joy.ox-joy.sx)*k;joy.sy+=(joy.y-joy.oy-joy.sy)*k;
+   const l=Math.hypot(joy.sx,joy.sy);joy.on=joy.on?l>R*JOY_OFF:l>R*JOY_ON;
+   if(!dx&&!dy&&joy.on&&l>0){const m=Math.min(1,l/R);dx=joy.sx/l*m;dy=joy.sy/l*m;}
+  }
   if(selected||serving){dx=0;dy=0;} // plate popup open (placing or serving): no walking
   const length=Math.hypot(dx,dy);moving=length>0;
   if(length>0){
-   facing=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');walk+=moveDt*14;dwell=0;dwellLock=false;
+   { // facing hysteresis: switch axis only when one clearly dominates (20%); near diagonals keep a matching facing
+    const hz:Facing=dx>0?'right':'left',vt:Facing=dy>0?'down':'up',ax=Math.abs(dx),ay=Math.abs(dy);
+    facing=ax>ay*1.2?hz:ay>ax*1.2?vt:facing===hz||facing===vt?facing:ax>ay?hz:vt;
+   }walk+=moveDt*14;dwell=0;dwellLock=false;
    if(serving){serving=null;message='Serve canceled by movement. No portion added.';}if(eating){eating=false;message='Eating stopped. Return home and press E to resume your partial bite.';}
    const step=190*moveDt*Math.min(1,length); // joystick is analog; keys are full speed
    move(player,dx/length*step,dy/length*step);
   }else if(serving){serving.elapsed+=dt;if(serving.elapsed>=serving.portion.food.serve){plate.push(serving.portion);message=`${serving.portion.food.name} packed. Add more or return home.`;
-   if(plate.reduce((n,p)=>n+p.w*p.h,0)===12&&plate.some(p=>!p.bonus)){for(const p of plate)p.bonus=true;message=`Full plate! Everything on it scores ×${FULL_BONUS}. Head home to eat.`;}serving=null;dwellLock=true;}}
+   if(used()===12&&plate.some(p=>!p.bonus)){for(const p of plate)p.bonus=true;message=`Full plate! Everything on it scores ×${FULL_BONUS}. Head home to eat.`;}serving=null;dwellLock=true;}}
   else if(eating&&home()){
    dwell=0;let budget=dt;while(budget>0&&plate.length){const p=plate[0],bite=Math.min(budget,p.food.eat-p.eaten);p.eaten+=bite;budget-=bite;if(p.eaten>=p.food.eat){const got=pts(p);score+=got;plate.shift();message=`+${got} banked${p.bonus?` (full plate ×${FULL_BONUS})`:''}! ${plate.length?'Next portion…':'Plate clear. Go again!'}`;}else break;}if(!plate.length)eating=false;
   }else{const f=near();if(f&&!selected&&!dwellLock){dwell+=dt;if(dwell>=DWELL)choose();}else dwell=0;}

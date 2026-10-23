@@ -18,7 +18,7 @@ The visible 4×3 plate checks exact clicked cells for bounds and overlaps. Dashe
 | Berry bites | 1×1 | 7 | 0.35s | 0.33s |
 | Golden rolls | 2×1 | 19 | 0.7s | 0.67s |
 | Green skewers | 1×3 | 30 | 0.9s | 0.93s |
-| Sushi pair | 2×1 | 28 | 0.85s | 0.77s |
+| Chicken leg (was Sushi pair) | 3-cell L (2×2 box) | 42 | 1.28s | 1.15s |
 | Royal roast | 2×2 | 48 | 1.75s | 1.73s |
 
 ## Assumptions
@@ -120,3 +120,21 @@ Verified 2026-10-22: production build passed. Chromium mobile emulation (touch, 
 
 - When a serve completes and all 12 plate cells are filled, every portion on the plate is flagged and scores ×1.25 when eaten (rounded per portion, e.g. skewers 30 → 38). The plate HUD shows ★×1.25 instead of free cells, its numbers show the boosted values, and the status line announces it. Portions keep the flag while you eat; food added after eating has started only gets it if the plate fills again. Constant: `FULL_BONUS` in `src/main.ts`.
 - Why 1.25, from the current tuning: over all 21,524 ways to fill the 4×3 plate, a full plate is worth 84–168 (mean ≈ 123). Topping up the last cell usually means a berry detour (≈ 5.3 s round trip from home + 1.7 s ring/serve/eat ≈ 7 s), which at Gold pace (450 / 100 s = 4.5 pts/s) costs ≈ 31 pts minus the berry's 7 ≈ 25 net. ×1.25 adds ≈ +31 on an average plate (+21 to +42), so completing the plate is worth a detour with a small margin; ×1.5 (+62) would make full plates dominate. Combined with the faster serve/eat tune, medal goals likely need raising after playtesting.
+
+## Food art on the plate (2026-10-22)
+
+- Plate blocks (popup placed food, placement cursor, serving portion, and the plate HUD) draw the station's dish art fitted to the portion's footprint instead of a flat colour box: e.g. Royal roast fills its 2×2, Green skewers stand upright in 1×3 and lie flat when rotated to 3×1. Tall footprints rotate the art 90°. The point value (with any full-plate bonus) is a small corner badge. While serving, the art fades in as the portion fills.
+
+## Mobile flicker fixes (2026-10-22)
+
+- Cause 1 — joystick jitter: a resting thumb crossed the single 20% dead zone repeatedly, toggling movement and re-picking the facing every frame (front/back/side sprites swapped, ring reset). Fix: on/off hysteresis (start above 25% of the radius, stop below 12%), light smoothing of the finger offset (40 ms), and facing hysteresis (switch axis only when one axis is 20% stronger; near diagonals keep a matching facing). Measured with emulated jittery touch: facing changes 45–55 → 0–1, movement toggles 53–58 → 1 per ~8 s rest.
+- Cause 2 — resize frames: when the mobile browser bar changed the viewport, the HUD column width (scale-dependent) shifted the camera ~20 units in one frame, and the resize callback ran after that frame's draw. Fix: the shell redraws right after fitting the canvas in the ResizeObserver callback, and the camera's usable width eases to its new value (max 3.3 units/frame in the same test).
+
+## Chicken leg replaces Sushi pair (2026-10-23, revised)
+
+- The grill room (formerly sushi bar, top right; sign "THE GRILL") serves a Chicken leg: thigh + drumstick in a 3-cell L (2×2 box). Score per cell kept at sushi's 14 → 42 pts; serve/eat scale per cell from sushi (×3/2): 1.275 s serve, 1.15 s eat.
+- Art: one roasted leg quarter drawn across the whole L (thigh along one arm, drumstick and bone up the other), rotated with the piece's 4 orientations; the counter shows it on a platter with an L footprint icon.
+- Plate logic supports any cell shape: footprints are cell lists, Rotate cycles all distinct orientations (1 square, 2 rectangle, 4 L), fit/auto-place/drag/full-plate checks are per cell.
+- Numbers: 24 placements on an empty plate (sushi had 17) and it fits 95% of half-full plates, so it is not harder to place in raw terms; its cost is the awkward single-cell holes it tends to leave. It appears in 64% of the 7,329 full-plate packings. A dedicated trip is 12.3 s for 42 pts = 3.41 pts/s (old sushi 2.43; roast 4.63; skewers 4.57), and at 14 pts/cell it is the densest filler for a high-value full plate.
+- Full plates average 118.5 pts (84–168); ×1.25 still adds ≈ +30, above the ≈ 25-pt net cost of a top-up detour, so FULL_BONUS is unchanged.
+- (An earlier same-day version used a 5-cell 3×3 L worth 70; replaced at the user's request.)

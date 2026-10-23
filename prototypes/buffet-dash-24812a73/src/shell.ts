@@ -1,12 +1,13 @@
 // The canvas element itself is letterboxed, so its DOM bounds are the input bounds.
-export function mountShell(aspect: number, clearInput: () => void) {
+export function mountShell(aspect: number, clearInput: () => void, redraw?: () => void) {
  const canvas=document.querySelector<HTMLCanvasElement>('#game')!;
  const arena=document.querySelector<HTMLElement>('.arena')!;
  const dialog=document.querySelector<HTMLDialogElement>('#help-dialog')!;
  const portrait=matchMedia('(orientation: portrait) and (max-width: 900px)');
  const paused=()=>dialog.open||portrait.matches;
  function fit(){const w=Math.min(arena.clientWidth,arena.clientHeight*aspect);canvas.style.width=`${w}px`;canvas.style.height=`${w/aspect}px`;}
- new ResizeObserver(fit).observe(arena);fit();
+ // Resize callbacks run after this frame's game draw; redraw at the new size so the painted frame isn't a stale, stretched one.
+ new ResizeObserver(()=>{fit();redraw?.();}).observe(arena);fit();
  // H toggles Help (keyboard only); Esc also closes it natively.
  window.addEventListener('keydown',e=>{if(e.key.toLowerCase()!=='h'||e.repeat)return;e.preventDefault();if(dialog.open)dialog.close();else{clearInput();dialog.showModal();}});
  dialog.addEventListener('close',()=>{clearInput();canvas.focus({preventScroll:true});});

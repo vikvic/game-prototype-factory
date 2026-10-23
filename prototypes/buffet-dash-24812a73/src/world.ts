@@ -8,7 +8,7 @@ export const VIEW={w:900,h:520};
 export const RADIUS=12; // player collision radius
 
 // Back wall, outer walls, and interior walls with doorways:
-// bakery wing (left, open to the south), sushi bar (top right, door on its south-east side),
+// bakery wing (left, open to the south), grill room (top right, chicken legs; door on its south-east side),
 // carvery wing (bottom right, door at y 580-700), dining area in the middle, two pillars.
 export const walls:Wall[]=[
  {x:0,y:0,w:1440,h:48,back:true},
@@ -18,7 +18,7 @@ export const walls:Wall[]=[
  {x:980,y:280,w:280,h:20},
  {x:580,y:400,w:40,h:40},{x:820,y:400,w:40,h:40},
 ];
-export const signs=[{text:'BAKERY',x:240},{text:'THE BUFFET',x:720},{text:'SUSHI BAR',x:1200}];
+export const signs=[{text:'BAKERY',x:240},{text:'THE BUFFET',x:720},{text:'THE GRILL',x:1200}];
 
 export const counterRect=(s:Point):Rect=>({x:s.x-86,y:s.y-44,w:172,h:80});
 export function tableRects(t:Point):Rect[]{

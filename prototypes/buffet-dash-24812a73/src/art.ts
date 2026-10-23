@@ -1,7 +1,7 @@
 // Vector art for the Pokémon-style overhead (3/4 front-facing) view. Canvas paths only, no sprites.
 type Ctx = CanvasRenderingContext2D;
 type Point = {x:number;y:number};
-export type Station = Point & {name:string;color:string;w:number;h:number};
+export type Station = Point & {name:string;color:string;w:number;h:number;cells?:[number,number][]};
 export type Facing = 'down'|'up'|'left'|'right';
 
 const INK='#2c2f3a';
@@ -133,7 +133,34 @@ function roast(ctx:Ctx,x:number,y:number){
  ell(ctx,x,y-7,27,15);paint(ctx,'#a65a2e');ell(ctx,x-7,y-13,11,5);paint(ctx,'#d38b52',0);
  ctx.beginPath();ctx.moveTo(x-9,y-22);ctx.lineTo(x-9,y-32);ctx.lineTo(x-4,y-27);ctx.lineTo(x,y-34);ctx.lineTo(x+4,y-27);ctx.lineTo(x+9,y-32);ctx.lineTo(x+9,y-22);ctx.closePath();paint(ctx,'#f2c94c',1.5);
 }
-const dishes:Record<string,(ctx:Ctx,x:number,y:number)=>void>={'Berry bites':berries,'Golden rolls':rolls,'Green skewers':skewers,'Sushi pair':sushi,'Royal roast':roast};
+// Roasted chicken leg quarter (thigh + drumstick) drawn in its base L frame: a 2×2 box centred on the origin,
+// cell size c, cells (0,0) top-left, (0,1) bottom-left, (1,1) bottom-right. Thigh lies along the bottom row,
+// drumstick runs up the left column with the bone end at the top.
+function legQuarter(ctx:Ctx,c:number){
+ const bone='#f5efe0',meat='#c9792f',crisp='#7a3e18',lw=Math.max(1.5,c*0.035);
+ // bone + knuckle
+ line(ctx,-c*0.5,-c*0.42,-c*0.5,-c*0.8,bone,c*0.15);
+ for(const dx of [-0.09,0.09]){ell(ctx,-c*0.5+dx*c,-c*0.84,c*0.1,c*0.1);paint(ctx,bone,lw);}
+ // drumstick meat: tapers from the joint up toward the bone
+ ctx.beginPath();ctx.moveTo(-c*0.62,-c*0.45);ctx.quadraticCurveTo(-c*0.88,c*0.0,-c*0.78,c*0.42);ctx.lineTo(-c*0.18,c*0.42);ctx.quadraticCurveTo(-c*0.12,c*0.0,-c*0.38,-c*0.45);ctx.closePath();paint(ctx,meat,lw);
+ // thigh: wide rounded piece along the bottom row
+ ctx.beginPath();ctx.moveTo(-c*0.86,c*0.3);ctx.bezierCurveTo(-c*0.55,c*0.04,c*0.45,c*0.0,c*0.84,c*0.3);ctx.bezierCurveTo(c*0.99,c*0.52,c*0.82,c*0.9,c*0.3,c*0.88);
+ ctx.bezierCurveTo(-c*0.25,c*0.9,-c*0.92,c*0.8,-c*0.86,c*0.3);ctx.closePath();paint(ctx,meat,lw);
+ // golden highlights + roasted seasoning flecks
+ ell(ctx,-c*0.2,c*0.36,c*0.38,c*0.12);paint(ctx,'#e9a85a',0);ell(ctx,-c*0.58,-c*0.12,c*0.07,c*0.2);paint(ctx,'#e9a85a',0);
+ ctx.fillStyle=crisp;for(const [x,y,r] of [[-0.5,0.55,0.05],[-0.2,0.62,0.04],[0.1,0.5,0.05],[0.35,0.62,0.045],[0.6,0.45,0.05],[0.25,0.3,0.035],[-0.65,0.15,0.04],[-0.42,-0.2,0.035],[-0.55,-0.32,0.03],[0.7,0.62,0.035],[-0.05,0.75,0.03]] as [number,number,number][]){ctx.beginPath();ctx.arc(x*c,y*c,r*c,0,Math.PI*2);ctx.fill();}
+}
+// Which quarter-turn of the base L these cells are (0–3); base = (0,0),(0,1),(1,1) in a 2×2 box.
+function lTurns(cells:[number,number][]){
+ const k=(cs:[number,number][])=>cs.map(p=>p.join()).sort().join(' ');let cur:[number,number][]=[[0,0],[0,1],[1,1]];
+ for(let r=0;r<4;r++){if(k(cur)===k(cells))return r;cur=cur.map(([x,y])=>[1-y,x] as [number,number]);}return 0;
+}
+function chicken(ctx:Ctx,x:number,y:number){
+ ell(ctx,x,y,44,15);paint(ctx,'#dfe4ea');ell(ctx,x,y-1,36,11);paint(ctx,'#f2f5f8',0);
+ ctx.save();ctx.translate(x+4,y-17);legQuarter(ctx,23);ctx.restore(); // thigh on the platter, drumstick up
+ for(const [dx,dy] of [[-36,4],[36,4]]){ell(ctx,x+dx,y+dy,5,4);paint(ctx,'#5fae4a',1.2);}
+}
+const dishes:Record<string,(ctx:Ctx,x:number,y:number)=>void>={'Berry bites':berries,'Golden rolls':rolls,'Green skewers':skewers,'Sushi pair':sushi,'Chicken leg':chicken,'Royal roast':roast};
 
 // Buffet counter: lit top surface + darker front face (the "front face view"), food dish on top, nameplate on the front.
 export function drawStation(ctx:Ctx,s:Station,compact:boolean,scale:number,key?:string){
@@ -147,7 +174,7 @@ export function drawStation(ctx:Ctx,s:Station,compact:boolean,scale:number,key?:
  (dishes[s.name]??berries)(ctx,x-14,y-16);
  if(!compact){
   const c=9,ox=x+60-s.w*c/2,oy=y-34;
-  for(let i=0;i<s.w;i++)for(let j=0;j<s.h;j++){ctx.beginPath();ctx.rect(ox+i*c,oy+j*c,c-1,c-1);paint(ctx,s.color,1);}
+  for(let i=0;i<s.w;i++)for(let j=0;j<s.h;j++){if(s.cells&&!s.cells.some(([a,b])=>a===i&&b===j))continue;ctx.beginPath();ctx.rect(ox+i*c,oy+j*c,c-1,c-1);paint(ctx,s.color,1);}
  }
  const fs=compact?10/scale:13;ctx.font=`800 ${fs}px system-ui`;const nw=ctx.measureText(s.name).width,kw=key?keyWidth(ctx,key,fs)+fs*0.4:0,tw=nw+kw+14;
  const ny=compact?y+42+fs*0.75:y+18; // small screens: nameplate sits below the counter so the food stays visible
@@ -228,7 +255,53 @@ export function plateLayout(compact:boolean,scale:number){
  const w=Math.max(cell*4+pad*2,fs*(compact?20:32)),h=cell*3+pad*2+fs*5.8,x=(900-w)/2,y=Math.max(6,(520-h)/2);
  return {x,y,w,h,cell,fs,gx:x+(w-cell*4)/2,gy:y+pad+fs*3.1};
 }
-type Block = {x:number;y:number;w:number;h:number;color:string;label:string};
+type Cells = [number,number][];
+type Block = {x:number;y:number;w:number;h:number;cells?:Cells;color:string;label:string;name:string};
+const isRect=(b:{w:number;h:number;cells?:Cells})=>!b.cells||b.cells.length===b.w*b.h;
+const hasCell=(cells:Cells,a:number,b:number)=>cells.some(([x,y])=>x===a&&y===b);
+// Cell rect inset by g only on sides without a neighbouring cell, so shaped pieces look like one piece.
+function cellBox(cells:Cells,a:number,b:number,ox:number,oy:number,c:number,g:number){
+ return {x0:ox+a*c+(hasCell(cells,a-1,b)?0:g),y0:oy+b*c+(hasCell(cells,a,b-1)?0:g),x1:ox+(a+1)*c-(hasCell(cells,a+1,b)?0:g),y1:oy+(b+1)*c-(hasCell(cells,a,b+1)?0:g)};
+}
+// Set the current path to the piece's footprint (rounded rect for rectangles, union of cells otherwise).
+function tilePath(ctx:Ctx,b:{w:number;h:number;cells?:Cells},ox:number,oy:number,c:number,g:number,r:number){
+ if(isRect(b)){rr(ctx,ox+g,oy+g,b.w*c-g*2,b.h*c-g*2,r);return;}
+ ctx.beginPath();for(const [a,bb] of b.cells!){const k=cellBox(b.cells!,a,bb,ox,oy,c,g);ctx.rect(k.x0,k.y0,k.x1-k.x0,k.y1-k.y0);}
+}
+function tileStroke(ctx:Ctx,b:{w:number;h:number;cells?:Cells},ox:number,oy:number,c:number,g:number,r:number,color:string,lw:number){
+ if(isRect(b)){rr(ctx,ox+g,oy+g,b.w*c-g*2,b.h*c-g*2,r);}
+ else{ctx.beginPath();for(const [a,bb] of b.cells!){const k=cellBox(b.cells!,a,bb,ox,oy,c,g),cs=b.cells!;
+  if(!hasCell(cs,a,bb-1)){ctx.moveTo(k.x0,k.y0);ctx.lineTo(k.x1,k.y0);}if(!hasCell(cs,a,bb+1)){ctx.moveTo(k.x0,k.y1);ctx.lineTo(k.x1,k.y1);}
+  if(!hasCell(cs,a-1,bb)){ctx.moveTo(k.x0,k.y0);ctx.lineTo(k.x0,k.y1);}if(!hasCell(cs,a+1,bb)){ctx.moveTo(k.x1,k.y0);ctx.lineTo(k.x1,k.y1);}}}
+ ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();ctx.lineCap='butt';
+}
+// Food art: rectangles get the fitted dish; the L-shaped chicken leg gets one leg quarter spanning its cells.
+function tileArt(ctx:Ctx,b:Block,ox:number,oy:number,c:number,g:number,alpha=1){
+ if(isRect(b)){drawFoodIcon(ctx,b.name,ox+b.w*c/2,oy+b.h*c/2,b.w*c-g*2,b.h*c-g*2,alpha);return;}
+ // Chicken leg: one leg quarter across the whole L, turned to match the piece's orientation.
+ ctx.save();ctx.globalAlpha*=alpha;ctx.translate(ox+b.w*c/2,oy+b.h*c/2);ctx.rotate(lTurns(b.cells!)*Math.PI/2);legQuarter(ctx,c*0.94);ctx.restore();
+}
+// Badge position: bottom-right corner of the lowest (then right-most) cell.
+function tileCorner(b:{w:number;h:number;cells?:Cells},ox:number,oy:number,c:number,g:number){
+ const cells=b.cells??[[b.w-1,b.h-1]];const [a,bb]=[...cells].sort((p,q)=>q[1]-p[1]||q[0]-p[0])[0];return {x:ox+(a+1)*c-g-3,y:oy+(bb+1)*c-g-3};
+}
+// Approximate drawn bounds of each dish (relative to its draw point) so it can be fitted into a plate footprint.
+const dishBounds:Record<string,{w:number;h:number;cy:number}>={'Berry bites':{w:70,h:46,cy:-6},'Golden rolls':{w:74,h:38,cy:-3},'Green skewers':{w:86,h:36,cy:-2},'Sushi pair':{w:82,h:38,cy:-2},'Chicken leg':{w:92,h:50,cy:-10},'Royal roast':{w:92,h:50,cy:-9}};
+// Food art fitted to a w×h box (centre cx,cy). Dishes are drawn landscape; tall footprints rotate the art 90°.
+export function drawFoodIcon(ctx:Ctx,name:string,cx:number,cy:number,w:number,h:number,alpha=1){
+ const d=dishBounds[name]??dishBounds['Berry bites'],rot=h>w*1.05,bw=rot?h:w,bh=rot?w:h,s=Math.min(bw/d.w,bh/d.h)*0.9;
+ ctx.save();ctx.globalAlpha*=alpha;ctx.translate(cx,cy);if(rot)ctx.rotate(-Math.PI/2);ctx.scale(s,s);(dishes[name]??berries)(ctx,0,-d.cy);ctx.restore();
+}
+// Food tile: light tint of the food colour, the food art, and a small value badge in the corner.
+// (ox,oy) = top-left of the piece's bounding box on the grid, c = cell size, g = inset.
+function foodTile(ctx:Ctx,b:Block,ox:number,oy:number,c:number,g:number,fs:number,r:number){
+ tilePath(ctx,b,ox,oy,c,g,r);ctx.fillStyle=shade(b.color,0.55);ctx.fill();tileStroke(ctx,b,ox,oy,c,g,r,INK,2);
+ tileArt(ctx,b,ox,oy,c,g);const k=tileCorner(b,ox,oy,c,g);badge(ctx,b.label,k.x,k.y,fs*0.8);
+}
+function badge(ctx:Ctx,label:string,right:number,bottom:number,fs:number){
+ ctx.font=`800 ${fs}px system-ui`;const bw=ctx.measureText(label).width+fs*0.7,bh=fs*1.25;
+ rr(ctx,right-bw,bottom-bh,bw,bh,bh/2);paint(ctx,'#fffaf0',1.2);text(ctx,label,right-bw/2,bottom-bh*0.27,fs,INK,800);
+}
 // progress !== null: serving in progress — the placed portion fills up and the bar below the grid shows serve time.
 export function drawPlatePopup(ctx:Ctx,L:ReturnType<typeof plateLayout>,title:string,sub:string,blocks:Block[],cursor:Block&{ok:boolean},keys:[string,string][],progress:number|null,now:number){
  ctx.fillStyle='#10252a66';ctx.fillRect(0,0,900,520);
@@ -238,33 +311,33 @@ export function drawPlatePopup(ctx:Ctx,L:ReturnType<typeof plateLayout>,title:st
  text(ctx,sub,L.x+L.w/2,L.y+L.fs*3.3,L.fs*0.75,'#4a5550',600);
  const c=L.cell,g=4;
  for(let j=0;j<3;j++)for(let i=0;i<4;i++){rr(ctx,L.gx+i*c+g/2,L.gy+j*c+g/2,c-g,c-g,6);paint(ctx,'#efe6d2',1.5,'#c9bba0');}
- for(const b of blocks){rr(ctx,L.gx+b.x*c+g,L.gy+b.y*c+g,b.w*c-g*2,b.h*c-g*2,7);paint(ctx,b.color,2);text(ctx,b.label,L.gx+(b.x+b.w/2)*c,L.gy+(b.y+b.h/2)*c+L.fs*0.35,L.fs,INK,800);}
- const bx=L.gx+cursor.x*c+g,by=L.gy+cursor.y*c+g,bw=cursor.w*c-g*2,bh=cursor.h*c-g*2,barY=L.gy+c*3+L.fs*0.55,barW=c*4-g;
+ for(const b of blocks)foodTile(ctx,b,L.gx+b.x*c,L.gy+b.y*c,c,g,L.fs,7);
+ const ox=L.gx+cursor.x*c,oy=L.gy+cursor.y*c,bh=cursor.h*c-g*2,barY=L.gy+c*3+L.fs*0.55,barW=c*4-g,k=tileCorner(cursor,ox,oy,c,g);
  if(progress!==null){ // serving: portion fills bottom-up, bar under the grid
-  rr(ctx,bx,by,bw,bh,7);paint(ctx,shade(cursor.color,0.55),2);
-  ctx.save();rr(ctx,bx,by,bw,bh,7);ctx.clip();ctx.fillStyle=cursor.color;ctx.fillRect(bx,by+bh*(1-Math.min(1,progress)),bw,bh);ctx.restore();
-  rr(ctx,bx,by,bw,bh,7);ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();
-  text(ctx,cursor.label,bx+bw/2,by+bh/2+L.fs*0.35,L.fs,INK,800);
+  tilePath(ctx,cursor,ox,oy,c,g,7);ctx.fillStyle=shade(cursor.color,0.55);ctx.fill();
+  ctx.save();tilePath(ctx,cursor,ox,oy,c,g,7);ctx.clip();ctx.fillStyle=cursor.color;ctx.fillRect(ox,oy+g+bh*(1-Math.min(1,progress)),cursor.w*c,bh+g);ctx.restore();
+  tileStroke(ctx,cursor,ox,oy,c,g,7,INK,2);
+  tileArt(ctx,cursor,ox,oy,c,g,0.35+0.65*Math.min(1,progress));badge(ctx,cursor.label,k.x,k.y,L.fs*0.8);
   rr(ctx,L.gx+g/2,barY,barW,L.fs*0.5,L.fs*0.25);paint(ctx,'#e2d8c2',0);
   rr(ctx,L.gx+g/2,barY,barW*Math.min(1,progress),L.fs*0.5,L.fs*0.25);paint(ctx,'#e8a33d',0);
   keyRow(ctx,keys,L.x+L.w/2,L.y+L.h-L.fs*1.15,L.fs*0.8);return;
  }
  const pulse=0.55+0.25*Math.sin(now/180);
- rr(ctx,bx,by,bw,bh,7);
- ctx.globalAlpha=pulse;ctx.fillStyle=cursor.ok?cursor.color:'#e0574f';ctx.fill();ctx.globalAlpha=1;
- ctx.setLineDash([8,5]);ctx.strokeStyle=cursor.ok?'#2f8f5b':'#d9453b';ctx.lineWidth=4;ctx.stroke();ctx.setLineDash([]);
- text(ctx,cursor.ok?cursor.label:'✕',L.gx+(cursor.x+cursor.w/2)*c,L.gy+(cursor.y+cursor.h/2)*c+L.fs*0.35,L.fs,cursor.ok?INK:'#ffffff',800);
+ tilePath(ctx,cursor,ox,oy,c,g,7);ctx.globalAlpha=pulse;ctx.fillStyle=cursor.ok?cursor.color:'#e0574f';ctx.fill();ctx.globalAlpha=1;
+ ctx.setLineDash([8,5]);tileStroke(ctx,cursor,ox,oy,c,g,7,cursor.ok?'#2f8f5b':'#d9453b',4);ctx.setLineDash([]);
+ if(cursor.ok){tileArt(ctx,cursor,ox,oy,c,g,0.9);badge(ctx,cursor.label,k.x,k.y,L.fs*0.8);}
+ else{tileArt(ctx,cursor,ox,oy,c,g,0.35);text(ctx,'✕',ox+cursor.w*c/2,oy+cursor.h*c/2+L.fs*0.5,L.fs*1.4,'#ffffff',900);}
  keyRow(ctx,keys,L.x+L.w/2,L.y+L.h-L.fs*1.15,L.fs*0.8);
 }
 
 // Plate HUD (screen space, under the minimap): value, free cells, 4x3 grid, current activity and progress.
-export function drawPlateHud(ctx:Ctx,r:{x:number;y:number;w:number},fs:number,title:string,blocks:Block[],reserved:Rect|null,sub:string,progress:number){
+export function drawPlateHud(ctx:Ctx,r:{x:number;y:number;w:number},fs:number,title:string,blocks:Block[],reserved:(Rect&{cells?:Cells})|null,sub:string,progress:number){
  const pad=fs*0.6,cell=(r.w-pad*2)/4,top=r.y+pad+fs*1.25,h=pad*2+fs*1.25+cell*3+fs*2.1;
  rr(ctx,r.x-3,r.y,r.w+6,h,6);paint(ctx,'#fffaf0e8',2);
  text(ctx,title,r.x+r.w/2,r.y+pad+fs*0.85,fs,INK,800);
  for(let j=0;j<3;j++)for(let i=0;i<4;i++){rr(ctx,r.x+pad+i*cell+1.5,top+j*cell+1.5,cell-3,cell-3,4);paint(ctx,'#efe6d2',1,'#c9bba0');}
- if(reserved){rr(ctx,r.x+pad+reserved.x*cell+2,top+reserved.y*cell+2,reserved.w*cell-4,reserved.h*cell-4,5);ctx.setLineDash([4,3]);paint(ctx,'#d8cdb4',2,'#8a7a5c');ctx.setLineDash([]);}
- for(const b of blocks){rr(ctx,r.x+pad+b.x*cell+2,top+b.y*cell+2,b.w*cell-4,b.h*cell-4,5);paint(ctx,b.color,1.5);text(ctx,b.label,r.x+pad+(b.x+b.w/2)*cell,top+(b.y+b.h/2)*cell+fs*0.35,fs*0.95,INK,800);}
+ if(reserved){const ox=r.x+pad+reserved.x*cell,oy=top+reserved.y*cell;tilePath(ctx,reserved,ox,oy,cell,2,5);ctx.fillStyle='#d8cdb4';ctx.fill();ctx.setLineDash([4,3]);tileStroke(ctx,reserved,ox,oy,cell,2,5,'#8a7a5c',2);ctx.setLineDash([]);}
+ for(const b of blocks)foodTile(ctx,b,r.x+pad+b.x*cell,top+b.y*cell,cell,2,fs*0.9,5);
  const by=top+cell*3+fs*0.35;
  rr(ctx,r.x+pad,by,r.w-pad*2,fs*0.5,fs*0.25);paint(ctx,'#e2d8c2',0);
  if(progress>0){rr(ctx,r.x+pad,by,(r.w-pad*2)*Math.min(1,progress),fs*0.5,fs*0.25);paint(ctx,'#e8a33d',0);}
