@@ -65,7 +65,8 @@ button:disabled{opacity:.45}
 button[hidden]{display:none!important}
 .primary{background:#ebc371;border-color:#ebc371;color:#183a32}
 .arena #t-start{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:2;font-size:16px;padding:6px 22px}
-.popup-controls{position:absolute;right:6px;top:50%;transform:translateY(-50%);flex-direction:column;gap:6px;z-index:2}
+/* Fixed top so Serve/Eat sits exactly where Place does (first slot of a 4-button column). */
+.popup-controls{position:absolute;right:6px;top:max(6px,calc(50% - 100px));flex-direction:column;gap:6px;z-index:2}
 .popup-controls button{min-width:76px}
 dialog .touch-only{position:sticky;bottom:0;width:100%}
 html.touch #status{font-size:11px;min-height:0}

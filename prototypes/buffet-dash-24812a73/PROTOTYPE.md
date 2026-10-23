@@ -115,3 +115,8 @@ Verified 2026-10-22: strict TypeScript / production build passed. Headless Chrom
 - Added mobile web-app meta tags so "Add to Home Screen" can open without browser chrome on iOS (untested on a device).
 
 Verified 2026-10-22: production build passed. Chromium mobile emulation (touch, coarse pointer) at 844x390 and 568x320, touch input only: Start, joystick to skewers, ring opens popup, Rotate, Place (only Cancel shown while serving), packed, SERVE button reopens via the ring, Cancel, joystick home, EAT banks 30, Help open/close, Restart, Full screen entered; no page errors. Desktop 1280x720: touch mode off, no visible buttons; keyboard regression tests still pass. Not verified on a physical phone.
+
+## Full-plate bonus (2026-10-22)
+
+- When a serve completes and all 12 plate cells are filled, every portion on the plate is flagged and scores ×1.25 when eaten (rounded per portion, e.g. skewers 30 → 38). The plate HUD shows ★×1.25 instead of free cells, its numbers show the boosted values, and the status line announces it. Portions keep the flag while you eat; food added after eating has started only gets it if the plate fills again. Constant: `FULL_BONUS` in `src/main.ts`.
+- Why 1.25, from the current tuning: over all 21,524 ways to fill the 4×3 plate, a full plate is worth 84–168 (mean ≈ 123). Topping up the last cell usually means a berry detour (≈ 5.3 s round trip from home + 1.7 s ring/serve/eat ≈ 7 s), which at Gold pace (450 / 100 s = 4.5 pts/s) costs ≈ 31 pts minus the berry's 7 ≈ 25 net. ×1.25 adds ≈ +31 on an average plate (+21 to +42), so completing the plate is worth a detour with a small margin; ×1.5 (+62) would make full plates dominate. Combined with the faster serve/eat tune, medal goals likely need raising after playtesting.

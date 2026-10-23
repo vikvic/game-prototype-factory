@@ -4,7 +4,11 @@ import { drawRoom, drawWall, drawRange, drawStation, drawTable, drawPlayer, draw
 import { WORLD, VIEW, walls, signs, counterRect, tableRects, setObstacles, move } from './world'; // world.ts also exports findPath (A*), kept for future use
 type Point = {x:number;y:number};
 type Food = Point & {name:string;color:string;w:number;h:number;value:number;serve:number;eat:number;role:string};
-type Portion = {food:Food;x:number;y:number;w:number;h:number;eaten:number};
+type Portion = {food:Food;x:number;y:number;w:number;h:number;eaten:number;bonus:boolean};
+// Full-plate bonus: when all 12 cells are filled, every portion on the plate scores ×FULL_BONUS (rounded per portion).
+// 1.25 ≈ break-even+: an average full plate is ~123 pts (84–168 over all packings); topping up the last cell with a
+// berry detour costs ~7 s ≈ 31 pts at Gold pace (4.5 pts/s) minus the berry's 7 → ~25 net, and 0.25×123 ≈ +31.
+const FULL_BONUS=1.25;
 // World positions in a 1440x880 hall (see world.ts for walls and doorways).
 // Timing tune (2026-10-22): serve = half the original, eat = original / 3.
 const foods:Food[] = [
@@ -39,7 +43,8 @@ const secs=(n:number)=>`${+n.toFixed(2)}s`; // eat times are thirds, show 2 deci
 const dist=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
 const near=()=>foods.find(f=>dist(player,f)<102);
 const home=()=>dist(player,table)<78;
-const value=()=>plate.reduce((n,p)=>n+p.food.value,0);
+const pts=(p:Portion)=>p.bonus?Math.round(p.food.value*FULL_BONUS):p.food.value;
+const value=()=>plate.reduce((n,p)=>n+pts(p),0);
 const medal=()=>score>=450?'GOLD':score>=320?'SILVER':score>=200?'BRONZE':'NO MEDAL';
 const txt=(id:string,v:string)=>{const e=$(id);if(e.textContent!==v)e.textContent=v;};
 const view=()=>({scale:canvas.clientWidth/VIEW.w,compact:canvas.clientWidth<600});
@@ -62,7 +67,7 @@ function place(i:number){
  if(dist(player,selected)>=102){message='Return to this station to serve.';ui();return;}
  const {w,h}=dimensions(),x=i%4,y=Math.floor(i/4);
  if(i<0||!fits(x,y,w,h)){message='Does not fit. Move the cursor, R to rotate, F to auto-place, or Esc. Nothing lost.';ui();return;}
- serving={portion:{food:selected,x,y,w,h,eaten:0},elapsed:0};selected=null;drag=null;message='Serving… hold on, the plate closes when it is ready. Esc cancels.';ui();
+ serving={portion:{food:selected,x,y,w,h,eaten:0,bonus:false},elapsed:0};selected=null;drag=null;message='Serving… hold on, the plate closes when it is ready. Esc cancels.';ui();
 }
 function eat(){if(state!=='playing'||!home()||!plate.length||serving)return;selected=null;eating=true;message='Eating in pickup order. Each finished portion banks points.';ui();}
 // E / the Eat button doubles as Place while the popup is open.
@@ -89,8 +94,8 @@ canvas.onpointerdown=e=>{
   if(onFood)drag={dx:c.x-cx,dy:c.y-cy,moved:false,onFood:true};else{drag={dx:0,dy:0,moved:true,onFood:false};cursor=clampCursor(c.y*4+c.x);ui();}
   return;
  }
- // Action button (SERVE at a counter, EAT at home) — touch or mouse.
- const b=eatBtn();if(Math.hypot(p.x-b.cx,p.y-b.cy)<=b.r*1.15){e.preventDefault();near()?startRing():eat();return;}
+ // Canvas action button (desktop / keyboard mode; touch mode uses the #t-action button on the right).
+ const b=eatBtn();if(!touchMode&&Math.hypot(p.x-b.cx,p.y-b.cy)<=b.r*1.15){e.preventDefault();near()?startRing():eat();return;}
  // Floating joystick: touch anywhere on the map left of the HUD column.
  if(isTouch&&!joy&&p.x<playRight()){e.preventDefault();canvas.setPointerCapture(e.pointerId);joy={id:e.pointerId,ox:p.x,oy:p.y,x:p.x,y:p.y};}
 };
@@ -106,6 +111,7 @@ $('t-help').onclick=()=>{keys.clear();joy=null;helpDialog.showModal();};
 $('t-help-close').onclick=()=>helpDialog.close();
 $('t-restart').onclick=()=>reset(true);
 $('t-start').onclick=()=>reset(true);
+$('t-action').onclick=()=>{near()?startRing():eat();};
 $('t-place').onclick=()=>place(cursor);$('t-rotate').onclick=rotate;$('t-auto').onclick=()=>place(suggestion());$('t-cancel').onclick=cancel;
 // Full screen (+ landscape lock where supported). iPhone Safari has no element fullscreen, so the button hides there.
 const docEl=document.documentElement as HTMLElement&{webkitRequestFullscreen?:()=>Promise<void>};
@@ -144,14 +150,16 @@ function ui(){
  const f=near(),{w,h}=dimensions();
  const tb=(id:string,show:boolean,dis=false)=>{const b=$<HTMLButtonElement>(id);if(b.hidden===show)b.hidden=!show;if(b.disabled!==dis)b.disabled=dis;};
  tb('t-start',state!=='playing');txt('t-start',state==='ended'?'Play again':'Start');
+ {const nf=near(),show=state==='playing'&&!selected&&!serving;tb('t-action',show,!(nf||canEat()));
+  txt('t-action',nf?'Serve':eating&&plate[0]?`Eating ${Math.round(plate[0].eaten/plate[0].food.eat*100)}%`:'Eat');}
  tb('t-place',!!selected,!(!!selected&&fits(cursor%4,Math.floor(cursor/4),w,h)));tb('t-rotate',!!selected,!selected||selected.w===selected.h);tb('t-auto',!!selected);tb('t-cancel',!!selected||!!serving);
  txt('prompt',state==='ready'?'Your table is home. Press Enter to start.':state==='ended'?`${medal()} · ${score} banked · ${value()} uneaten · Enter to play again`:selected?`Placing ${selected.name} · ${w}×${h}`:f?`${f.name} · ${f.value} pts · ${f.w}×${f.h} · E to serve`:home()?'Home table · E to eat':touchMode?'Drag on the map to walk to a counter or back to your table':'Walk with WASD / arrows to a station or back to your table');
 }
 // Which key to press right now, shown above the player.
 function keyHint():[string,string][]|null{
  if(state!=='playing'||selected||serving)return null;
- if(near())return touchMode?[['','Hold still or tap SERVE']]:[['E','Serve']];
- if(home()&&plate.length&&!eating)return touchMode?[['','Tap EAT']]:[['E','Eat']];
+ if(near())return touchMode?[['','Hold still or tap Serve →']]:[['E','Serve']];
+ if(home()&&plate.length&&!eating)return touchMode?[['','Tap Eat →']]:[['E','Eat']];
  return null;
 }
 function draw(now:number){
@@ -177,15 +185,15 @@ function draw(now:number){
  const hint=keyHint();if(hint)drawKeyPrompt(ctx,player.x,player.y-52,hint,compact?10/scale:13);
  ctx.setTransform(dpr,0,0,dpr,0,0); // screen space overlays
  const m=minimapRect(compact,scale,WORLD);
- if(state==='playing'&&!selected&&!serving){const pr=eating&&plate[0]?plate[0].eaten/plate[0].food.eat:0;drawEatButton(ctx,eatBtn(),near()?'serve':canEat()?'ready':eating?'eating':'off',pr,now,touchMode?0:compact?10/scale:13);}
+ if(state==='playing'&&!selected&&!serving&&!touchMode){const pr=eating&&plate[0]?plate[0].eaten/plate[0].food.eat:0;drawEatButton(ctx,eatBtn(),near()?'serve':canEat()?'ready':eating?'eating':'off',pr,now,touchMode?0:compact?10/scale:13);}
  if(state==='playing'&&touchMode&&!selected&&!serving)drawJoystick(ctx,joy,{x:joyR()+24,y:VIEW.h-joyR()-24},joyR(),compact?10/scale:13);
  drawMinimap(ctx,m,WORLD,walls,foods.map(f=>({...counterRect(f),color:f.color})),tableRects(table)[0],player,cam);
  // Plate HUD sits directly under the minimap.
  const q=serving?.portion,progress=serving?serving.elapsed/serving.portion.food.serve:eating&&plate[0]?plate[0].eaten/plate[0].food.eat:0;
- drawPlateHud(ctx,{x:m.x,y:m.y+m.h+8,w:m.w},compact?10/scale:12,`${compact?'':'Plate '}${value()} pts · ${12-plate.reduce((n,p)=>n+p.w*p.h,0)}/12${compact?'':' free'}`,
-  plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${p.food.value}`})),q?{x:q.x,y:q.y,w:q.w,h:q.h}:null,
+ drawPlateHud(ctx,{x:m.x,y:m.y+m.h+8,w:m.w},compact?10/scale:12,`${compact?'':'Plate '}${value()} pts · ${plate.some(p=>p.bonus)?`★×${FULL_BONUS}`:`${12-plate.reduce((n,p)=>n+p.w*p.h,0)}/12${compact?'':' free'}`}`,
+  plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${pts(p)}`})),q?{x:q.x,y:q.y,w:q.w,h:q.h}:null,
   serving?`Serving · ${Math.max(0,serving.portion.food.serve-serving.elapsed).toFixed(1)}s`:eating&&plate[0]?`Eating · ${Math.round(progress*100)}%`:plate.length?(home()?(touchMode?'Tap EAT':'Tap EAT or press E'):'Go home to eat'):'Empty plate',progress);
- const blocks=plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${p.food.value}`}));
+ const blocks=plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${pts(p)}`}));
  if(selected&&state==='playing'){
   const {w,h}=dimensions(),x=cursor%4,y=Math.floor(cursor/4);
   drawPlatePopup(ctx,plateLayout(compact,scale),`Place ${selected.name} · ${w}×${h} · ${selected.value} pts`,'Drag the food to move it · tap it to place',blocks,
@@ -211,9 +219,10 @@ function frame(now:number){
    if(serving){serving=null;message='Serve canceled by movement. No portion added.';}if(eating){eating=false;message='Eating stopped. Return home and press E to resume your partial bite.';}
    const step=190*moveDt*Math.min(1,length); // joystick is analog; keys are full speed
    move(player,dx/length*step,dy/length*step);
-  }else if(serving){serving.elapsed+=dt;if(serving.elapsed>=serving.portion.food.serve){plate.push(serving.portion);message=`${serving.portion.food.name} packed. Add more or return home.`;serving=null;dwellLock=true;}}
+  }else if(serving){serving.elapsed+=dt;if(serving.elapsed>=serving.portion.food.serve){plate.push(serving.portion);message=`${serving.portion.food.name} packed. Add more or return home.`;
+   if(plate.reduce((n,p)=>n+p.w*p.h,0)===12&&plate.some(p=>!p.bonus)){for(const p of plate)p.bonus=true;message=`Full plate! Everything on it scores ×${FULL_BONUS}. Head home to eat.`;}serving=null;dwellLock=true;}}
   else if(eating&&home()){
-   dwell=0;let budget=dt;while(budget>0&&plate.length){const p=plate[0],bite=Math.min(budget,p.food.eat-p.eaten);p.eaten+=bite;budget-=bite;if(p.eaten>=p.food.eat){score+=p.food.value;plate.shift();message=`+${p.food.value} banked! ${plate.length?'Next portion…':'Plate clear. Go again!'}`;}else break;}if(!plate.length)eating=false;
+   dwell=0;let budget=dt;while(budget>0&&plate.length){const p=plate[0],bite=Math.min(budget,p.food.eat-p.eaten);p.eaten+=bite;budget-=bite;if(p.eaten>=p.food.eat){const got=pts(p);score+=got;plate.shift();message=`+${got} banked${p.bonus?` (full plate ×${FULL_BONUS})`:''}! ${plate.length?'Next portion…':'Plate clear. Go again!'}`;}else break;}if(!plate.length)eating=false;
   }else{const f=near();if(f&&!selected&&!dwellLock){dwell+=dt;if(dwell>=DWELL)choose();}else dwell=0;}
   if(remaining<=0){state='ended';moving=false;keys.clear();selected=null;serving=null;eating=false;message=`Time! ${score} points scored. ${value()} points uneaten. Only fully eaten portions count.`;}
  }else moving=false;
