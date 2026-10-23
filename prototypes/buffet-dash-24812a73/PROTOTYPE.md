@@ -2,7 +2,7 @@
 
 A Canvas buffet game with a 100-second round. Fully eat portions at the home table to bank points. Bronze: 200; silver: 320; gold: 450. Timeout ends every run regardless of target.
 
-## Controls (keyboard, plus touch inside the plate popup)
+## Controls (keyboard on desktop; touch mode on phones/tablets — see the touch section below)
 - Enter starts a round (also "play again" after time-out). Backspace restarts at any time. H toggles Help (Esc also closes it).
 - WASD / arrows move.
 - Next to a counter, standing still for 1 second, or pressing E, fills a ring around the player; when full the plate popup opens (also when the plate is full: no room check). Movement is locked while it is open. Drag the food (touch or mouse) or use WASD / arrows to move it; tap the food or press E to place. R rotates, F auto-places, Esc cancels. After a cancel or a completed serve the ring only restarts after moving or pressing E.
@@ -104,3 +104,14 @@ Verified 2026-10-22: strict TypeScript / production build passed. Headless Chrom
 ## Timing tune (2026-10-22)
 
 - Serve times halved and eat times divided by 3 (eating 3x as fast); the table above shows the new values (eat times are exact thirds in code, e.g. 5.2/3, displayed to 2 decimals). Values, footprints, movement, ranges, the 1-second serve ring and medal goals are unchanged. Faster processing offsets the longer walks in the larger hall, but medal targets still need playtesting.
+
+## Touch mode for phones and tablets (2026-10-22)
+
+- Touch mode turns on automatically for coarse pointers (`(pointer: coarse)`) or on any touch, and switches back on any keyboard key except H. It adds `html.touch`; desktop keyboard mode shows no buttons.
+- Start: Start button (bottom of the map) or tap the map; "Play again" after time-out. Header: Help, Restart, Full screen (hidden where the Fullscreen API is unavailable, e.g. iPhone Safari; tries a landscape orientation lock after entering full screen). Help has a Close button.
+- Walking: floating joystick. Touch anywhere on the map left of the minimap/plate column; the base appears under the finger and movement is analog (20% dead zone, full speed at the base radius). An idle dashed circle bottom-left reads "Drag to walk".
+- Action button (bottom right of the map): SERVE at a counter (starts the 1-second ring, like E), EAT at home with food, dimmed otherwise. Its E keycap is hidden in touch mode.
+- Plate popup: drag the food / tap the food as before, plus Place, Rotate, Auto and Cancel buttons stacked at the right edge of the arena (Cancel only while serving). On-canvas prompts drop keycaps ("Hold still or tap SERVE", "Tap EAT", "Tap to start").
+- Added mobile web-app meta tags so "Add to Home Screen" can open without browser chrome on iOS (untested on a device).
+
+Verified 2026-10-22: production build passed. Chromium mobile emulation (touch, coarse pointer) at 844x390 and 568x320, touch input only: Start, joystick to skewers, ring opens popup, Rotate, Place (only Cancel shown while serving), packed, SERVE button reopens via the ring, Cancel, joystick home, EAT banks 30, Help open/close, Restart, Full screen entered; no page errors. Desktop 1280x720: touch mode off, no visible buttons; keyboard regression tests still pass. Not verified on a physical phone.

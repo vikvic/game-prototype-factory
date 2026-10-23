@@ -1,6 +1,6 @@
 import './style.css';
 import { mountShell } from './shell';
-import { drawRoom, drawWall, drawRange, drawStation, drawTable, drawPlayer, drawKeyPrompt, drawDialog, drawMinimap, minimapRect, plateLayout, drawPlatePopup, drawPlateHud, drawRing, eatButton, drawEatButton, text, type Facing } from './art';
+import { drawRoom, drawWall, drawRange, drawStation, drawTable, drawPlayer, drawKeyPrompt, drawDialog, drawMinimap, minimapRect, plateLayout, drawPlatePopup, drawPlateHud, drawRing, eatButton, drawEatButton, drawJoystick, text, type Facing } from './art';
 import { WORLD, VIEW, walls, signs, counterRect, tableRects, setObstacles, move } from './world'; // world.ts also exports findPath (A*), kept for future use
 type Point = {x:number;y:number};
 type Food = Point & {name:string;color:string;w:number;h:number;value:number;serve:number;eat:number;role:string};
@@ -26,6 +26,11 @@ let selected:Food|null=null,rotated=false,cursor=0,eating=false;
 // Stand still next to a station for DWELL seconds to open the plate popup. Locked after cancel/serve until the player moves.
 const DWELL=1;let dwell=0,dwellLock=false;
 let drag:{dx:number;dy:number;moved:boolean;onFood:boolean}|null=null;
+// Touch mode: on for coarse pointers or after any touch; a keyboard key switches back. Desktop stays keyboard-only.
+let touchMode=false,joy:{id:number;ox:number;oy:number;x:number;y:number}|null=null;
+function setTouch(on:boolean){if(touchMode===on)return;touchMode=on;document.documentElement.classList.toggle('touch',on);joy=null;}
+setTouch(matchMedia('(pointer: coarse)').matches);
+document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||e.pointerType==='pen')setTouch(true);},{capture:true});
 let serving:{portion:Portion;elapsed:number}|null=null;
 let facing:Facing='down',walk=0,moving=false;
 let message='Press Enter to start. Collect → fit → return home → eat to score.';
@@ -72,21 +77,53 @@ function cellAt(e:PointerEvent){
  const {x:sx,y:sy}=screenPt(e),{scale,compact}=view(),L=plateLayout(compact,scale);
  const x=Math.floor((sx-L.gx)/L.cell),y=Math.floor((sy-L.gy)/L.cell);return x>=0&&x<4&&y>=0&&y<3?{x,y}:null;
 }
+const joyR=()=>{const {compact,scale}=view();return compact?48/scale:64;};
+const playRight=()=>{const {compact,scale}=view();return minimapRect(compact,scale,WORLD).x-10;}; // left of the HUD column
 canvas.onpointerdown=e=>{
- if(paused()||serving)return;
- // On-screen EAT button (touch / mouse) when the popup is closed.
- if(!selected){const p=screenPt(e),b=eatBtn();if(state==='playing'&&Math.hypot(p.x-b.cx,p.y-b.cy)<=b.r*1.15){e.preventDefault();eat();}return;}
- const c=cellAt(e);if(!c)return;e.preventDefault();canvas.setPointerCapture(e.pointerId);
- const {w,h}=dimensions(),cx=cursor%4,cy=Math.floor(cursor/4),onFood=c.x>=cx&&c.x<cx+w&&c.y>=cy&&c.y<cy+h;
- if(onFood)drag={dx:c.x-cx,dy:c.y-cy,moved:false,onFood:true};else{drag={dx:0,dy:0,moved:true,onFood:false};cursor=clampCursor(c.y*4+c.x);ui();}
+ if(paused())return;const p=screenPt(e),isTouch=e.pointerType!=='mouse';
+ if(state!=='playing'){if(isTouch){e.preventDefault();reset(true);}return;} // tap to start / play again
+ if(serving)return;
+ if(selected){ // popup: drag the food (or tap a cell) to move it, tap the food to place it
+  const c=cellAt(e);if(!c)return;e.preventDefault();canvas.setPointerCapture(e.pointerId);
+  const {w,h}=dimensions(),cx=cursor%4,cy=Math.floor(cursor/4),onFood=c.x>=cx&&c.x<cx+w&&c.y>=cy&&c.y<cy+h;
+  if(onFood)drag={dx:c.x-cx,dy:c.y-cy,moved:false,onFood:true};else{drag={dx:0,dy:0,moved:true,onFood:false};cursor=clampCursor(c.y*4+c.x);ui();}
+  return;
+ }
+ // Action button (SERVE at a counter, EAT at home) — touch or mouse.
+ const b=eatBtn();if(Math.hypot(p.x-b.cx,p.y-b.cy)<=b.r*1.15){e.preventDefault();near()?startRing():eat();return;}
+ // Floating joystick: touch anywhere on the map left of the HUD column.
+ if(isTouch&&!joy&&p.x<playRight()){e.preventDefault();canvas.setPointerCapture(e.pointerId);joy={id:e.pointerId,ox:p.x,oy:p.y,x:p.x,y:p.y};}
 };
-canvas.onpointermove=e=>{if(!drag||!selected)return;const c=cellAt(e);if(!c)return;const n=clampCursor(Math.max(0,c.y-drag.dy)*4+Math.max(0,c.x-drag.dx));if(n!==cursor){cursor=n;drag.moved=true;ui();}};
-canvas.onpointerup=()=>{if(drag&&selected&&drag.onFood&&!drag.moved)place(cursor);drag=null;};
-canvas.onpointercancel=()=>{drag=null;};
+canvas.onpointermove=e=>{
+ if(joy&&e.pointerId===joy.id){const p=screenPt(e);joy.x=p.x;joy.y=p.y;return;}
+ if(!drag||!selected)return;const c=cellAt(e);if(!c)return;const n=clampCursor(Math.max(0,c.y-drag.dy)*4+Math.max(0,c.x-drag.dx));if(n!==cursor){cursor=n;drag.moved=true;ui();}
+};
+canvas.onpointerup=e=>{if(joy&&e.pointerId===joy.id){joy=null;return;}if(drag&&selected&&drag.onFood&&!drag.moved)place(cursor);drag=null;};
+canvas.onpointercancel=e=>{if(joy&&e.pointerId===joy.id)joy=null;drag=null;};
+// Touch buttons (only visible in touch mode): header Help / Restart / Full screen, Start, popup Place / Rotate / Auto / Cancel.
+const helpDialog=document.querySelector<HTMLDialogElement>('#help-dialog')!;
+$('t-help').onclick=()=>{keys.clear();joy=null;helpDialog.showModal();};
+$('t-help-close').onclick=()=>helpDialog.close();
+$('t-restart').onclick=()=>reset(true);
+$('t-start').onclick=()=>reset(true);
+$('t-place').onclick=()=>place(cursor);$('t-rotate').onclick=rotate;$('t-auto').onclick=()=>place(suggestion());$('t-cancel').onclick=cancel;
+// Full screen (+ landscape lock where supported). iPhone Safari has no element fullscreen, so the button hides there.
+const docEl=document.documentElement as HTMLElement&{webkitRequestFullscreen?:()=>Promise<void>};
+const fsDoc=document as Document&{webkitFullscreenEnabled?:boolean;webkitFullscreenElement?:Element;webkitExitFullscreen?:()=>Promise<void>};
+const fsOK=!!(document.fullscreenEnabled||fsDoc.webkitFullscreenEnabled);
+$<HTMLButtonElement>('t-full').hidden=!fsOK;
+$('t-full').onclick=async()=>{
+ try{
+  if(document.fullscreenElement||fsDoc.webkitFullscreenElement){await (document.exitFullscreen?.()??fsDoc.webkitExitFullscreen?.());return;}
+  await (docEl.requestFullscreen?.()??docEl.webkitRequestFullscreen?.());
+  await (screen.orientation as ScreenOrientation&{lock?:(o:string)=>Promise<void>}).lock?.('landscape');
+ }catch{/* orientation lock is optional */}
+};
+document.addEventListener('fullscreenchange',()=>txt('t-full',document.fullscreenElement?'Exit full screen':'Full screen'));
 // Keyboard. Enter start · Backspace restart · H help (shell.ts) · WASD/arrows move · E serve (starts ring) / eat / place
 // · R rotate · F auto-place · Esc cancel. (Pointer only in the popup and on the EAT button.)
 window.addEventListener('keydown',e=>{
- const k=e.key.toLowerCase();if(paused())return;
+ const k=e.key.toLowerCase();if(k!=='h')setTouch(false);if(paused())return;
  if(k==='backspace'){e.preventDefault();reset(true);return;}
  if(state!=='playing'){if(k==='enter'&&!e.repeat){e.preventDefault();reset(true);}return;}
  if(serving){if(steps[k])e.preventDefault();if(k==='escape')cancel();return;} // serving: popup stays up, only Esc
@@ -105,13 +142,16 @@ function ui(){
  txt('status',message);
  if(canvas.dataset.phase!==state)canvas.dataset.phase=state;
  const f=near(),{w,h}=dimensions();
- txt('prompt',state==='ready'?'Your table is home. Press Enter to start.':state==='ended'?`${medal()} · ${score} banked · ${value()} uneaten · Enter to play again`:selected?`Placing ${selected.name} · ${w}×${h}`:f?`${f.name} · ${f.value} pts · ${f.w}×${f.h} · E to serve`:home()?'Home table · E to eat':'Walk with WASD / arrows to a station or back to your table');
+ const tb=(id:string,show:boolean,dis=false)=>{const b=$<HTMLButtonElement>(id);if(b.hidden===show)b.hidden=!show;if(b.disabled!==dis)b.disabled=dis;};
+ tb('t-start',state!=='playing');txt('t-start',state==='ended'?'Play again':'Start');
+ tb('t-place',!!selected,!(!!selected&&fits(cursor%4,Math.floor(cursor/4),w,h)));tb('t-rotate',!!selected,!selected||selected.w===selected.h);tb('t-auto',!!selected);tb('t-cancel',!!selected||!!serving);
+ txt('prompt',state==='ready'?'Your table is home. Press Enter to start.':state==='ended'?`${medal()} · ${score} banked · ${value()} uneaten · Enter to play again`:selected?`Placing ${selected.name} · ${w}×${h}`:f?`${f.name} · ${f.value} pts · ${f.w}×${f.h} · E to serve`:home()?'Home table · E to eat':touchMode?'Drag on the map to walk to a counter or back to your table':'Walk with WASD / arrows to a station or back to your table');
 }
 // Which key to press right now, shown above the player.
 function keyHint():[string,string][]|null{
  if(state!=='playing'||selected||serving)return null;
- if(near())return [['E','Serve']];
- if(home()&&plate.length&&!eating)return [['E','Eat']];
+ if(near())return touchMode?[['','Hold still or tap SERVE']]:[['E','Serve']];
+ if(home()&&plate.length&&!eating)return touchMode?[['','Tap EAT']]:[['E','Eat']];
  return null;
 }
 function draw(now:number){
@@ -137,37 +177,39 @@ function draw(now:number){
  const hint=keyHint();if(hint)drawKeyPrompt(ctx,player.x,player.y-52,hint,compact?10/scale:13);
  ctx.setTransform(dpr,0,0,dpr,0,0); // screen space overlays
  const m=minimapRect(compact,scale,WORLD);
- if(state==='playing'&&!selected&&!serving){const pr=eating&&plate[0]?plate[0].eaten/plate[0].food.eat:0;drawEatButton(ctx,eatBtn(),canEat()?'ready':eating?'eating':'off',pr,now,compact?10/scale:13);}
+ if(state==='playing'&&!selected&&!serving){const pr=eating&&plate[0]?plate[0].eaten/plate[0].food.eat:0;drawEatButton(ctx,eatBtn(),near()?'serve':canEat()?'ready':eating?'eating':'off',pr,now,touchMode?0:compact?10/scale:13);}
+ if(state==='playing'&&touchMode&&!selected&&!serving)drawJoystick(ctx,joy,{x:joyR()+24,y:VIEW.h-joyR()-24},joyR(),compact?10/scale:13);
  drawMinimap(ctx,m,WORLD,walls,foods.map(f=>({...counterRect(f),color:f.color})),tableRects(table)[0],player,cam);
  // Plate HUD sits directly under the minimap.
  const q=serving?.portion,progress=serving?serving.elapsed/serving.portion.food.serve:eating&&plate[0]?plate[0].eaten/plate[0].food.eat:0;
  drawPlateHud(ctx,{x:m.x,y:m.y+m.h+8,w:m.w},compact?10/scale:12,`${compact?'':'Plate '}${value()} pts · ${12-plate.reduce((n,p)=>n+p.w*p.h,0)}/12${compact?'':' free'}`,
   plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${p.food.value}`})),q?{x:q.x,y:q.y,w:q.w,h:q.h}:null,
-  serving?`Serving · ${Math.max(0,serving.portion.food.serve-serving.elapsed).toFixed(1)}s`:eating&&plate[0]?`Eating · ${Math.round(progress*100)}%`:plate.length?(home()?'Tap EAT or press E':'Go home to eat'):'Empty plate',progress);
+  serving?`Serving · ${Math.max(0,serving.portion.food.serve-serving.elapsed).toFixed(1)}s`:eating&&plate[0]?`Eating · ${Math.round(progress*100)}%`:plate.length?(home()?(touchMode?'Tap EAT':'Tap EAT or press E'):'Go home to eat'):'Empty plate',progress);
  const blocks=plate.map(p=>({x:p.x,y:p.y,w:p.w,h:p.h,color:p.food.color,label:`${p.food.value}`}));
  if(selected&&state==='playing'){
   const {w,h}=dimensions(),x=cursor%4,y=Math.floor(cursor/4);
   drawPlatePopup(ctx,plateLayout(compact,scale),`Place ${selected.name} · ${w}×${h} · ${selected.value} pts`,'Drag the food to move it · tap it to place',blocks,
    {x,y,w,h,color:selected.color,label:`${selected.value}`,ok:fits(x,y,w,h)},
-   [['WASD','Move'],['E','Place'],['R','Rotate'],['F','Auto'],['Esc','Cancel']],null,now);
+   touchMode?[['','Buttons on the right: Place · Rotate · Auto · Cancel']]:[['WASD','Move'],['E','Place'],['R','Rotate'],['F','Auto'],['Esc','Cancel']],null,now);
  }else if(serving&&state==='playing'){ // popup stays up while serving, with the progress bar on it
   const q=serving.portion,left=Math.max(0,q.food.serve-serving.elapsed);
   drawPlatePopup(ctx,plateLayout(compact,scale),`Serving ${q.food.name} · ${left.toFixed(1)}s`,'Hold on, plating up…',blocks,
-   {x:q.x,y:q.y,w:q.w,h:q.h,color:q.food.color,label:`${q.food.value}`,ok:true},[['Esc','Cancel']],serving.elapsed/q.food.serve,now);
+   {x:q.x,y:q.y,w:q.w,h:q.h,color:q.food.color,label:`${q.food.value}`,ok:true},touchMode?[['','Cancel button on the right']]:[['Esc','Cancel']],serving.elapsed/q.food.serve,now);
  }
- if(state!=='playing')drawDialog(ctx,state==='ready'?'100 seconds. One hungry diner.':`${medal()} · ${score} points banked`,state==='ready'?'Collect → fit → return home → eat to score.':`${value()} points left uneaten. Try another route.`,state==='ready'?[['Enter','Start'],['H','Help']]:[['Enter','Play again'],['H','Help']],now);
+ if(state!=='playing')drawDialog(ctx,state==='ready'?'100 seconds. One hungry diner.':`${medal()} · ${score} points banked`,state==='ready'?'Collect → fit → return home → eat to score.':`${value()} points left uneaten. Try another route.`,touchMode?[['',state==='ready'?'Tap to start':'Tap to play again']]:state==='ready'?[['Enter','Start'],['H','Help']]:[['Enter','Play again'],['H','Help']],now);
 }
 function frame(now:number){
  const elapsed=Math.max(0,(now-last)/1000);last=now;
  if(state==='playing'&&!paused()){
   const dt=Math.min(elapsed,remaining),moveDt=Math.min(dt,0.05);remaining=Math.max(0,remaining-dt);
   let dx=Number(keys.has('d')||keys.has('arrowright'))-Number(keys.has('a')||keys.has('arrowleft')),dy=Number(keys.has('s')||keys.has('arrowdown'))-Number(keys.has('w')||keys.has('arrowup'));
+  if(!dx&&!dy&&joy){const R=joyR(),vx=joy.x-joy.ox,vy=joy.y-joy.oy,l=Math.hypot(vx,vy);if(l>R*0.2){const m=Math.min(1,l/R);dx=vx/l*m;dy=vy/l*m;}}
   if(selected||serving){dx=0;dy=0;} // plate popup open (placing or serving): no walking
   const length=Math.hypot(dx,dy);moving=length>0;
   if(length>0){
    facing=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');walk+=moveDt*14;dwell=0;dwellLock=false;
    if(serving){serving=null;message='Serve canceled by movement. No portion added.';}if(eating){eating=false;message='Eating stopped. Return home and press E to resume your partial bite.';}
-   const step=190*moveDt;
+   const step=190*moveDt*Math.min(1,length); // joystick is analog; keys are full speed
    move(player,dx/length*step,dy/length*step);
   }else if(serving){serving.elapsed+=dt;if(serving.elapsed>=serving.portion.food.serve){plate.push(serving.portion);message=`${serving.portion.food.name} packed. Add more or return home.`;serving=null;dwellLock=true;}}
   else if(eating&&home()){

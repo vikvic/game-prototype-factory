@@ -26,9 +26,9 @@ export function keycap(ctx:Ctx,x:number,cy:number,label:string,fs:number){
 }
 // A centred row of [key] label pairs.
 export function keyRow(ctx:Ctx,items:[string,string][],cx:number,cy:number,fs:number,color='#4a5550'){
- const gap=fs*0.9,parts=items.map(([k,l])=>{const kw=keyWidth(ctx,k,fs);ctx.font=`600 ${fs}px system-ui`;return {k,l,kw,lw:ctx.measureText(l).width};});
+ const gap=fs*0.9,parts=items.map(([k,l])=>{const kw=k?keyWidth(ctx,k,fs):-fs*0.3;ctx.font=`600 ${fs}px system-ui`;return {k,l,kw,lw:ctx.measureText(l).width};});
  const total=parts.reduce((n,p)=>n+p.kw+fs*0.3+p.lw,0)+gap*(parts.length-1);let x=cx-total/2;
- for(const p of parts){keycap(ctx,x,cy,p.k,fs);x+=p.kw+fs*0.3;ctx.fillStyle=color;ctx.font=`600 ${fs}px system-ui`;ctx.textAlign='left';ctx.fillText(p.l,x,cy+fs*0.35);x+=p.lw+gap;}
+ for(const p of parts){if(p.k)keycap(ctx,x,cy,p.k,fs);x+=p.kw+fs*0.3;ctx.fillStyle=color;ctx.font=`600 ${fs}px system-ui`;ctx.textAlign='left';ctx.fillText(p.l,x,cy+fs*0.35);x+=p.lw+gap;}
  return total;
 }
 // Speech-bubble prompt above the player showing which key to press.
@@ -283,18 +283,28 @@ export function drawRing(ctx:Ctx,x:number,y:number,r:number,progress:number,colo
 export function eatButton(compact:boolean,scale:number,m:Rect){
  const r=Math.max(compact?32/scale:40,34);return {cx:m.x-16-r,cy:520-14-r,r};
 }
-export function drawEatButton(ctx:Ctx,b:{cx:number;cy:number;r:number},mode:'ready'|'eating'|'off',progress:number,now:number,fs:number){
+// mode 'serve' (at a counter: starts the ring) / 'ready' (at home with food) / 'eating' / 'off'. fs=0 hides the E keycap (touch mode).
+export function drawEatButton(ctx:Ctx,b:{cx:number;cy:number;r:number},mode:'serve'|'ready'|'eating'|'off',progress:number,now:number,fs:number){
  const {cx,cy,r}=b;ctx.save();if(mode==='off')ctx.globalAlpha=0.45;
  ell(ctx,cx,cy+r*0.12,r,r);paint(ctx,'#00000033',0);
- if(mode==='ready'){ell(ctx,cx,cy,r+5+3*Math.sin(now/160),r+5+3*Math.sin(now/160));paint(ctx,'#efd18466',0);}
+ if(mode==='ready'||mode==='serve'){ell(ctx,cx,cy,r+5+3*Math.sin(now/160),r+5+3*Math.sin(now/160));paint(ctx,'#efd18466',0);}
  ell(ctx,cx,cy,r,r);paint(ctx,mode==='off'?'#9aa59e':'#ebc371',3);
  ell(ctx,cx,cy-r*0.08,r*0.82,r*0.78);paint(ctx,mode==='off'?'#b4bdb7':'#f3d58f',0);
  // fork + plate glyph
  ell(ctx,cx,cy-r*0.12,r*0.36,r*0.24);paint(ctx,'#ffffff',2);
  line(ctx,cx-r*0.52,cy-r*0.42,cx-r*0.52,cy+r*0.06,INK,2.5);for(const k of [-0.6,-0.52,-0.44])line(ctx,cx+r*k,cy-r*0.42,cx+r*k,cy-r*0.24,INK,1.5);
  line(ctx,cx+r*0.52,cy-r*0.42,cx+r*0.52,cy+r*0.06,INK,2.5);
- text(ctx,mode==='eating'?`${Math.round(progress*100)}%`:'EAT',cx,cy+r*0.42,r*0.34,INK,900);
+ text(ctx,mode==='eating'?`${Math.round(progress*100)}%`:mode==='serve'?'SERVE':'EAT',cx,cy+r*0.42,r*(mode==='serve'?0.28:0.34),INK,900);
  if(mode==='eating'){ctx.beginPath();ctx.arc(cx,cy,r+6,-Math.PI/2,-Math.PI/2+Math.PI*2*Math.min(1,progress));ctx.strokeStyle='#e8a33d';ctx.lineWidth=6;ctx.lineCap='round';ctx.stroke();ctx.lineCap='butt';}
  ctx.restore();
- keycap(ctx,cx+r*0.55,cy-r*0.85,'E',fs);
+ if(fs)keycap(ctx,cx+r*0.55,cy-r*0.85,'E',fs);
+}
+
+// Floating joystick (touch mode): base where the finger went down, knob follows the finger; idle hint bottom-left.
+export function drawJoystick(ctx:Ctx,joy:{ox:number;oy:number;x:number;y:number}|null,idle:Point,R:number,fs:number){
+ if(!joy){ell(ctx,idle.x,idle.y,R,R);ctx.strokeStyle='#2c2f3a40';ctx.lineWidth=3;ctx.setLineDash([6,6]);ctx.stroke();ctx.setLineDash([]);
+  text(ctx,'Drag to walk',idle.x,idle.y+fs*0.35,fs,'#2c2f3a99',700);return;}
+ ell(ctx,joy.ox,joy.oy,R,R);ctx.fillStyle='#2c2f3a30';ctx.fill();ctx.strokeStyle='#ffffffb0';ctx.lineWidth=3;ctx.stroke();
+ const vx=joy.x-joy.ox,vy=joy.y-joy.oy,l=Math.hypot(vx,vy),k=l>R?R/l:1;
+ ell(ctx,joy.ox+vx*k,joy.oy+vy*k,R*0.42,R*0.42);paint(ctx,'#fbfbf5',3);
 }
