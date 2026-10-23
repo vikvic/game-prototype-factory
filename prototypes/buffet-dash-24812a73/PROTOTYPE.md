@@ -15,11 +15,11 @@ The visible 4×3 plate checks exact clicked cells for bounds and overlaps. Dashe
 
 | Food | Footprint | Value | Serve | Eat |
 | --- | --- | --- | --- | --- |
-| Berry bites | 1×1 | 7 | 0.7s | 1s |
-| Golden rolls | 2×1 | 19 | 1.4s | 2s |
-| Green skewers | 1×3 | 30 | 1.8s | 2.8s |
-| Sushi pair | 2×1 | 28 | 1.7s | 2.3s |
-| Royal roast | 2×2 | 48 | 3.5s | 5.2s |
+| Berry bites | 1×1 | 7 | 0.35s | 0.33s |
+| Golden rolls | 2×1 | 19 | 0.7s | 0.67s |
+| Green skewers | 1×3 | 30 | 0.9s | 0.93s |
+| Sushi pair | 2×1 | 28 | 0.85s | 0.77s |
+| Royal roast | 2×2 | 48 | 1.75s | 1.73s |
 
 ## Assumptions
 Values and medal goals are initial tuning choices. Roast has high portion value but lower points per cell and slower processing than distant sushi. Nearby berries fill gaps quickly. Movement is 190 map units/second. Serving range is 102 units; home range is 78. Furniture is decorative and traversable to avoid pathfinding traps. The clock continues when the tab is hidden; elapsed time is reconciled on the next frame. Help and portrait rotate guidance pause the round explicitly.
@@ -100,3 +100,7 @@ Verified 2026-10-22: strict TypeScript / production build passed. Headless Chrom
 
 - Q is removed. E is context-sensitive: at a counter it starts the 1-second ring (even right after a cancel or serve), in the popup it places, at home it eats. The contextual prompt now reads "E Serve" at counters.
 - The ring and E no longer check for room on the plate before opening the popup; if nothing fits, the popup shows the red ✕ cursor and Esc closes it.
+
+## Timing tune (2026-10-22)
+
+- Serve times halved and eat times divided by 3 (eating 3x as fast); the table above shows the new values (eat times are exact thirds in code, e.g. 5.2/3, displayed to 2 decimals). Values, footprints, movement, ranges, the 1-second serve ring and medal goals are unchanged. Faster processing offsets the longer walks in the larger hall, but medal targets still need playtesting.

@@ -6,12 +6,13 @@ type Point = {x:number;y:number};
 type Food = Point & {name:string;color:string;w:number;h:number;value:number;serve:number;eat:number;role:string};
 type Portion = {food:Food;x:number;y:number;w:number;h:number;eaten:number};
 // World positions in a 1440x880 hall (see world.ts for walls and doorways).
+// Timing tune (2026-10-22): serve = half the original, eat = original / 3.
 const foods:Food[] = [
- {name:'Berry bites',color:'#ef8293',x:260,y:690,w:1,h:1,value:7,serve:0.7,eat:1,role:'Nearby · gap filler'},
- {name:'Golden rolls',color:'#eec46b',x:240,y:190,w:2,h:1,value:19,serve:1.4,eat:2,role:'Quick staple'},
- {name:'Green skewers',color:'#a1c777',x:720,y:180,w:1,h:3,value:30,serve:1.8,eat:2.8,role:'Long & lean'},
- {name:'Sushi pair',color:'#7acac4',x:1200,y:150,w:2,h:1,value:28,serve:1.7,eat:2.3,role:'Far · efficient'},
- {name:'Royal roast',color:'#c89bda',x:1220,y:720,w:2,h:2,value:48,serve:3.5,eat:5.2,role:'Premium · bulky'}
+ {name:'Berry bites',color:'#ef8293',x:260,y:690,w:1,h:1,value:7,serve:0.35,eat:1/3,role:'Nearby · gap filler'},
+ {name:'Golden rolls',color:'#eec46b',x:240,y:190,w:2,h:1,value:19,serve:0.7,eat:2/3,role:'Quick staple'},
+ {name:'Green skewers',color:'#a1c777',x:720,y:180,w:1,h:3,value:30,serve:0.9,eat:2.8/3,role:'Long & lean'},
+ {name:'Sushi pair',color:'#7acac4',x:1200,y:150,w:2,h:1,value:28,serve:0.85,eat:2.3/3,role:'Far · efficient'},
+ {name:'Royal roast',color:'#c89bda',x:1220,y:720,w:2,h:2,value:48,serve:1.75,eat:5.2/3,role:'Premium · bulky'}
 ];
 const table:Point={x:720,y:650},spawn:Point={x:table.x,y:table.y-58}; // spawn just behind the table, inside home range
 setObstacles([...foods.map(counterRect),...tableRects(table)]);
@@ -29,6 +30,7 @@ let serving:{portion:Portion;elapsed:number}|null=null;
 let facing:Facing='down',walk=0,moving=false;
 let message='Press Enter to start. Collect → fit → return home → eat to score.';
 const paused=mountShell(VIEW.w/VIEW.h,()=>{keys.clear();last=performance.now();});
+const secs=(n:number)=>`${+n.toFixed(2)}s`; // eat times are thirds, show 2 decimals
 const dist=(a:Point,b:Point)=>Math.hypot(a.x-b.x,a.y-b.y);
 const near=()=>foods.find(f=>dist(player,f)<102);
 const home=()=>dist(player,table)<78;
@@ -123,7 +125,7 @@ function draw(now:number){
  const items:{y:number;draw:()=>void}[]=walls.map(w=>({y:w.y+w.h,draw:()=>drawWall(ctx,w,compact,signs)}));
  for(const f of foods)items.push({y:f.y-10,draw:()=>{
   drawStation(ctx,f,compact,scale);
-  if(!compact){text(ctx,`${f.value} pts · ${f.w}×${f.h} · serve ${f.serve}s`,f.x,f.y+56,12,'#4b5a52',600);text(ctx,`eat ${f.eat}s · ${f.role}`,f.x,f.y+72,12,'#4b5a52',600);}
+  if(!compact){text(ctx,`${f.value} pts · ${f.w}×${f.h} · serve ${secs(f.serve)}`,f.x,f.y+56,12,'#4b5a52',600);text(ctx,`eat ${secs(f.eat)} · ${f.role}`,f.x,f.y+72,12,'#4b5a52',600);}
  }});
  items.push({y:table.y-10,draw:()=>{drawTable(ctx,table,compact,scale);if(!compact)text(ctx,'E / Eat to score',table.x,table.y+56,12,'#2f5d50',700);}});
  items.push({y:player.y+18,draw:()=>{
