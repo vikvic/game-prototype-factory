@@ -158,3 +158,8 @@ Verified 2026-10-22: production build passed. Chromium mobile emulation (touch, 
 - It plays on every successful Feast bite (Perfect or Good), for all foods. Nothing else makes sound (no ticks, miss, bank, popup, packed or time-out sounds) — reduced on playtest feedback that the fuller set did not work.
 - Feast emits cues as an event queue (`Feast.events`); main plays the munch immediately after E / touch input, so it is not delayed to the next frame. Tests read `window.__sfxLog` (only exists when a test sets it).
 - Mute: M (keyboard) or the touch header Sound button; stored in localStorage (`buffet-dash-muted`), wrapped in try/catch so private browsing still works.
+
+## Station swap + continuous holds (2026-10-25)
+
+- Chicken leg and Royal roast swapped places: Chicken leg is now in the carvery wing (bottom right, 1220,720), Royal roast in the grill room (top right, 1200,150). Grid A* walk from home to the counter front: carvery ≈ 559 units, grill room ≈ 870. The chicken trip is now shorter and the roast trip longer, so the earlier pts/s figures (chicken 3.41, roast 4.63) no longer hold — re-check balance in playtest. Role labels updated ("Far" moved to the roast).
+- Feast holds: the roast's `HH` draws as one continuous bar, but each hold note needed its own press, so holding through made the second note Miss. Now, if the bite button is still down when a hold ends and the next note is a hold starting right then, it carries on with the same grade (one munch for the whole bar). Releasing within the Good window (0.12 s) after that carry-over counts as a re-press, so the press re-grades it instead of a drop. Releasing later still drops one grade.

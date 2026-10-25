@@ -28,8 +28,8 @@ const foods:Food[] = [
  {name:'Green skewers',color:'#a1c777',x:720,y:180,w:1,h:3,value:30,serve:0.9,bites:'TTT',role:'Long & lean'},
  // Chicken leg (thigh + drumstick) replaces Sushi pair: a 3-cell L in a 2×2 box at sushi's 14 pts/cell = 42;
  // serve/eat scaled per cell from sushi (×3/2).
- {name:'Chicken leg',color:'#e58a5a',x:1200,y:150,w:2,h:2,cells:[[0,0],[0,1],[1,1]],value:42,serve:0.85*3/2,bites:'TTH',role:'Far · thigh & drumstick L'},
- {name:'Royal roast',color:'#c89bda',x:1220,y:720,w:2,h:2,value:48,serve:1.75,bites:'HHTT',role:'Premium · bulky'}
+ {name:'Chicken leg',color:'#e58a5a',x:1220,y:720,w:2,h:2,cells:[[0,0],[0,1],[1,1]],value:42,serve:0.85*3/2,bites:'TTH',role:'Thigh & drumstick L'},
+ {name:'Royal roast',color:'#c89bda',x:1200,y:150,w:2,h:2,value:48,serve:1.75,bites:'HHTT',role:'Far · premium · bulky'}
 ];
 const table:Point={x:720,y:650},spawn:Point={x:table.x,y:table.y-58}; // spawn just behind the table, inside home range
 setObstacles([...foods.map(counterRect),...tableRects(table)]);

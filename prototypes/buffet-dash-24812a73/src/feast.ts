@@ -8,7 +8,7 @@ const DOWN:Record<number,number>={1.2:1.0,1.0:0.6,0.6:0.6};
 
 // A portion as the feast sees it: bite pattern ('T' tap, 'H' hold) and grades of bites already eaten (persist on stop).
 export type Eater = {bites:string;grades:number[]};
-export type Note = {t:number;dur:number;hold:boolean;p:Eater;i:number;grade:number|null;state:'wait'|'held'|'done'};
+export type Note = {t:number;dur:number;hold:boolean;p:Eater;i:number;grade:number|null;state:'wait'|'held'|'done';chained?:boolean};
 export type Fx = {text:string;at:number;kind:'perfect'|'good'|'miss'};
 // events: sound cues for main to play ('tick','tick-accent','hit-perfect','hit-good','hold','miss','drop'), with the portion
 // they belong to (so main can pick that food's bite sound); ticks: beat times.
@@ -32,17 +32,22 @@ export function press(f:Feast){
  if(n.hold){n.state='held';f.events.push({e:'hold',p:n.p});}else finish(f,n);
 }
 // Bite released: a hold let go before its end (minus grace) drops one grade.
+// A hold that was carried on from the previous hold and let go right at its start counts as a re-press: it goes back to waiting.
 export function release(f:Feast){
  f.pressing=false;
- for(const n of f.notes)if(n.state==='held'){if(f.t<n.t+n.dur-HOLD_GRACE){n.grade=DOWN[n.grade!];f.events.push({e:'drop',p:n.p});}finish(f,n);}
+ for(const n of f.notes)if(n.state==='held'){
+  if(n.chained&&f.t-n.t<=GOOD){n.state='wait';n.grade=null;n.chained=false;continue;}
+  if(f.t<n.t+n.dur-HOLD_GRACE){n.grade=DOWN[n.grade!];f.events.push({e:'drop',p:n.p});}finish(f,n);}
 }
-// Advance time: unpressed notes past the window miss; completed holds finish.
+// Advance time: unpressed notes past the window miss; completed holds finish. Back-to-back holds (the roast's HH) draw as one
+// bar, so still holding when one ends carries straight into the next hold with the same grade (no re-press needed, no extra munch).
 export function update(f:Feast,dt:number){
  f.t+=dt;
  while(f.nextTick<f.ticks.length&&f.t>=f.ticks[f.nextTick].t)f.events.push({e:f.ticks[f.nextTick++].accent?'tick-accent':'tick'});
- for(const n of f.notes){
-  if(n.state==='wait'&&f.t>n.t+GOOD){n.grade=GRADE.miss;finish(f,n);f.events.push({e:'miss',p:n.p});}
-  else if(n.state==='held'&&f.t>=n.t+n.dur)finish(f,n);
+ for(let k=0;k<f.notes.length;k++){const n=f.notes[k];
+  if(n.state==='held'&&f.t>=n.t+n.dur){finish(f,n);const m=f.notes[k+1];
+   if(f.pressing&&m&&m.hold&&m.state==='wait'&&Math.abs(m.t-(n.t+n.dur))<1e-6){m.grade=n.grade;m.state='held';m.chained=true;}}
+  else if(n.state==='wait'&&f.t>n.t+GOOD){n.grade=GRADE.miss;finish(f,n);f.events.push({e:'miss',p:n.p});}
  }
  f.fx=f.fx.filter(x=>f.t-x.at<0.6);
 }

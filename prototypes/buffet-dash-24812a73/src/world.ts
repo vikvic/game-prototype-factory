@@ -8,8 +8,8 @@ export const VIEW={w:900,h:520};
 export const RADIUS=12; // player collision radius
 
 // Back wall, outer walls, and interior walls with doorways:
-// bakery wing (left, open to the south), grill room (top right, chicken legs; door on its south-east side),
-// carvery wing (bottom right, door at y 580-700), dining area in the middle, two pillars.
+// bakery wing (left, open to the south), grill room (top right, royal roast; door on its south-east side),
+// carvery wing (bottom right, chicken legs; door at y 580-700), dining area in the middle, two pillars.
 export const walls:Wall[]=[
  {x:0,y:0,w:1440,h:48,back:true},
  {x:0,y:48,w:20,h:832},{x:1420,y:48,w:20,h:832},{x:20,y:860,w:1400,h:20},
