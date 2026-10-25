@@ -1,0 +1,11 @@
+{
+  "checked_date": "2026-10-25",
+  "signal": "BBC Entertainment RSS coverage; search growth unmeasured",
+  "sources": [
+    {"url":"https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml","supports":"Headline and feed publication time"},
+    {"url":"https://www.nme.com/news/music/sam-fender-scraps-front-standing-tickets-reduced-prices-2027-stadium-tour-3974164","supports":"Reported removal of premium standing areas and £85 before fees/contribution"},
+    {"url":"https://www.samfender.com/","supports":"Official tour name and dates"},
+    {"url":"https://www.newcastleunited.com/en/news/sam-fender-st-james-park-june-2027","supports":"Official homecoming venue and ticket-sale context"}
+  ],
+  "fictional_elements": ["scissors", "executives drawing endless ropes", "slapstick fan falls", "scoring and multipliers"]
+}

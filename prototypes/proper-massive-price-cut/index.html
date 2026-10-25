@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#142d39"><meta name="description" content="Snip the VIP ropes. Let the fans through. A 60-second portrait arcade inspired by Sam Fender’s ticket-price intervention.">
+<title>Proper Massive Price Cut</title>
+</head><body>
+<main class="game-shell">
+  <header>
+    <div class="brand"><span class="eyebrow">A PROPER MASSIVE</span><h1>PRICE CUT<span class="cut-mark">✂</span></h1></div>
+    <nav aria-label="Game controls"><button id="pause" aria-label="Pause game" title="Pause · P">Ⅱ</button><button id="sound" aria-label="Mute sound" aria-pressed="false" title="Sound">♪</button><button id="help" aria-label="How to play" title="Help · H">?</button></nav>
+  </header>
+  <section class="scoreboard" aria-label="Round status"><div><span>SCORE</span><strong id="score">0</strong></div><div class="mult-stat"><span>MULTIPLIER</span><strong id="multiplier">1×</strong></div><div><span>FANS IN</span><strong id="fans">0</strong></div><div><span>TIME</span><strong id="time">60</strong></div></section>
+  <section class="stage" aria-label="Concert entrance">
+    <canvas id="game" width="420" height="650" tabindex="0" aria-label="Swipe across the VIP ropes to cut them. Fans walk from the bottom to the concert at the top. Multiple cuts increase their score multiplier. The round lasts sixty seconds."></canvas>
+    <section class="overlay" id="intro" aria-labelledby="intro-title"><div class="ticket">
+      <span class="ticket-kicker">SAM FENDER VS. THE VIP ROPES</span><h2 id="intro-title">LET THE<br>FANS IN.</h2>
+      <div class="swipe-demo" aria-hidden="true"><span>✂</span><i></i><b>↗</b></div>
+      <p>Swipe to snip every rope you cross.<br>Short reach. Quick recharge.<br><strong>Multi-cuts = bigger fan points.</strong></p>
+      <button id="start" class="primary">OPEN THE GATES <span>→</span></button>
+      <p class="small">60 seconds. No early game over.<br>Mouse or touch · Sound makes it sillier.</p>
+      <button id="story" class="text-button">The story behind the scissors ↗</button>
+    </div></section>
+    <section class="overlay" id="result" aria-labelledby="result-title" hidden><div class="ticket result-ticket">
+      <span class="ticket-kicker">SIXTY SECONDS. EVERY FAN COUNTS.</span><h2 id="result-title">GATES CLOSED.</h2>
+      <strong id="final-score" class="final-score">0</strong><span class="score-label">PROPER MASSIVE POINTS</span>
+      <p id="final-stats"></p><p id="best-score" class="small"></p>
+      <canvas id="result-portrait" width="260" height="120" aria-label="Sam and the fans react to your actual score"></canvas>
+      <button id="replay" class="primary">ONE MORE ROUND <span>↻</span></button>
+      <div class="result-actions"><button id="share">Share score ↗</button><button id="save">Save card ↓</button></div>
+      <p id="share-status" class="small" role="status">Your score. Your crowd. Your bragging rights.</p>
+    </div></section>
+  </section>
+  <footer>
+    <div class="ready-line"><span id="ready-label">SCISSORS READY</span><span>REACH <b>150</b></span></div>
+    <div class="recharge-track" role="progressbar" aria-label="Scissors recharge" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="recharge"></i></div>
+    <p id="message" role="status">Cut the ropes. Keep the crowd moving.</p>
+  </footer>
+</main>
+<dialog id="pause-dialog"><div class="dialog-body"><span class="eyebrow">SCISSORS DOWN</span><h2>TAKE A BREATHER.</h2><p id="pause-reason">Your crowd and clock are paused.</p><button id="resume" class="primary" autofocus>KEEP CUTTING →</button></div></dialog>
+<dialog id="help-dialog"><div class="dialog-body"><span class="eyebrow">HOW TO PLAY</span><h2>SMALL SWIPES.<br>BIG OPENINGS.</h2><p>Fans walk upward. Executives stretch VIP ropes across their path. Swipe across a rope: scissors zip in, snip it and get out of the way.</p><p><strong>One swipe can cut every rope it crosses.</strong> Your stroke has 150 units of reach (about a third of the arena width). Long or curved strokes use the same budget. Scissors recharge in 0.6 seconds.</p><p>Cut 2 / 3 / 4+ ropes in one swipe for at least 2× / 3× / 4× points per arriving fan. Smaller cuts preserve your multiplier. A blocked fan tumbles out, an executive laughs, and the multiplier resets to 1×. Banked points stay.</p><p><strong>Only the timer ends the run.</strong> You have 60 active-play seconds. Help, pause and leaving the tab freeze the clock. P pauses, H opens help, R restarts; mouse and touch use the same swipe controls.</p><button id="help-close" class="primary">GOT IT →</button></div></dialog>
+<dialog id="story-dialog"><div class="dialog-body"><span class="eyebrow">THE REAL HOOK</span><h2>NO PREMIUM<br>FRONT ROW.</h2><p>On October 25, 2026, the factory’s BBC Entertainment RSS feed carried a story about Sam Fender challenging inflated tour ticket prices.</p><p>NME reported that premium front-standing sections had been removed and UK standing tickets revised to £85 <strong>before venue/ticketing fees and the £1 LIVE Trust contribution</strong>.</p><p>The scissors, scheming executives, falling fans and endless new ropes are fictional arcade exaggerations. Original cartoon art and synthesized sound. Unofficial.</p><p><a href="https://www.nme.com/news/music/sam-fender-scraps-front-standing-tickets-reduced-prices-2027-stadium-tour-3974164" target="_blank" rel="noopener noreferrer">Read the pricing report ↗</a><br><a href="https://www.samfender.com/" target="_blank" rel="noopener noreferrer">Official tour site ↗</a><br><a href="../../">More prototypes ↗</a></p><button id="story-close" class="primary">BACK TO THE CROWD →</button></div></dialog>
+<script type="module" src="/src/main.ts"></script></body></html>
