@@ -381,3 +381,41 @@ export function drawJoystick(ctx:Ctx,joy:{ox:number;oy:number;x:number;y:number}
  const vx=joy.x-joy.ox,vy=joy.y-joy.oy,l=Math.hypot(vx,vy),k=l>R?R/l:1;
  ell(ctx,joy.ox+vx*k,joy.oy+vy*k,R*0.42,R*0.42);paint(ctx,'#fbfbf5',3);
 }
+
+// ---- Feast (rhythm eating) panel ----
+export function feastLayout(compact:boolean,scale:number){
+ const P=plateLayout(compact,scale),fs=P.fs,cell=P.cell*0.6,pad=fs*1.2,lh=Math.max(P.cell*0.95,compact?44/scale:58);
+ const w=Math.max(P.w,cell*4+pad*2,fs*(compact?22:34)),top=fs*3.4,h=top+cell*3+fs*0.9+lh+fs*2.7,x=(900-w)/2,y=Math.max(6,(520-h)/2);
+ return {x,y,w,h,fs,cell,gx:x+(w-cell*4)/2,gy:y+top,lx:x+pad,ly:y+top+cell*3+fs*0.9,lw:w-pad*2,lh};
+}
+type FeastNote={dt:number;dur:number;hold:boolean;color:string;name:string;grade:number|null;state:string};
+export function drawFeast(ctx:Ctx,L:ReturnType<typeof feastLayout>,d:{title:string;sub:string;blocks:Block[];current:number;notes:FeastNote[];pressing:boolean;fx:{text:string;age:number;kind:string}[];beat:number;keys:[string,string][];now:number}){
+ ctx.fillStyle='#10252a66';ctx.fillRect(0,0,900,520);
+ rr(ctx,L.x,L.y,L.w,L.h,14);paint(ctx,'#fbfbf5',5);
+ rr(ctx,L.x+7,L.y+7,L.w-14,L.h-14,9);ctx.strokeStyle='#e8a33d';ctx.lineWidth=3;ctx.stroke();
+ text(ctx,d.title,L.x+L.w/2,L.y+L.fs*2.0,L.fs*1.05,INK,800);
+ text(ctx,d.sub,L.x+L.w/2,L.y+L.fs*3.05,L.fs*0.75,'#4a5550',700);
+ // plate: the portion being eaten is outlined in gold
+ const c=L.cell;
+ for(let j=0;j<3;j++)for(let i=0;i<4;i++){rr(ctx,L.gx+i*c+1.5,L.gy+j*c+1.5,c-3,c-3,4);paint(ctx,'#efe6d2',1,'#c9bba0');}
+ d.blocks.forEach((b,i)=>{foodTile(ctx,b,L.gx+b.x*c,L.gy+b.y*c,c,2,L.fs*0.7,5);if(i===d.current)tileStroke(ctx,b,L.gx+b.x*c,L.gy+b.y*c,c,2,5,'#e8a33d',4);});
+ // lane
+ const cy=L.ly+L.lh/2,r=L.lh*0.34,hx=L.lx+L.lh*0.7,speed=(L.lx+L.lw-hx)/1.6;
+ rr(ctx,L.lx,L.ly,L.lw,L.lh,L.lh*0.3);paint(ctx,'#efe6d2',2,'#c9bba0');
+ ctx.save();rr(ctx,L.lx,L.ly,L.lw,L.lh,L.lh*0.3);ctx.clip();
+ for(let k=-1;k<6;k++){const bx=hx+(k*d.beat-((d.notes[0]?.dt??0)%d.beat))*speed;line(ctx,bx,L.ly+4,bx,L.ly+L.lh-4,'#e2d5b8',1.5);} // beat ticks
+ for(const n of d.notes){
+  if(n.state==='done'&&n.grade!==null&&n.grade>0.6)continue; // eaten
+  const x=hx+n.dt*speed;if(x-r>L.lx+L.lw||x+n.dur*speed*(n.hold?1:0)+r<L.lx)continue;
+  const miss=n.state==='done',col=miss?'#b9b2a4':n.color;
+  if(n.hold){const len=n.dur*speed;rr(ctx,x,cy-r*0.55,len,r*1.1,r*0.55);ctx.globalAlpha=0.7;paint(ctx,col,2);ctx.globalAlpha=1;}
+  if(n.state==='held')continue;
+  ell(ctx,x,cy,r*0.85,r*0.85);paint(ctx,col,2);if(!miss)drawFoodIcon(ctx,n.name,x,cy,r*1.3,r*1.3);
+ }
+ ctx.restore();
+ // bite target (mouth)
+ ell(ctx,hx,cy,r*1.05,r*1.05);ctx.fillStyle=d.pressing?'#ffe7a399':'#ffffff55';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.stroke();
+ ctx.beginPath();ctx.arc(hx,cy,r*0.55,0.15*Math.PI,0.85*Math.PI);ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke(); // smile
+ for(const f of d.fx){const a=Math.max(0,1-f.age/0.6);ctx.globalAlpha=a;text(ctx,f.text,hx,L.ly-L.fs*0.25-f.age*L.fs*1.5,L.fs*0.95,f.kind==='perfect'?'#c9831a':f.kind==='good'?'#2f8f5b':'#d9453b',900);ctx.globalAlpha=1;}
+ keyRow(ctx,d.keys,L.x+L.w/2,L.y+L.h-L.fs*1.15,L.fs*0.8);
+}

@@ -3,7 +3,7 @@
 A Canvas buffet game with a 100-second round. Fully eat portions at the home table to bank points. Bronze: 200; silver: 320; gold: 450. Timeout ends every run regardless of target.
 
 ## Controls (keyboard on desktop; touch mode on phones/tablets — see the touch section below)
-- Enter starts a round (also "play again" after time-out). Backspace restarts at any time. H toggles Help (Esc also closes it).
+- Any key (except H and modifier keys), click or tap starts a round, or plays again after time-out, once the start/end screen has been up for 1 second. Backspace restarts at any time. H toggles Help (Esc also closes it).
 - WASD / arrows move.
 - Next to a counter, standing still for 1 second, or pressing E, fills a ring around the player; when full the plate popup opens (also when the plate is full: no room check). Movement is locked while it is open. Drag the food (touch or mouse) or use WASD / arrows to move it; tap the food or press E to place. R rotates, F auto-places, Esc cancels. After a cancel or a completed serve the ring only restarts after moving or pressing E.
 - E, or tapping the round on-screen EAT button, eats portions in pickup order at home. Moving pauses eating; partial bites resume.
@@ -13,7 +13,7 @@ A Canvas buffet game with a 100-second round. Fully eat portions at the home tab
 ## Implemented mechanics
 The visible 4×3 plate checks exact clicked cells for bounds and overlaps. Dashed outlines show suggested placement or pointer fit feedback. Invalid placements lose no food; the round clock continues. Serving reserves cells and adds food only after completion. Completed eating credits points and frees cells. Unfinished portions never score. Restart clears inventory, progress, destination, held keys, score, and timers.
 
-| Food | Footprint | Value | Serve | Eat |
+| Food | Footprint | Value | Serve | Eat (pre-Feast) |
 | --- | --- | --- | --- | --- |
 | Berry bites | 1×1 | 7 | 0.35s | 0.33s |
 | Golden rolls | 2×1 | 19 | 0.7s | 0.67s |
@@ -138,3 +138,23 @@ Verified 2026-10-22: production build passed. Chromium mobile emulation (touch, 
 - Numbers: 24 placements on an empty plate (sushi had 17) and it fits 95% of half-full plates, so it is not harder to place in raw terms; its cost is the awkward single-cell holes it tends to leave. It appears in 64% of the 7,329 full-plate packings. A dedicated trip is 12.3 s for 42 pts = 3.41 pts/s (old sushi 2.43; roast 4.63; skewers 4.57), and at 14 pts/cell it is the densest filler for a high-value full plate.
 - Full plates average 118.5 pts (84–168); ×1.25 still adds ≈ +30, above the ≈ 25-pt net cost of a top-up detour, so FULL_BONUS is unchanged.
 - (An earlier same-day version used a 5-cell 3×3 L worth 70; replaced at the user's request.)
+
+## Start on any input (2026-10-24)
+
+- Enter is no longer required: any key (except H, which opens Help, and modifier keys), any click or tap on the map, or the touch Start button starts the round / plays again. Input is ignored for the first second after the ready or end screen appears (`START_DELAY` in `src/main.ts`) so keys held at time-out don't instantly restart; the dialogue shows "Get ready…" during that second and the touch Start button is disabled.
+
+## Feast: rhythm eating (2026-10-24)
+
+- Eating is now a one-button rhythm mini-game (`src/feast.ts` logic, `drawFeast` in `src/art.ts`). E / Eat at home opens the Feast panel: the plate (current portion outlined) above a lane where notes slide into a mouth target. The chart is the plate in pickup order, one note per cell, one note every 0.4 s (BEAT), after a 0.8 s count-in. The "Eat" column in the food table above is superseded; eating time is now cells × 0.4 s.
+- Patterns ('T' tap, 'H' hold one beat): Berry T · Rolls TT · Skewers TTT · Chicken leg TTH (thigh = hold) · Roast HHTT.
+- Grades per bite: Perfect (±60 ms) ×1.2, Good (±120 ms) ×1.0, Miss ×0.6; releasing a hold more than 60 ms early drops one grade; stray presses are ignored. A portion banks value × average bite grade (× full-plate bonus) when its last bite is judged. No fail state.
+- Input: keyboard E (down/up for holds); touch: tap / hold anywhere on the map. Esc or the touch Stop button ends early: finished portions are already banked, partly eaten portions keep their judged bites and resume on the next Feast. Movement is locked and the round clock keeps running.
+- Tests: on-time keyboard play of skewers + roast scored Perfect ×7 = 94; no input = 3 misses, 18; on-beat touch taps = Perfect ×3; logic unit checks for hold early-release, window edges (130 ms late = miss), stray presses and resume.
+- Balance: eating a full plate now takes 4.8 s + 0.8 s count-in (was ~3.7 s for 4 skewers), and score scales ×0.6–×1.2 with timing; medal goals need playtest retuning.
+
+## Sound effects (2026-10-24)
+
+- `src/sound.ts` plays one **recorded** munch (`src/sfx/munch.wav`, imported so Vite hashes it into `dist/assets`). Synthesised versions sounded industrial, not like a human bite, so they were replaced. Source: `crunch.4.ogg` from "7 Eating Crunches" by StarNinjas, CC0 (https://opengameart.org/node/123490), trimmed to 0.33 s, mono, normalised, WAV for browser compatibility. Each play varies pitch ±8% so repeats don't sound identical. The AudioContext is created and the clip fetched/decoded on the first key or pointer press (browser autoplay rules, iOS included).
+- It plays on every successful Feast bite (Perfect or Good), for all foods. Nothing else makes sound (no ticks, miss, bank, popup, packed or time-out sounds) — reduced on playtest feedback that the fuller set did not work.
+- Feast emits cues as an event queue (`Feast.events`); main plays the munch immediately after E / touch input, so it is not delayed to the next frame. Tests read `window.__sfxLog` (only exists when a test sets it).
+- Mute: M (keyboard) or the touch header Sound button; stored in localStorage (`buffet-dash-muted`), wrapped in try/catch so private browsing still works.
