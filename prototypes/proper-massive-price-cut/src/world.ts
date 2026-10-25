@@ -2,10 +2,10 @@ export type Point = { x: number; y: number };
 export const W = 420, H = 650, ROUND = 60, REACH = 150, COOLDOWN = 0.6;
 export type Rope = { id: number; a: Point; b: Point; age: number; draw: number; cat: number; cut: Point | null; snapped: number; claimed: boolean };
 export type Fan = Point & { id: number; speed: number; look: number; state: 'walking' | 'falling' | 'through'; age: number; turn: number };
-export type Cat = Point & { side: number; laugh: number; working: number; look: number };
+export type Cat = Point & { side: number; laugh: number; angry: number; working: number; look: number };
 export type Hit = Point & { rope: number; distance: number; done: boolean };
 export type Slash = { path: Point[]; hits: Hit[]; length: number; age: number; rewarded: boolean };
-export type FX = Point & { text: string; color: string; age: number };
+export type FX = Point & { text: string; color: string; age: number; speech?: boolean; life?: number };
 export type Sound = { kind: 'cut' | 'laugh' | 'pass' | 'combo'; amount: number };
 export type World = {
   phase: 'intro' | 'playing' | 'ended'; time: number; elapsed: number; score: number; passed: number; missed: number;
@@ -14,12 +14,13 @@ export type World = {
   nextFan: number; nextRope: number; serial: number; message: string; comboAge: number;
 };
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
+const complaints = ['My ticket!', 'I wanted to see the show!', 'But I queued for hours!', 'Let me in!', 'Not the rope again!', 'I can hear the encore!'];
 export const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 export function createWorld(playing = false): World {
   return { phase: playing ? 'playing' : 'intro', time: ROUND, elapsed: 0, score: 0, passed: 0, missed: 0,
     multiplier: 1, bestMultiplier: 1, cuts: 0, swipes: 0, cooldown: 0, flash: 0,
     ropes: [], fans: [], slashes: [], fx: [], sounds: [], nextFan: .2, nextRope: 1.6, serial: 0,
-    cats: Array.from({ length: 6 }, (_, i) => ({ x: i % 2 ? 394 : 26, y: 180 + Math.floor(i / 2) * 125, side: i % 2 ? -1 : 1, laugh: 0, working: 0, look: i })),
+    cats: Array.from({ length: 6 }, (_, i) => ({ x: i % 2 ? 394 : 26, y: 180 + Math.floor(i / 2) * 125, side: i % 2 ? -1 : 1, laugh: 0, angry: 0, working: 0, look: i })),
     message: 'Keep the crowd moving. Swipe across ropes.', comboAge: 0 };
 }
 export function addPoint(path: Point[], next: Point): boolean {
@@ -84,7 +85,7 @@ function spawnRope(w: World) {
   cat.working = draw;
 }
 function effects(w: World, dt: number, scoring: boolean) {
-  for (const cat of w.cats) { cat.laugh = Math.max(0, cat.laugh - dt); cat.working = Math.max(0, cat.working - dt); }
+  for (const cat of w.cats) { cat.laugh = Math.max(0, cat.laugh - dt); cat.angry = Math.max(0, cat.angry - dt); cat.working = Math.max(0, cat.working - dt); }
   for (const rope of w.ropes) { rope.age += dt; if (rope.cut) rope.snapped += dt; }
   for (const slash of w.slashes) {
     slash.age += dt;
@@ -92,7 +93,11 @@ function effects(w: World, dt: number, scoring: boolean) {
     for (const hit of slash.hits) if (!hit.done && slash.age >= .035 && hit.distance <= along) {
       hit.done = true;
       const rope = w.ropes.find(r => r.id === hit.rope);
-      if (rope && !rope.cut) { rope.cut = { x: hit.x, y: hit.y }; rope.snapped = 0; if (scoring) w.cuts++; pop(w, hit, 'SNIP!', '#fff5c6'); w.sounds.push({ kind: 'cut', amount: 1 }); }
+      if (rope && !rope.cut) {
+        rope.cut = { x: hit.x, y: hit.y }; rope.snapped = 0;
+        const owner = w.cats[rope.cat]; owner.angry = 1.5; owner.laugh = 0;
+        if (scoring) w.cuts++; pop(w, hit, 'SNIP!', '#fff5c6'); w.sounds.push({ kind: 'cut', amount: 1 });
+      }
     }
     if (!slash.rewarded && slash.age >= .155) {
       slash.rewarded = true;
@@ -107,7 +112,7 @@ function effects(w: World, dt: number, scoring: boolean) {
   w.slashes = w.slashes.filter(s => s.age < .43);
   w.ropes = w.ropes.filter(r => !r.cut || r.snapped < .48);
   for (const fx of w.fx) fx.age += dt;
-  w.fx = w.fx.filter(f => f.age < .9).slice(-45);
+  w.fx = w.fx.filter(f => f.age < (f.life ?? .9)).slice(-45);
 }
 function substep(w: World, dt: number) {
   w.elapsed += dt; w.time = Math.max(0, ROUND - w.elapsed);
@@ -129,8 +134,10 @@ function substep(w: World, dt: number) {
     const collision = w.ropes.find(r => !r.cut && r.age >= r.draw && intersection(previous, { x: fan.x, y: fan.y - 10 }, r.a, r.b));
     if (collision) {
       fan.state = 'falling'; fan.age = 0; w.missed++; w.multiplier = 1; w.flash = .18;
-      const cat = w.cats[Math.floor(rand(0, w.cats.length))]; cat.laugh = 1.1;
-      pop(w, fan, 'OOOF!', '#ffb2a6'); w.message = 'Rope hit! Multiplier reset. Keep cutting.'; w.sounds.push({ kind: 'laugh', amount: 1 });
+      const available = w.cats.filter(c => c.angry === 0), audience = available.length ? available : w.cats;
+      const cat = audience[Math.floor(rand(0, audience.length))]; cat.laugh = 1.1;
+      w.fx.push({ x: fan.x, y: fan.y - (fan.id % 2) * 27, text: complaints[Math.floor(rand(0, complaints.length))], color: '#fff4d9', age: 0, life: 1.65, speech: true });
+      w.message = 'Rope hit! Multiplier reset. Keep cutting.'; w.sounds.push({ kind: 'laugh', amount: 1 });
     } else if (fan.y < 89) {
       fan.state = 'through'; fan.age = 0; w.passed++; w.score += w.multiplier;
       pop(w, fan, `+${w.multiplier}`, '#c8ff74'); w.sounds.push({ kind: 'pass', amount: w.multiplier });

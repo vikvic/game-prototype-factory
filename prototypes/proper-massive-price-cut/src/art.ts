@@ -13,7 +13,7 @@ function box(c: Ctx, x: number, y: number, w: number, h: number, r: number, colo
 function text(c: Ctx, s: string, x: number, y: number, size: number, color = CREAM, weight = 800) {
   c.font = `${weight} ${size}px system-ui, sans-serif`; c.textAlign = 'center'; c.fillStyle = color; c.fillText(s, x, y);
 }
-function face(c: Ctx, skin: string, mood: 'calm' | 'joy' | 'shock' | 'laugh', look = 0) {
+function face(c: Ctx, skin: string, mood: 'calm' | 'joy' | 'shock' | 'laugh' | 'angry', look = 0) {
   oval(c, 0, 0, 12, 14, skin, 1.8); oval(c, -12, 1, 2.5, 4, skin); oval(c, 12, 1, 2.5, 4, skin);
   const dark = '#332b36';
   if (mood === 'joy' || mood === 'laugh') {
@@ -23,7 +23,12 @@ function face(c: Ctx, skin: string, mood: 'calm' | 'joy' | 'shock' | 'laugh', lo
     oval(c, 4.5, -1, mood === 'shock' ? 3.8 : 1.8, mood === 'shock' ? 4.3 : 2.2, mood === 'shock' ? '#fff' : dark);
     if (mood === 'shock') { oval(c, -4, -1, 1.3, 2, dark); oval(c, 5, -1, 1.3, 2, dark); }
   }
-  if (mood === 'shock') oval(c, 0, 8, 3.4, 4.6, dark);
+  if (mood === 'angry') {
+    line(c, { x: -9, y: -8 }, { x: -2, y: -4 }, dark, 2.7);
+    line(c, { x: 2, y: -4 }, { x: 9, y: -8 }, dark, 2.7);
+    c.beginPath(); c.arc(0, 12, 4.5, Math.PI, Math.PI * 2); c.strokeStyle = dark; c.lineWidth = 2; c.stroke();
+    oval(c, -8, 5, 3.5, 2.3, '#f28179'); oval(c, 8, 5, 3.5, 2.3, '#f28179');
+  } else if (mood === 'shock') oval(c, 0, 8, 3.4, 4.6, dark);
   else if (mood === 'laugh') { oval(c, 0, 8, 6, 5.5, dark); box(c, -4, 4, 8, 2.8, 1, '#fff'); }
   else { c.beginPath(); c.arc(0, 4, mood === 'joy' ? 5 : 3, 0, Math.PI); c.strokeStyle = dark; c.lineWidth = 1.6; c.stroke(); }
   if (look % 3 === 0) { oval(c, -8, 5, 2.4, 1.2, '#df8a75'); oval(c, 8, 5, 2.4, 1.2, '#df8a75'); }
@@ -51,20 +56,23 @@ export function drawFan(c: Ctx, f: Fan, now: number, scale = 1) {
 }
 function drawCat(c: Ctx, cat: Cat, now: number) {
   c.save(); c.translate(cat.x, cat.y);
-  const laughing = cat.laugh > 0;
-  c.rotate(laughing ? Math.sin(now * 23) * .13 : cat.side * -.05);
+  const angry = cat.angry > 0, laughing = cat.laugh > 0 && !angry;
+  c.rotate(angry ? Math.sin(now * 34) * .08 : laughing ? Math.sin(now * 23) * .13 : cat.side * -.05);
   oval(c, 0, 39, 25, 7, '#10222b50');
   box(c, -22, 0, 44, 36, 10, cat.look % 2 ? '#66517c' : '#2d5263', 2);
   oval(c, 0, 17, 24, 24, cat.look % 2 ? '#66517c' : '#2d5263', 2);
   c.fillStyle = CREAM; c.beginPath(); c.moveTo(-8, 0); c.lineTo(0, 28); c.lineTo(9, 0); c.fill();
   c.fillStyle = '#f9b94e'; c.beginPath(); c.moveTo(0, 2); c.lineTo(-4, 11); c.lineTo(1, 23); c.lineTo(5, 10); c.fill();
   text(c, '£', 13, 30, 12, '#fff4d9');
-  c.save(); c.translate(0, -11); c.scale(1.25, 1.1); face(c, skins[(cat.look + 1) % skins.length], laughing ? 'laugh' : 'calm');
+  c.save(); c.translate(0, -11); c.scale(1.25, 1.1); face(c, skins[(cat.look + 1) % skins.length], angry ? 'angry' : laughing ? 'laugh' : 'calm');
   c.strokeStyle = INK; c.lineWidth = 1.2; c.strokeRect(-9, -4, 7, 5); c.strokeRect(2, -4, 7, 5); line(c, { x: -2, y: -2 }, { x: 2, y: -2 }, INK, 1);
   if (cat.look % 2) { oval(c, -3, 5, 4, 1.8, '#54383b'); oval(c, 3, 5, 4, 1.8, '#54383b'); }
   c.restore();
-  oval(c, cat.side * (cat.working > 0 ? 26 + Math.sin(now * 18) * 4 : 21), 2, 6, 7, '#dfae90', 1.5);
-  if (laughing) { text(c, 'HA!', cat.side * 10, -46 - Math.sin(now * 14) * 4, 16, '#ffe49a'); }
+  oval(c, cat.side * (angry ? 25 : cat.working > 0 ? 26 + Math.sin(now * 18) * 4 : 21), angry ? -18 + Math.sin(now * 28) * 3 : 2, 6, 7, '#dfae90', 1.5);
+  if (angry) {
+    text(c, 'GRR!', cat.side * 8, -47, 14, '#ff9f96');
+    for (const side of [-1, 1]) { c.beginPath(); c.moveTo(side * 17, -29); c.quadraticCurveTo(side * 27, -37, side * 20, -44); c.strokeStyle = '#fbd9cb'; c.lineWidth = 2; c.stroke(); }
+  } else if (laughing) { text(c, 'HA!', cat.side * 10, -46 - Math.sin(now * 14) * 4, 16, '#ffe49a'); }
   else if (cat.working > 0) { text(c, 'VIP+', 0, -42, 11, '#ffb7ba'); }
   c.restore();
 }
@@ -155,7 +163,30 @@ export function render(c: Ctx, w: World, now: number, path: Point[] | null) {
     const open = Math.min(1, nearest / .025);
     scissors(c, p.x - Math.cos(angle) * 28, p.y - Math.sin(angle) * 28, angle, open, 1.2); c.restore();
   }
-  for (const f of w.fx) { c.save(); c.globalAlpha = Math.min(1, (1 - f.age / .9) * 2); text(c, f.text, Math.max(37, Math.min(W - 37, f.x)), f.y - f.age * 40 - 17, f.text.includes('ROPES') ? 19 : 13, f.color, 950); c.restore(); }
+  const bubbles: { x: number; y: number; w: number; h: number }[] = [];
+  for (const f of w.fx) {
+    c.save(); c.globalAlpha = Math.max(0, Math.min(1, ((f.life ?? .9) - f.age) * 4));
+    if (f.speech) {
+      c.font = '800 14px system-ui, sans-serif';
+      const lines: string[] = []; let row = '';
+      for (const word of f.text.split(' ')) { const next = row ? `${row} ${word}` : word; if (row && c.measureText(next).width > 148) { lines.push(row); row = word; } else row = next; }
+      if (row) lines.push(row);
+      const width = Math.max(...lines.map(s => c.measureText(s).width)) + 20, height = lines.length * 17 + 13;
+      const x = Math.max(5, Math.min(W - width - 5, f.x - width / 2));
+      let y = Math.max(5, f.y - height - 31 - f.age * 13);
+      for (let attempt = 0; attempt <= bubbles.length; attempt++) {
+        const overlap = bubbles.find(b => x < b.x + b.w + 5 && x + width + 5 > b.x && y < b.y + b.h + 6 && y + height + 6 > b.y);
+        if (!overlap) break;
+        const above = overlap.y - height - 7;
+        y = above >= 5 ? above : Math.max(...bubbles.map(b => b.y + b.h)) + 7;
+      }
+      bubbles.push({ x, y, w: width, h: height });
+      box(c, x + 2, y + 3, width, height, 9, '#102b3566'); box(c, x, y, width, height, 9, CREAM, 1.7);
+      c.beginPath(); c.moveTo(x + width / 2 - 5, y + height - 1); c.lineTo(x + width / 2, y + height + 8); c.lineTo(x + width / 2 + 6, y + height - 1); c.fillStyle = CREAM; c.fill();
+      lines.forEach((s, i) => text(c, s, x + width / 2, y + 19 + i * 17, 14, INK, 800));
+    } else text(c, f.text, Math.max(37, Math.min(W - 37, f.x)), f.y - f.age * 40 - 17, f.text.includes('ROPES') ? 19 : 13, f.color, 950);
+    c.restore();
+  }
   const ready = 1 - w.cooldown / COOLDOWN;
   box(c, 76, 608, 268, 29, 10, '#0c2734d9');
   text(c, ready >= 1 ? 'SWIPE ACROSS ROPES' : 'SCISSORS RECHARGING…', 210, 627, 11, ready >= 1 ? '#dcf5d6' : '#b4c7c8');

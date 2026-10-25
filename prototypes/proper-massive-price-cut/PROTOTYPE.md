@@ -16,6 +16,11 @@ SOURCES.md and sources.json record source-backed observations, limitations and f
 ## Playtest question
 Can players deliberately time limited strokes for multi-cuts while rescuing approaching fans, and does the falling-fan/executive reaction make misses funny and readable? Numbers are provisional; physical-phone ergonomics and replay appeal need human playtesting.
 
+## Character reactions
+Blocked fans leave a brief comic speech bubble (including “My ticket!” and “I wanted to see the show!”) as they tumble away. At the actual snip, the executive responsible for that rope becomes angry for 1.5 seconds: furrowed brows, a frown, red cheeks, raised shaking fist, steam marks and GRR. Anger takes visual priority over laughter; other available executives still laugh at missed fans. These are visual dialogue bubbles, not recorded or synthesized spoken dialogue. Scoring, collision rules and timing are unchanged.
+
+Direct browser review confirmed complaint bubbles on fan collisions and angry rope owners after a three-rope swipe. Nearby bubbles are vertically separated for readability. The updated strict TypeScript/Vite build passed.
+
 ## Verification
 October 25, 2026: strict TypeScript/Vite production build passed. Direct Chromium browser play at 390x844 confirmed multi-rope cutting (a three-rope swipe produced 3x), animated recoil/falls/laughter, and continued play despite misses. Sustained ordinary mouse swipes admitted nine fans and banked ten points in approximately seventeen seconds. A full unattended round ran to zero and showed the result/replay screen instead of ending on misses. Pause held the clock unchanged at 59.71s; Help and portrait/landscape rotation preserved the same round. Layout checks at 320x568 confirmed no document overflow and 44px primary/header targets. Landscape 844x390 retained a centered portrait field. No browser error logs were observed.
 
