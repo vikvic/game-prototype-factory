@@ -1,5 +1,5 @@
 import './style.css';
-import { advance, settle, createWorld, addPoint, swipe, W, H, COOLDOWN, type Point } from './world';
+import { advance, settle, createWorld, addPoint, swipe, W, H, COOLDOWN, STAR_TARGETS, starsForScore, type Point } from './world';
 import { render, resultImage, drawSam, drawFan } from './art';
 import { Soundtrack } from './sound';
 
@@ -94,13 +94,18 @@ function finish() {
   best = Math.max(best, world.score);
   try { localStorage.setItem('price-cut-best', String(best)); } catch { /* Session score remains available. */ }
   txt('final-score', String(world.score));
+  const stars = starsForScore(world.score), celebrating = stars >= 2;
+  txt('final-stars', '★'.repeat(stars) + '☆'.repeat(3 - stars));
+  $('final-stars').setAttribute('aria-label', `${stars} out of 3 stars`);
+  const next = STAR_TARGETS.find(target => target > world.score);
+  txt('rating-detail', next ? `${next - world.score} more points for the next star` : 'Three stars! Keep pushing your personal best.');
   txt('final-stats', `${world.passed} fans admitted · ${world.missed} blocked · ${world.bestMultiplier}× best multiplier`);
   txt('best-score', `PERSONAL BEST ${best} · ${world.cuts} ropes snipped`);
   const p = $<HTMLCanvasElement>('result-portrait'), c = p.getContext('2d')!;
   c.clearRect(0, 0, p.width, p.height);
-  drawSam(c, 130, 42, world.passed > 0 && world.passed >= world.missed, 0, 1.1);
-  for (let i = 0; i < 4; i++) drawFan(c, { id: i, x: [35, 76, 187, 230][i], y: 82, speed: 0, look: i * 13, state: world.passed > 0 && world.passed >= world.missed ? 'through' : 'falling', age: 0, turn: 0 }, 0, .8);
-  p.dataset.mood = world.passed > 0 && world.passed >= world.missed ? 'celebrating' : 'exasperated';
+  drawSam(c, 130, 42, celebrating, 0, 1.1);
+  for (let i = 0; i < 4; i++) drawFan(c, { id: i, x: [35, 76, 187, 230][i], y: 82, speed: 0, look: i * 13, state: celebrating ? 'through' : 'falling', age: 0, turn: 0 }, 0, .8);
+  p.dataset.mood = celebrating ? 'celebrating' : 'exasperated';
   try {
     card = resultImage(world, pageUrl());
     const raw = atob(card.toDataURL('image/png').split(',')[1]);
@@ -109,7 +114,7 @@ function finish() {
   $('replay').focus({ preventScroll: true });
 }
 $('share').onclick = async () => {
-  const plain: ShareData = { title: 'Proper Massive Price Cut', text: `${world.score} points. ${world.passed} fans through. ${world.bestMultiplier}× multiplier. Can you open the gates?`, url: pageUrl() };
+  const plain: ShareData = { title: 'Proper Massive Price Cut', text: `${world.score} points. ${starsForScore(world.score)}/3 stars. ${world.passed} fans through. ${world.bestMultiplier}× multiplier. Can you open the gates?`, url: pageUrl() };
   try {
     if (navigator.share) {
       let payload = plain;
@@ -135,6 +140,9 @@ window.addEventListener('keydown', e => {
 });
 function updateUi() {
   txt('score', String(world.score)); txt('fans', String(world.passed)); txt('multiplier', `${world.multiplier}×`); txt('time', String(Math.ceil(world.time)));
+  const stars = starsForScore(world.score), next = STAR_TARGETS.find(target => target > world.score);
+  txt('stars', '★'.repeat(stars) + '☆'.repeat(3 - stars)); $('stars').setAttribute('aria-label', `${stars} out of 3 stars`);
+  txt('star-progress', next ? `Next ★ at ${next} · ${next - world.score} to go` : '3 STARS · KEEP SCORING!');
   $('time').classList.toggle('urgent', world.time < 11);
   const ready = Math.round((1 - world.cooldown / COOLDOWN) * 100);
   $('recharge').style.transform = `scaleX(${ready / 100})`;
@@ -142,7 +150,7 @@ function updateUi() {
   if (ready === 100) $('recharge').parentElement!.classList.remove('blocked');
   txt('ready-label', ready === 100 ? 'SCISSORS READY' : 'RECHARGING'); txt('message', world.message);
   $<HTMLButtonElement>('pause').disabled = world.phase !== 'playing';
-  Object.assign(canvas.dataset, { phase: world.phase, paused: String(paused), score: String(world.score), passed: String(world.passed), missed: String(world.missed), multiplier: String(world.multiplier), cuts: String(world.cuts), swipes: String(world.swipes), time: world.time.toFixed(2), cooldown: world.cooldown.toFixed(2), reach: '150' });
+  Object.assign(canvas.dataset, { phase: world.phase, paused: String(paused), score: String(world.score), stars: String(stars), passed: String(world.passed), missed: String(world.missed), multiplier: String(world.multiplier), cuts: String(world.cuts), swipes: String(world.swipes), time: world.time.toFixed(2), cooldown: world.cooldown.toFixed(2), reach: '150' });
 }
 function frame(now: number) {
   const dt = Math.max(0, (now - last) / 1000); last = now;

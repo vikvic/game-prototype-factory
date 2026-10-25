@@ -14,9 +14,11 @@ Targeted Wing reuse: portrait presentation, touch/mouse conventions, pause/help 
 - One scissors sprite fades in, travels along the accepted stroke, closes at crossings and fades out. Rope halves recoil and fade with synchronized synthesized snip/snap sound.
 - Multi-cuts raise the current multiplier to at least 2x / 3x / 4x for two / three / four-or-more ropes. Single cuts preserve a higher multiplier.
 - A fan hitting an active rope falls dramatically out of the bottom, a randomly chosen executive laughs, multiplier becomes 1x, and banked points stay.
-- Ropes have a visible drawing phase before blocking. New ropes and fans appear faster over the round.
+- Ropes have a visible drawing phase before blocking. All nine opposite-side executive row pairings are possible, including top-to-bottom diagonals. Active connections are unique; both endpoints react when cut. New ropes and fans appear faster over the round.
 - Only sixty active-play seconds end the round. No lives or early loss. Pause, help, backgrounding and orientation changes preserve the clock and score.
-- Results show score, admitted/blocked fans, best multiplier, Replay and voluntary Share/Save. Artwork reacts to the admission-versus-blocked outcome without claiming a binary win/loss.
+- Points award up to three stars: 25 / 75 / 150 for one / two / three stars. The HUD shows the next target; results, share text and the exported card retain the same rating. Two or three stars use celebrating character art; zero or one uses exasperated art. Scoring continues beyond three stars.
+- Results show score, stars, admitted/blocked fans, best multiplier, Replay and voluntary Share/Save.
+- Fans and gameplay effects are clipped below the foreground entrance panel; the score and star HUD remain above the playfield.
 
 ## Initial tuning and implementation choices
 Rope drawing takes 0.75–0.95s; new ropes every 2.2–1.05s, capped at seven uncut ropes. Fans spawn every 0.65–0.45s. Swipe animation reaches all crossings in about 0.155s and finishes fading at 0.43s. These are initial design choices for human playtesting, not established balance.

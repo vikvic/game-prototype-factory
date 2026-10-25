@@ -1,6 +1,8 @@
 export type Point = { x: number; y: number };
 export const W = 420, H = 650, ROUND = 60, REACH = 150, COOLDOWN = 0.6;
-export type Rope = { id: number; a: Point; b: Point; age: number; draw: number; cat: number; cut: Point | null; snapped: number; claimed: boolean };
+export const STAR_TARGETS = [25, 75, 150] as const;
+export const starsForScore = (score: number) => STAR_TARGETS.filter(target => score >= target).length;
+export type Rope = { id: number; a: Point; b: Point; age: number; draw: number; cat: number; other: number; cut: Point | null; snapped: number; claimed: boolean };
 export type Fan = Point & { id: number; speed: number; look: number; state: 'walking' | 'falling' | 'through'; age: number; turn: number };
 export type Cat = Point & { side: number; laugh: number; angry: number; working: number; look: number };
 export type Hit = Point & { rope: number; distance: number; done: boolean };
@@ -76,13 +78,25 @@ export function swipe(w: World, path: Point[]): boolean {
 function pop(w: World, p: Point, text: string, color: string) { w.fx.push({ ...p, text, color, age: 0 }); }
 function spawnRope(w: World) {
   if (w.ropes.filter(r => !r.cut).length >= 7) return;
-  const index = Math.floor(rand(0, 6)), cat = w.cats[index];
-  const level = Math.floor(index / 2), endLevel = Math.max(0, Math.min(2, level + (Math.random() < .28 ? (Math.random() < .5 ? -1 : 1) : 0)));
-  const a = { x: cat.x + cat.side * 19, y: cat.y + rand(-25, 25) };
-  const b = { x: cat.side > 0 ? 375 : 45, y: 180 + endLevel * 125 + rand(-27, 27) };
+  // All nine left/right row pairings are possible, including top-to-bottom.
+  // Avoid duplicate active connections so two overlapping ropes never look like one.
+  const pairs: [number, number][] = [];
+  w.cats.forEach((left, i) => {
+    if (left.side < 0) return;
+    w.cats.forEach((right, j) => {
+      if (right.side > 0 || w.ropes.some(r => !r.cut && ((r.cat === i && r.other === j) || (r.cat === j && r.other === i)))) return;
+      pairs.push([i, j]);
+    });
+  });
+  if (!pairs.length) return;
+  let [index, target] = pairs[Math.floor(rand(0, pairs.length))];
+  if (Math.random() < .5) [index, target] = [target, index];
+  const cat = w.cats[index], partner = w.cats[target];
+  const a = { x: cat.x + cat.side * 19, y: cat.y + 2 };
+  const b = { x: partner.x + partner.side * 19, y: partner.y + 2 };
   const draw = .95 - .2 * w.elapsed / ROUND;
-  w.ropes.push({ id: ++w.serial, a, b, age: 0, draw, cat: index, cut: null, snapped: 0, claimed: false });
-  cat.working = draw;
+  w.ropes.push({ id: ++w.serial, a, b, age: 0, draw, cat: index, other: target, cut: null, snapped: 0, claimed: false });
+  cat.working = draw; partner.working = draw;
 }
 function effects(w: World, dt: number, scoring: boolean) {
   for (const cat of w.cats) { cat.laugh = Math.max(0, cat.laugh - dt); cat.angry = Math.max(0, cat.angry - dt); cat.working = Math.max(0, cat.working - dt); }
@@ -95,7 +109,7 @@ function effects(w: World, dt: number, scoring: boolean) {
       const rope = w.ropes.find(r => r.id === hit.rope);
       if (rope && !rope.cut) {
         rope.cut = { x: hit.x, y: hit.y }; rope.snapped = 0;
-        const owner = w.cats[rope.cat]; owner.angry = 1.5; owner.laugh = 0;
+        for (const index of [rope.cat, rope.other]) { const owner = w.cats[index]; owner.angry = 1.5; owner.laugh = 0; }
         if (scoring) w.cuts++; pop(w, hit, 'SNIP!', '#fff5c6'); w.sounds.push({ kind: 'cut', amount: 1 });
       }
     }
@@ -140,7 +154,8 @@ function substep(w: World, dt: number) {
       w.message = 'Rope hit! Multiplier reset. Keep cutting.'; w.sounds.push({ kind: 'laugh', amount: 1 });
     } else if (fan.y < 89) {
       fan.state = 'through'; fan.age = 0; w.passed++; w.score += w.multiplier;
-      pop(w, fan, `+${w.multiplier}`, '#c8ff74'); w.sounds.push({ kind: 'pass', amount: w.multiplier });
+      // Keep admission feedback below the foreground entrance for its full lifetime.
+      pop(w, { x: fan.x, y: 160 }, `+${w.multiplier}`, '#c8ff74'); w.sounds.push({ kind: 'pass', amount: w.multiplier });
     }
   }
   w.fans = w.fans.filter(f => f.y < 770 && f.y > 20);

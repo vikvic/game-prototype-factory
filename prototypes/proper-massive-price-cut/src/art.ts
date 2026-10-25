@@ -1,4 +1,4 @@
-import { W, H, REACH, COOLDOWN, pathLength, pointOn, type Point, type World, type Fan, type Cat, type Rope } from './world';
+import { W, H, REACH, COOLDOWN, starsForScore, pathLength, pointOn, type Point, type World, type Fan, type Cat, type Rope } from './world';
 type Ctx = CanvasRenderingContext2D;
 const INK = '#182b39', CREAM = '#fff4d9', MINT = '#c8ff74', RED = '#f55770';
 function line(c: Ctx, a: Point, b: Point, color: string, width = 2) { c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.strokeStyle = color; c.lineWidth = width; c.stroke(); }
@@ -124,12 +124,9 @@ export function scissors(c: Ctx, x: number, y: number, angle: number, open: numb
   }
   oval(c, 0, 0, 3, 3, '#f5ce7c', 1.3); c.restore();
 }
-export function render(c: Ctx, w: World, now: number, path: Point[] | null) {
-  c.clearRect(0, 0, W, H);
-  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#244d53'); g.addColorStop(1, '#13363f'); c.fillStyle = g; c.fillRect(0, 0, W, H);
-  c.fillStyle = '#24484f';
-  for (let y = 120; y < H; y += 52) for (let x = 60; x < 380; x += 64) { c.beginPath(); c.moveTo(x, y); c.lineTo(x + 30, y + 12); c.lineTo(x + 60, y); c.lineTo(x + 30, y - 12); c.fill(); }
-  // Stage, admission line and portrait headliner form the goal at the top.
+function drawEntrance(c: Ctx, w: World, now: number) {
+  // Foreground UI: arriving fans disappear behind this panel, never over it.
+  c.fillStyle = '#244d53'; c.fillRect(0, 0, W, 100);
   box(c, 54, 0, 312, 90, 14, '#102d35', 2); box(c, 66, 9, 288, 26, 7, MINT);
   text(c, 'ALL STANDING. ALL TOGETHER.', 210, 27, 12, INK);
   for (let i = 0; i < 12; i++) oval(c, 76 + i * 24.4, 44, 2, 2, '#ffe49a');
@@ -137,6 +134,13 @@ export function render(c: Ctx, w: World, now: number, path: Point[] | null) {
   text(c, 'THE WAY IN', 116, 73, 11, '#d5eccb'); text(c, '£85*', 307, 75, 18, CREAM);
   c.setLineDash([5, 6]); line(c, { x: 59, y: 98 }, { x: 361, y: 98 }, '#c8ff7466', 2); c.setLineDash([]);
   text(c, '↑', 88, 121, 18, '#c8ff74'); text(c, '↑', 332, 121, 18, '#c8ff74');
+}
+export function render(c: Ctx, w: World, now: number, path: Point[] | null) {
+  c.clearRect(0, 0, W, H);
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#244d53'); g.addColorStop(1, '#13363f'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.fillStyle = '#24484f';
+  for (let y = 120; y < H; y += 52) for (let x = 60; x < 380; x += 64) { c.beginPath(); c.moveTo(x, y); c.lineTo(x + 30, y + 12); c.lineTo(x + 60, y); c.lineTo(x + 30, y - 12); c.fill(); }
+  c.save(); c.beginPath(); c.rect(0, 100, W, H - 100); c.clip();
   // Side balconies keep executives away from the usable crowd lanes.
   for (const cat of w.cats) box(c, cat.side > 0 ? 0 : 373, cat.y - 38, 47, 88, 9, '#102b3599');
   const walking = w.fans.filter(f => f.state !== 'falling').sort((a, b) => a.y - b.y);
@@ -191,21 +195,24 @@ export function render(c: Ctx, w: World, now: number, path: Point[] | null) {
   box(c, 76, 608, 268, 29, 10, '#0c2734d9');
   text(c, ready >= 1 ? 'SWIPE ACROSS ROPES' : 'SCISSORS RECHARGING…', 210, 627, 11, ready >= 1 ? '#dcf5d6' : '#b4c7c8');
   if (w.flash > 0) { c.fillStyle = `rgba(255,102,102,${w.flash * .25})`; c.fillRect(0, 0, W, H); }
+  c.restore();
+  drawEntrance(c, w, now);
 }
 export function resultImage(w: World, url: string): HTMLCanvasElement {
   const card = document.createElement('canvas'); card.width = 1080; card.height = 1350;
   const c = card.getContext('2d')!; c.fillStyle = INK; c.fillRect(0, 0, 1080, 1350);
   box(c, 48, 48, 984, 1254, 40, CREAM);
   text(c, 'PROPER MASSIVE', 540, 148, 47, INK, 950); text(c, 'PRICE CUT', 540, 218, 72, INK, 950);
-  const celebrating = w.passed >= w.missed && w.passed > 0;
+  const stars = starsForScore(w.score), celebrating = stars >= 2;
   text(c, w.passed ? `I GOT ${w.passed} FANS IN.` : 'THE ROPES WON THIS ROUND.', 540, 287, 27, '#48646b');
   drawSam(c, 540, 465, celebrating, 0, 3.2);
   for (let i = 0; i < 6; i++) drawFan(c, { id: i, x: 200 + i % 3 * 340, y: 468 + Math.floor(i / 3) * 220, speed: 0, look: i * 19, state: celebrating ? 'through' : 'falling', age: 0, turn: 0 }, 0, 2.2);
   box(c, 110, 730, 860, 173, 24, MINT); text(c, String(w.score), 540, 853, 116, INK, 950);
   text(c, `${w.passed} FANS IN  ·  ${w.missed} BLOCKED  ·  ${w.bestMultiplier}× BEST`, 540, 964, 28, INK);
-  text(c, '60 seconds. How many can you get through?', 540, 1047, 31, INK);
-  text(c, 'Inspired by Sam Fender’s ticket-price intervention.', 540, 1124, 23, '#48646b');
-  text(c, 'Fictional arcade comedy · Unofficial', 540, 1162, 22, '#48646b');
+  text(c, '★'.repeat(stars) + '☆'.repeat(3 - stars), 540, 1028, 53, '#a86c19');
+  text(c, '60 seconds. How many can you get through?', 540, 1086, 31, INK);
+  text(c, 'Inspired by Sam Fender’s ticket-price intervention.', 540, 1143, 23, '#48646b');
+  text(c, 'Fictional arcade comedy · Unofficial', 540, 1181, 22, '#48646b');
   c.font = '19px system-ui'; c.textAlign = 'center'; c.fillStyle = INK; c.fillText(url, 540, 1240, 850);
   return card;
 }
