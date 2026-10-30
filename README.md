@@ -4,6 +4,10 @@ The new **Topical Arcade** workflow adds researched opportunities, reusable game
 and subject-specific editions in a separate queue. See [the operator guide](docs/topical-factory.md).
 Start with `python factory.py topical readiness`. Historical prototype commands remain available.
 
+For the first advertising connection, see [Reddit Ads setup and paused drafts](docs/reddit-ads.md).
+`python factory.py ads reddit doctor` checks local setup without contacting Reddit.
+This adapter can create only paused campaign containers; it cannot buy traffic.
+
 **Markdown idea → queued job → local game folder → web playtest link.**
 
 A local Python orchestrator hands each idea to a fresh Codex or Claude Code process in
