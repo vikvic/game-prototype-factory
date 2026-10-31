@@ -12,3 +12,6 @@ commercial-dist/
 .venv/
 .claude/worktrees/
 .claude/scheduled_tasks.lock
+
+# Public browser ingestion configuration for Price Cut.
+!prototypes/proper-massive-price-cut/.env.production

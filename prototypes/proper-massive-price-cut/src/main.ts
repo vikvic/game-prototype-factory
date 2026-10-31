@@ -2,6 +2,7 @@ import './style.css';
 import { advance, settle, createWorld, addPoint, swipe, W, H, COOLDOWN, STAR_TARGETS, starsForScore, type Point } from './world';
 import { render, resultImage, drawSam, drawFan } from './art';
 import { Soundtrack } from './sound';
+import { analyticsConfigured, analyticsEnabled, setAnalyticsEnabled, trackLoaded, trackRoundStarted, trackRoundCompleted, trackRoundEvent, roundEventTracker } from './analytics';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const canvas = $<HTMLCanvasElement>('game'), context = canvas.getContext('2d')!;
@@ -86,15 +87,21 @@ function start() {
   world = createWorld(true); paused = false; card = null; cardFile = null; settling = 0; last = performance.now();
   $('intro').hidden = true; $('result').hidden = true;
   txt('share-status', 'Your score. Your crowd. Your bragging rights.'); canvas.focus({ preventScroll: true });
+  trackRoundStarted();
 }
 $('start').onclick = start; $('replay').onclick = start;
-const pageUrl = () => new URL('./', location.href).href;
+const pageUrl = () => {
+  const url = new URL('./', location.href);
+  url.search = new URLSearchParams({ utm_source: 'player_share', utm_medium: 'referral', utm_campaign: 'price_cut' }).toString();
+  return url.href;
+};
 function finish() {
   clearGesture(); $('result').hidden = false;
   best = Math.max(best, world.score);
   try { localStorage.setItem('price-cut-best', String(best)); } catch { /* Session score remains available. */ }
   txt('final-score', String(world.score));
   const stars = starsForScore(world.score), celebrating = stars >= 2;
+  trackRoundCompleted({ score: world.score, stars, active_play_seconds: world.elapsed, fans_admitted: world.passed, fans_blocked: world.missed, best_multiplier: world.bestMultiplier });
   txt('final-stars', '★'.repeat(stars) + '☆'.repeat(3 - stars));
   $('final-stars').setAttribute('aria-label', `${stars} out of 3 stars`);
   const next = STAR_TARGETS.find(target => target > world.score);
@@ -114,19 +121,21 @@ function finish() {
   $('replay').focus({ preventScroll: true });
 }
 $('share').onclick = async () => {
+  const trackShare = roundEventTracker();
+  trackShare('share_initiated', { score: world.score, stars: starsForScore(world.score) });
   const plain: ShareData = { title: 'Proper Massive Price Cut', text: `${world.score} points. ${starsForScore(world.score)}/3 stars. ${world.passed} fans through. ${world.bestMultiplier}× multiplier. Can you open the gates?`, url: pageUrl() };
   try {
     if (navigator.share) {
       let payload = plain;
       try { const image = { ...plain, files: cardFile ? [cardFile] : [] }; if (cardFile && navigator.canShare?.(image)) payload = image; } catch { /* Link share is still usable. */ }
-      await navigator.share(payload); txt('share-status', 'Share dialog closed. Your next round is waiting.');
-    } else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(`${plain.text}\n${plain.url}`); txt('share-status', 'Score and link copied. Send them wherever you like.'); }
+      await navigator.share(payload); trackShare('share_dialog_closed'); txt('share-status', 'Share dialog closed. Your next round is waiting.');
+    } else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(`${plain.text}\n${plain.url}`); trackShare('share_link_copied'); txt('share-status', 'Score and link copied. Send them wherever you like.'); }
     else txt('share-status', `Share this page: ${pageUrl()}`);
-  } catch (e) { txt('share-status', e instanceof DOMException && e.name === 'AbortError' ? 'Sharing canceled. Your score stays here.' : 'Sharing unavailable. Save the card or copy the page address.'); }
+  } catch (e) { const cancelled = e instanceof DOMException && e.name === 'AbortError'; trackShare(cancelled ? 'share_cancelled' : 'share_failed'); txt('share-status', cancelled ? 'Sharing canceled. Your score stays here.' : 'Sharing unavailable. Save the card or copy the page address.'); }
 };
 $('save').onclick = () => {
   if (!card) { txt('share-status', 'Card unavailable. Copy the page address to share.'); return; }
-  try { const a = document.createElement('a'); a.href = card.toDataURL('image/png'); a.download = `price-cut-${world.score}.png`; a.click(); txt('share-status', 'Score card download requested.'); }
+  try { const a = document.createElement('a'); a.href = card.toDataURL('image/png'); a.download = `price-cut-${world.score}.png`; a.click(); trackRoundEvent('result_save_requested', { score: world.score }); txt('share-status', 'Score card download requested.'); }
   catch { txt('share-status', 'Saving unavailable. Your score and replay are still here.'); }
 };
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause('You left the game. The clock is paused.'); last = performance.now(); });
@@ -171,4 +180,8 @@ function frame(now: number) {
   context.translate(ox, oy); context.scale(scale, scale); render(context, world, world.elapsed, gesture?.path ?? null);
   requestAnimationFrame(frame);
 }
-resize(); requestAnimationFrame(frame);
+const analyticsToggle = $<HTMLInputElement>('analytics-enabled');
+analyticsToggle.checked = analyticsEnabled();
+analyticsToggle.disabled = !analyticsConfigured;
+analyticsToggle.onchange = () => { setAnalyticsEnabled(analyticsToggle.checked); analyticsToggle.checked = analyticsEnabled(); };
+resize(); requestAnimationFrame(frame); trackLoaded();

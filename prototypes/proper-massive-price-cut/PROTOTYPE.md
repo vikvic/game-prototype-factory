@@ -5,7 +5,7 @@ Portrait Canvas score attack. Open the gates, swipe across ropes and admit as ma
 ## Controls and scoring
 Mouse/touch: swipe up to 150 logical units; all crossed ropes are cut. Scissors cooldown 0.6s. Multiple crossings of the same rope count once. Multi-cut 2/3/4+ gives at least 2x/3x/4x per admitted fan; a smaller cut preserves the current multiplier. Rope collision makes the fan tumble out, a random executive laugh and the multiplier reset. Score never decreases and misses never end the run early.
 
-Pause button/P/Escape; Help button/H; R restarts. Backgrounding and orientation changes pause. Only the timer ends a round. Replay, native optional sharing, clipboard fallback and PNG saving are independent. No ads, tracking, live feed access or remote model calls at runtime.
+Pause button/P/Escape; Help button/H; R restarts. Backgrounding and orientation changes pause. Only the timer ends a round. Replay, native optional sharing, clipboard fallback and PNG saving are independent. No ads, live feed access or remote model calls at runtime. Explicit PostHog gameplay events are configured through build variables; see ANALYTICS.md. Players can disable statistics in Help.
 
 ## Build and deployment
 `npm ci --ignore-scripts --no-audit --no-fund` then `npm run build` checks strict TypeScript and creates relative-base static output. `python tools/build_site.py` at repository root adds the game to `dist/games/proper-massive-price-cut/` and the gallery. Existing main-branch Pages and Cloudflare Git integration publish the combined artifact. No new Worker or secrets needed.

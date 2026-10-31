@@ -12,4 +12,5 @@ dialog{padding:0;background:#fff4d9;color:#182b39;border:2px solid #182b39;borde
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 
 /* Keep the HUD above every game actor and expose score-based star progress. */
+.analytics-choice{margin-top:16px;border-top:1px solid #8e9e85;padding-top:10px}.analytics-choice label{display:flex;align-items:center;gap:9px;min-height:44px;font-size:13px;font-weight:700;cursor:pointer}.analytics-choice input{width:20px;height:20px;accent-color:#225b59}.analytics-choice p{font-size:11px;margin:3px 0 8px}
 header,.scoreboard,.rating-strip,footer{position:relative;z-index:2;background:#182f3b}.stage{z-index:0;isolation:isolate}.rating-strip{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:2px 12px 5px;min-height:24px;border-bottom:1px solid #ffffff16}.rating-strip #stars{color:#f6cb76;font-size:17px;line-height:1;letter-spacing:2px;white-space:nowrap}#star-progress{font-size:9px;font-weight:750;color:#c1d4cf}.final-stars{font-size:29px;line-height:1.1;color:#a86c19;letter-spacing:6px;margin:7px 0 2px}#rating-detail{margin-top:2px}

@@ -33,7 +33,15 @@ jobs:
         with:
           python-version: '3.11'
       - name: Build every exported game and gallery
-        run: python tools/build_site.py
+        env:
+          VITE_POSTHOG_KEY: ${{ vars.VITE_POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.VITE_POSTHOG_HOST }}
+          VITE_GAME_REVISION: ${{ github.sha }}
+        run: |
+          # Empty Actions variables must not override the prototype's public .env.production.
+          if [ -z "$VITE_POSTHOG_KEY" ]; then unset VITE_POSTHOG_KEY; fi
+          if [ -z "$VITE_POSTHOG_HOST" ]; then unset VITE_POSTHOG_HOST; fi
+          python tools/build_site.py
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: dist
