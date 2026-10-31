@@ -10,8 +10,4 @@ if __name__ == "__main__":
         from pathlib import Path
         from prototype_factory.topical.cli import main as topical_main
         raise SystemExit(topical_main(Path(__file__).resolve().parent, sys.argv[2:]))
-    if len(sys.argv) > 1 and sys.argv[1] == "ads":
-        from pathlib import Path
-        from prototype_factory.ads.cli import main as ads_main
-        raise SystemExit(ads_main(Path(__file__).resolve().parent, sys.argv[2:]))
     raise SystemExit(main())
