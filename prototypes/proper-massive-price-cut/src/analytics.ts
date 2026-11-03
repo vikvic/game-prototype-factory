@@ -33,6 +33,7 @@ const permittedProperties = new Set([
   'round_id', 'round_number', 'is_replay', 'score', 'stars', 'active_play_seconds',
   'fans_admitted', 'fans_blocked', 'best_multiplier',
   'token', 'distinct_id', '$lib', '$lib_version', '$process_person_profile', '$is_identified',
+  '$session_id', '$window_id', '$pageview_id',
   '$current_url', '$host', '$pathname', '$browser', '$browser_version',
   '$browser_language', '$browser_language_prefix', '$os', '$os_version', '$device_type',
   '$screen_width', '$screen_height', '$viewport_width', '$viewport_height', '$config_defaults',
@@ -43,6 +44,7 @@ let pending: Array<{ name: EventName; props: Properties }> = [];
 let roundNumber = 0, roundId = '', roundCompleted = false;
 let loaded = false;
 let allowed = true;
+let optInRequested = false;
 try { allowed = localStorage.getItem(preferenceKey) !== 'false'; } catch { /* Preference is optional. */ }
 
 export const analyticsConfigured = Boolean(key && host && /^https:\/\//.test(host));
@@ -72,7 +74,7 @@ function send(name: EventName, props: Properties = {}) {
         persistence: 'memory',
         person_profiles: 'never',
         autocapture: false,
-        capture_pageview: false,
+        capture_pageview: true,
         capture_pageleave: false,
         capture_dead_clicks: false,
         capture_performance: false,
@@ -87,7 +89,9 @@ function send(name: EventName, props: Properties = {}) {
         respect_dnt: true,
         opt_out_useragent_filter: common.test_mode === true,
         before_send: event => {
-          if (!event || !permitted() || event.event.startsWith('$')) return null;
+          if (!event || !permitted() || (event.event.startsWith('$') && event.event !== '$pageview')) return null;
+          // Automatic pageviews need the same game, bounded attribution and QA labels.
+          Object.assign(event.properties, common);
           for (const property of Object.keys(event.properties)) {
             if (!permittedProperties.has(property)) delete event.properties[property];
             else if (/(?:url|referrer)$/i.test(property)) event.properties[property] = cleanUrl(event.properties[property]);
@@ -96,6 +100,9 @@ function send(name: EventName, props: Properties = {}) {
         },
       });
       client = posthog;
+      // A saved opt-out may prevent initial capture; honor a new explicit choice
+      // even when the SDK was not loaded when the player checked the control.
+      if (optInRequested && permitted()) client.opt_in_capturing({ captureEventName: false });
       const queued = pending; pending = [];
       for (const event of queued) {
         if (permitted()) client.capture(event.name, event.props);
@@ -111,6 +118,7 @@ export function analyticsEnabled() { return permitted(); }
 
 export function setAnalyticsEnabled(enabled: boolean) {
   allowed = enabled;
+  optInRequested = enabled;
   try { localStorage.setItem(preferenceKey, String(enabled)); } catch { /* Session-only choice. */ }
   if (!enabled) {
     pending = [];

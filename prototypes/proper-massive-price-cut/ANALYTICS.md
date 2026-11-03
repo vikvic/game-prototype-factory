@@ -24,6 +24,7 @@ Missing configuration disables capture without breaking the game. Configuration 
 
 | Event | Meaning |
 | --- | --- |
+| `$pageview` | Standard Web Analytics pageview when the SDK initializes on a measured page visit; restarting a round does not create another pageview |
 | `game_loaded` | Game initialized and Start is available, once per measured page visit |
 | `game_started` | Each round starts, including keyboard restarts |
 | `round_completed` | Timed round reaches final results, once per round |
@@ -42,11 +43,11 @@ Attribution is captured on page load and retained across rounds. Shared result U
 
 ## Capture controls
 
-- Explicit events only: automatic clicks, pageviews, pageleave, exceptions, performance capture, heatmaps, surveys, feature flag requests, console recording and session replay are disabled.
+- Standard automatic pageviews and explicit gameplay events are enabled. Automatic clicks, pageleave, exceptions, performance capture, heatmaps, surveys, feature flag requests, console recording and session replay are disabled. Only `$pageview` is allowed through the system-event filter.
 - PostHog uses memory persistence and `person_profiles: never`; no identity survives a reload through this integration. The game retains its existing personal-best storage and stores only an explicit analytics preference when changed.
 - Help contains a gameplay-statistics checkbox. Turning it off stops new capture, and the choice is retained where browser storage is available. `analytics=off`, Do Not Track and Global Privacy Control also disable capture. Re-enabling cannot override these signals.
 - The intro discloses PostHog statistics and directs players to Help. This is an opt-out measurement setup, not a consent banner or a legal compliance certification. Change to an opt-in gate before capture if required for your launch configuration.
-- Outgoing event properties use an explicit allowlist: our gameplay fields, bounded campaign tags, anonymous event identity and basic browser/device metadata. SDK-derived click IDs, search terms and duplicate session-entry campaign fields are discarded. Full URL query strings and fragments are removed from the retained current URL. Never put personal information in UTM tags. Browser/network metadata is still processed by PostHog.
+- Outgoing event properties use an explicit allowlist: our gameplay fields, bounded campaign tags, anonymous event identity, temporary SDK session/window/pageview IDs and basic browser/device metadata. Automatic pageviews receive the same game, visit, revision, campaign and test labels as gameplay events. SDK-derived click IDs, search terms and duplicate session-entry campaign fields are discarded. Full URL query strings and fragments are removed from the retained current URL. Never put personal information in UTM tags. Browser/network metadata is still processed by PostHog.
 - SDK loading is asynchronous; a bounded in-memory queue preserves the initial load/start ordering. Analytics failure does not block play, results, sharing or Replay. Blocking and opt-out cause undercounting.
 
 ## Reporting
@@ -56,6 +57,14 @@ Start with `game_loaded` to `game_started` to `round_completed`, grouped within 
 No Meta Pixel or Conversions API is added by this change. Those are separate destinations requiring their own configuration and consent decisions.
 
 SDK reference: https://posthog.com/docs/libraries/js and https://posthog.com/docs/libraries/js/config .
+
+## Web Analytics setup correction on November 3 2026
+
+Project health reported `no_live_events`: no `$pageview` or `$screen` events in the last 30 days, despite stored gameplay events. Pageview capture had been disabled, and the outgoing filter rejected every system event. Enable standard pageviews, permit only `$pageview` through that filter, retain transient SDK session IDs, and attach the existing bounded campaign/game/test labels before property cleanup. Opt-out, DNT/GPC, query removal, memory persistence and disabled recordings remain in force. The health warning is scheduled and may remain until PostHog checks the incoming traffic again; stored `$pageview` records are the immediate verification.
+
+Browser verification also exposed a retained SDK opt-out after reloading: checking the game's statistics control before lazy SDK initialization could leave that old opt-out active. A new explicit opt-in is now applied after initialization, before queued events are sent. The initial saved opt-out is never overridden without that player action.
+
+Verification: strict TypeScript/Vite builds passed. Project 700357 stored a tagged QA `$pageview`, `game_loaded` and `game_started` with matching visit/session IDs, `test_mode=true` and a current URL without its query or fragment. Reloading with statistics off retained the unchecked control and produced no observed records for that opt-out campaign. Explicitly re-enabling after reload produced one stored pageview plus load/start records. No new tests were added.
 
 ## Verification on October 30 2026
 
