@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Mecha vs Kaiju — Field Support (v6)</title>
+<style>
+:root{--bg:#0b1220;--panel:#121b2e;--line:#22304d;--text:#dfe7f5;--dim:#8796b3;--kaiju:#ff5a5f;--ok:#4ade80;--warn:#fbbf24;--bad:#ef4444;--armory:#60a5fa;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{overflow:hidden;margin:0;background:var(--bg);color:var(--text);font:14px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;touch-action:manipulation}
+#app{height:100vh;height:100dvh;display:grid;grid-template-columns:minmax(0,1fr) clamp(220px,27vw,320px);grid-template-rows:auto minmax(0,1fr) auto;gap:6px;
+  padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left))}
+header{grid-column:1/-1}
+#main{grid-column:1;grid-row:2;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:0;min-width:0}
+#bw{width:100%}
+#side{grid-column:2;grid-row:2/4;display:flex;flex-direction:column;gap:6px;min-height:0}
+#bottom{grid-column:1;grid-row:3;display:flex;gap:8px;align-items:stretch;min-width:0}
+#board{container-type:inline-size}
+header{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;color:var(--dim);flex-wrap:wrap}
+header b{color:var(--text)}
+#hdr{display:flex;gap:12px;flex-wrap:wrap}
+button{font:inherit;color:var(--text);background:#1c2944;border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer}
+button:disabled{opacity:.4;cursor:default}
+#bw{position:relative}
+#board{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;background:var(--line);border:2px solid var(--line);border-radius:8px}
+.cell{position:relative;aspect-ratio:1;background:#0f1a2d;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cell.kz{background:#1b1422}
+.cell.div::after{content:'';position:absolute;right:-2px;top:0;bottom:0;border-right:2px dashed #ff5a5f99;pointer-events:none}
+.cell.mv::before{content:'';position:absolute;inset:32%;border-radius:50%;background:#4cc3ff2a;border:1px solid #4cc3ffaa}
+.g{font-size:calc(100cqw / 12 * .58);line-height:1}
+.g.dim{opacity:.35}
+.ms{width:94%;height:94%}
+.bar{position:absolute;left:10%;right:10%;bottom:3px;height:4px;background:#0006;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%}
+.badge{position:absolute;top:0;left:1px;font-size:8px;font-weight:800;color:#06101f;border-radius:3px;padding:0 3px;z-index:2}
+.warn,.aim{position:absolute;top:0;right:0;font-size:9px;font-weight:800;border-radius:3px;padding:0 3px;z-index:3}
+.warn{color:#fff;background:#dc2626}
+.aim{color:#052e16;background:#4ade80}
+.cell.sel{outline:2px solid #fff;outline-offset:-2px;z-index:1}
+.cell.tgt{animation:pulse 1s infinite}
+.cell.act{outline:2px solid var(--warn);outline-offset:-2px;z-index:2}
+@keyframes pulse{50%{box-shadow:inset 0 0 0 3px #4ade80}}
+#iv{position:absolute;left:2px;top:2px;width:calc(100% - 4px);height:calc(100% - 4px);pointer-events:none;z-index:4}
+#fx{position:absolute;inset:0;pointer-events:none;z-index:5}
+.card{touch-action:none;user-select:none;-webkit-user-select:none}
+.ghost{position:fixed;pointer-events:none;z-index:50;transform:translate(-50%,-70%) rotate(-4deg);opacity:.92;box-shadow:0 10px 24px #000c;border-color:#fff}
+.drop{outline:3px solid #fff!important;outline-offset:-3px;background:#14532d!important}
+.card.dragging{opacity:.3}
+#banner{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-weight:900;font-size:clamp(16px,3.2vw,30px);letter-spacing:.12em;padding:6px 18px;border-radius:8px;background:#000a;pointer-events:none;opacity:0;z-index:7;white-space:nowrap}
+.ph{font-weight:800;padding:0 6px;border-radius:4px}
+.bul{position:absolute;width:22px;height:5px;margin:-2.5px 0 0 -11px;border-radius:2px;pointer-events:none;z-index:6}
+.swp{position:absolute;border-radius:50%;border:6px solid transparent;pointer-events:none;z-index:6}
+.ring{position:absolute;border-radius:50%;border:3px solid;pointer-events:none;z-index:6}
+.fl{position:absolute;transform:translate(-50%,-50%);font-weight:800;font-size:13px;white-space:nowrap;animation:up .9s forwards;text-shadow:0 1px 2px #000}
+.fl.dmg{color:#ff8a8a}.fl.miss{color:#9aa8c4}.fl.heal{color:var(--ok)}
+@keyframes up{to{transform:translate(-50%,-180%);opacity:0}}
+#panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;overflow:auto;flex:0 1 auto;min-height:0}
+.tabs{display:flex;gap:4px;margin-bottom:4px}
+.tabs button{flex:1;padding:3px 2px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs button.on{border-color:#fff}
+.tabs button.down{opacity:.35;text-decoration:line-through}
+.pv{display:flex;gap:8px;align-items:center;margin-bottom:4px}
+.pv svg{flex:0 0 52px;width:52px;height:52px;background:#0b1220;border-radius:6px}
+.sup{font-size:11px;color:var(--dim)}
+.inc{font-size:11px;margin-top:3px}
+.inc .h{color:#fca5a5}.inc .a{color:var(--dim)}
+.part{display:grid;grid-template-columns:38px 1fr 64px;align-items:center;gap:4px;padding:2px 4px;font-size:12px;border-radius:5px;border:1px solid transparent;cursor:pointer}
+.part+.part{margin-top:2px}
+.part .sl{font-size:10px;color:var(--dim);font-weight:700}
+.part small{display:block;color:var(--dim);font-size:10px}
+.part.dead{background:#3a0f14}
+.part.valid{border-color:var(--ok);background:#0f2a1c}
+.sp{color:#111;background:#f97316;border-radius:3px;padding:0 3px;font-size:10px;margin-left:4px}
+.am{color:#facc15}
+.part small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iw{color:#fff;background:#dc2626;border-radius:3px;padding:0 3px;font-size:10px;margin-left:4px}
+.hpw{position:relative;height:14px;background:#0006;border-radius:3px;overflow:hidden;font-size:10px;text-align:center;line-height:14px}
+.hpw i{position:absolute;left:0;top:0;bottom:0}
+.hpw span{position:relative}
+.x{color:var(--bad);font-size:11px;text-align:right}
+.flag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#3b2a07;color:var(--warn);margin-left:4px}
+#apply{width:100%;margin-top:6px;border-color:var(--ok)}
+#hand{flex:1;display:flex;gap:6px;overflow-x:auto;min-width:0}
+.card{flex:1 1 0;min-width:96px;max-width:160px;background:#16213a;border:1px solid var(--line);border-radius:8px;padding:6px;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-height:84px}
+.card.on{border-color:#fff;transform:translateY(-3px)}
+.card.poor{opacity:.45}
+.ct{display:flex;justify-content:space-between;font-weight:700;font-size:12px;gap:4px}
+.cost{background:#facc15;color:#000;border-radius:50%;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.cost i{font-style:normal;font-size:9px;color:#b91c1c}
+.cx{font-size:11px;color:#c3cde0;flex:1}
+.ck{font-size:9px;text-transform:uppercase;letter-spacing:.05em}
+.k-part .ck{color:var(--armory)}.k-repair .ck{color:var(--ok)}.k-order .ck{color:var(--warn)}
+.k-part{border-left:3px solid var(--armory)}.k-repair{border-left:3px solid var(--ok)}.k-order{border-left:3px solid var(--warn)}
+#bar{display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:4px;width:104px;text-align:center}
+#energy{font-size:18px;font-weight:800;color:#facc15}
+#pile{font-size:10px;color:var(--dim)}
+#fight{background:#b91c1c;border-color:#ef4444;font-weight:800;padding:12px 6px;font-size:15px}
+#log{background:#0a101c;border:1px solid var(--line);border-radius:8px;padding:5px 7px;font-size:11px;overflow:auto;flex:1 1 60px;min-height:48px}
+#log div{padding:1px 0}
+.l-bad{color:#fca5a5}.l-good{color:#86efac}.l-warn{color:var(--warn)}.l-dim{color:var(--dim)}
+#helpov{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:11;padding:16px}
+#helpov .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;max-width:640px;max-height:90vh;overflow:auto;font-size:13px;color:#c3cde0}
+#helpov li{margin:4px 0}
+#rotate{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:20;font-size:16px;text-align:center;padding:20px}
+@media (orientation:portrait) and (max-width:700px){#rotate{display:flex}}
+@media (max-height:520px){.card{min-width:78px;min-height:0;padding:4px 5px;gap:2px}.ct{font-size:11px}.cx{font-size:10px}.ck{display:none}.cost{min-width:18px;height:18px;font-size:11px}#fight{padding:8px 4px}#energy{font-size:15px}}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#000c;padding:8px 14px;border-radius:6px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+#over{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:20px;z-index:10}
+#over h2{margin:0;font-size:28px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header><div id="hdr"></div><div><button id="helpb">?</button> <button id="speed">⏩ 1x</button> <button id="restart">↻</button></div></header>
+  <main id="main"><div id="bw"><div id="board"></div><svg id="iv" viewBox="0 0 12 5" preserveAspectRatio="none"></svg><div id="fx"></div><div id="banner"></div></div></main>
+  <aside id="side"><div id="panel"></div><div id="log"></div></aside>
+  <footer id="bottom"><div id="hand"></div><div id="bar"><span id="energy"></span><button id="fight">FIGHT ▶</button><span id="pile"></span></div></footer>
+</div>
+<div id="helpov"><div class="box"><b>How to play</b><ul>
+    <li><b>Plan phase:</b> pick a mecha and tap a blue-dot tile to move it. You can re-pick the move as often as you like, because it's always measured from where the mecha started the turn. <b>Drag cards</b> onto a mecha on the board (it picks the best slot: destroyed, then spent, then most damaged) or onto a specific part in the panel. Tapping a card, then a part, also works. You get 3⚡ and a hand of 5 each turn.</li>
+    <li><b>Turn order is always:</b> 1) you plan, 2) mecha fire automatically (each weapon that has ammo hits the nearest kaiju in range), 3) kaiju act.</li>
+    <li><b>Ammo:</b> every shot uses 1 ammo, hit or miss. A spent weapon stops firing and stays SPENT until you swap in a new arm card.</li>
+    <li><b>Waves arrive on a timer</b> (shown at the top), whether or not you've cleared the field.</li>
+    <li><b>Kaiju commit at the start of your turn:</b> 🦖 Rex stomps one marked tile, 🐉 Wyvern breathes fire along 2 tiles, 🪲 Beetle charges in a fixed direction. They don't chase. Step off the red tiles to dodge, or step in to shield a building. A Rex that can't reach its tile whiffs.</li>
+    <li><b>Your targeting:</b> cyan arrows show what each mecha weapon will shoot when you press FIGHT. Range boxes show the selected mecha's weapons: the dashed box with an L badge is the left arm, the dotted box with an R badge is the right arm. The badge shows the weapon icon. ∅ means spent. Both update as you move.</li>
+    <li><b>Intents:</b> dashed red line = where a kaiju will move. Red/orange tiles = what it will hit. <span class="warn" style="position:static">⚠5</span> = incoming damage. <span class="aim" style="position:static">🎯9</span> = damage your mecha will deal. 💀 = predicted kill.</li>
+    <li><b>Kaiju head for the city.</b> A mecha within 3 tiles draws their attack (body-block!). You lose if every building falls or every mecha goes down.</li>
+    <li><b>Parts:</b> a dead arm means no weapon. Dead legs mean no movement. A dead head means 50% accuracy. A dead core means the mecha is down. Hits on a part that's already gone go to the core.</li>
+  </ul><button id="helpx">Got it</button></div></div>
+<div id="rotate"><div style="font-size:40px">📱↻</div>Rotate your phone to landscape</div>
+<div id="toast"></div>
+<div id="over"><h2 id="otitle"></h2><div id="omsg"></div><button id="again">Play again</button></div>
+<script>
+const W=12,H=5,DIV=6,HAND=5,MAX_E=3,AGGRO=3;
+let S;
+const $=s=>document.querySelector(s);
+const dist=(a,b)=>Math.max(Math.abs(a.x-b.x),Math.abs(a.y-b.y));
+const sleep=ms=>new Promise(r=>setTimeout(r,window.__TEST?0:ms*(S.fast?0.35:1)));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+const PARTS={
+  head:{slot:'head',name:'Std Head',hp:4},
+  sensor:{slot:'head',name:'Sensor Array',hp:5,rangeBonus:1},
+  core:{slot:'core',name:'Reactor Core',hp:12},
+  blade:{slot:'arm',name:'Blade',hp:6,dmg:6,range:1,ammo:6},
+  rifle:{slot:'arm',name:'Rifle',hp:5,dmg:3,range:3,ammo:6},
+  cannon:{slot:'arm',name:'Cannon',hp:6,dmg:4,range:4,ammo:5},
+  fist:{slot:'arm',name:'Fist',hp:6,dmg:2,range:1,ammo:8},
+  bazooka:{slot:'arm',name:'Bazooka',hp:3,dmg:7,range:4,ammo:2},
+  shield:{slot:'arm',name:'Shield',hp:8,block:1},
+  legs:{slot:'legs',name:'Legs',hp:6,move:2},
+  thrusters:{slot:'legs',name:'Thrusters',hp:5,move:3},
+  treads:{slot:'legs',name:'Treads',hp:9,move:1},
+};
+function mkPart(key,hp){const d=PARTS[key];const p={key,...d};p.max=hp||d.hp;p.hp=p.max;if(d.ammo)p.maxAmmo=d.ammo;return p;}
+const SLOTS=['head','larm','core','rarm','legs'];
+const WICON={blade:'🗡️',rifle:'🔫',cannon:'💥',fist:'👊',bazooka:'🚀',shield:'🛡️'};
+const SLOTCOL={larm:'#38bdf8',rarm:'#818cf8'};
+const BLUE='#38bdf8',RED='#ff3b3b';
+const SL={head:'HEAD',larm:'L-ARM',core:'CORE',rarm:'R-ARM',legs:'LEGS'};
+const STYPE={head:'head',larm:'arm',rarm:'arm',core:'core',legs:'legs'};
+
+const MECHA=[
+  {id:'V',name:'Vanguard',color:'#4cc3ff',x:2,y:1,parts:{head:['head'],larm:['shield'],core:['core',12],rarm:['blade'],legs:['legs']}},
+  {id:'S',name:'Striker',color:'#c4b5fd',x:2,y:2,parts:{head:['head'],larm:['rifle'],core:['core',10],rarm:['rifle'],legs:['legs']}},
+  {id:'B',name:'Bastion',color:'#34d399',x:2,y:3,parts:{head:['head'],larm:['cannon'],core:['core',14],rarm:['fist'],legs:['treads']}},
+];
+const KAIJU={
+  wyvern:{name:'Wyvern',glyph:'🐉',hp:14,move:3,dmg:3,armor:0,atk:'breath',aim:{head:4,larm:2,rarm:2,core:1,legs:1},note:'Fire breath: flies up to 3, then scorches the next 2 tiles in a line. Aims high (heads/arms).'},
+  rex:{name:'Rex',glyph:'🦖',hp:26,move:1,dmg:5,armor:0,atk:'stomp',aim:{head:1,larm:1,rarm:1,core:5,legs:1},note:'Stomp: walks 1, then crushes one marked tile. Only hits if it can reach. Aims at the core.'},
+  beetle:{name:'Beetle',glyph:'🪲',hp:18,move:2,dmg:4,armor:1,atk:'charge',aim:{head:0,larm:1,rarm:1,core:1,legs:5},note:'Charge: rams up to 3 tiles in a fixed direction and hits the first thing in the way. Armored (-1 dmg taken). Aims at legs.'},
+};
+const WAVES=[{t:1,k:['wyvern','beetle']},{t:5,k:['rex','wyvern','beetle']},{t:10,k:['rex','rex','wyvern','beetle']}];
+const CITY=[{x:0,y:0},{x:3,y:0},{x:0,y:2},{x:1,y:4},{x:4,y:4},{x:5,y:1}];
+
+const CARDS={
+  patch:{name:'Patch Kit',cost:1,kind:'repair',n:3,text:'+4 HP to a damaged part.',valid:(p,s)=>p.hp>0&&p.hp<p.max,apply:(m,s)=>{const p=m.parts[s];p.hp=Math.min(p.max,p.hp+4);}},
+  weld:{name:'Field Weld',cost:2,kind:'repair',n:2,text:'Revive a destroyed part at half HP.',valid:(p,s)=>p.hp<=0&&s!=='core',apply:(m,s)=>{const p=m.parts[s];p.hp=Math.ceil(p.max/2);}},
+  plating:{name:'Core Plating',cost:2,kind:'repair',n:2,text:'+5 Core HP (can go 5 over max).',valid:(p,s)=>s==='core'&&p.hp<p.max+5,apply:(m)=>{const p=m.parts.core;p.hp=Math.min(p.max+5,p.hp+5);}},
+  rifle:{name:'Rifle Arm',cost:1,kind:'part',part:'rifle',n:3},
+  blade:{name:'Blade Arm',cost:1,kind:'part',part:'blade',n:3},
+  cannon:{name:'Cannon Arm',cost:2,kind:'part',part:'cannon',n:2},
+  bazooka:{name:'Bazooka Arm',cost:2,kind:'part',part:'bazooka',n:2},
+  shield:{name:'Shield Arm',cost:1,kind:'part',part:'shield',n:1},
+  legs:{name:'Spare Legs',cost:1,kind:'part',part:'legs',n:1},
+  thrusters:{name:'Thruster Legs',cost:2,kind:'part',part:'thrusters',n:1},
+  treads:{name:'Tread Legs',cost:2,kind:'part',part:'treads',n:1},
+  sensor:{name:'Sensor Head',cost:2,kind:'part',part:'sensor',n:1},
+  head:{name:'Spare Head',cost:1,kind:'part',part:'head',n:1},
+  jets:{name:'Jump Jets',cost:1,kind:'order',n:1,text:'+2 move this turn.'},
+  overdrive:{name:'Overdrive',cost:1,kind:'order',n:1,text:'Weapons fire twice this turn (uses 2 ammo). Costs 2 Core HP.'},
+};
+function partStats(p){if(p.dmg)return `${p.dmg} dmg · range ${p.range} · ${p.maxAmmo||p.ammo} ammo`;if(p.block)return `blocks ${p.block} per hit`;if(p.move!=null)return `move ${p.move}`;if(p.rangeBonus)return `+${p.rangeBonus} weapon range`;return '';}
+function cardText(c){if(c.text)return c.text;const p=PARTS[c.part];const st=partStats(p);return `${st?st+' · ':''}${p.hp} HP`;}
+function isValid(c,p,s){return c.kind==='part'?STYPE[s]===PARTS[c.part].slot:c.kind==='repair'?c.valid(p,s):false;}
+
+// ---------- sprites ----------
+const MET='#64748b',DARK='#334155';
+const tint=(p,c)=>{const r=p.hp/p.max;return r>.6?c:r>.3?'#fbbf24':'#f97316';};
+const ghost=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="#ef4444" stroke-width=".6" stroke-dasharray="1 .8"/>`;
+function headSVG(p,c){if(p.hp<=0)return ghost(16,6,8,7.5);const t=tint(p,c);
+  let s=`<rect x="16" y="6" width="8" height="7.5" rx="1.5" fill="${t}"/><rect x="17.3" y="8.6" width="5.4" height="2" rx=".8" fill="#67e8f9"/>`;
+  if(p.key==='sensor')s+=`<line x1="22.5" y1="6.5" x2="25.5" y2="1.8" stroke="${t}" stroke-width=".9"/><circle cx="25.5" cy="1.8" r="1.5" fill="#fbbf24"/><line x1="17.5" y1="6.5" x2="15.5" y2="3" stroke="${t}" stroke-width=".7"/>`;
+  return s;}
+function coreSVG(p,c){const t=p.hp>0?tint(p,c):'#7f1d1d';return `<rect x="13.5" y="13" width="13" height="14" rx="2.5" fill="${t}" stroke="#0b1220" stroke-width=".5"/><circle cx="20" cy="19.5" r="2.6" fill="#38bdf8"/><circle cx="20" cy="19.5" r="1.2" fill="#e0f2fe"/>`;}
+function armSVG(p,c){if(p.hp<=0)return ghost(9.5,14,4.5,6);const t=tint(p,c);const sh=`<rect x="10" y="14" width="4" height="9" rx="1" fill="${t}"/>`;
+  if(p.dmg&&p.ammo<=0)return `<g opacity=".35" filter="url(#gray)">${armBody(p,t,sh)}</g>`;
+  return armBody(p,t,sh);}
+function armBody(p,t,sh){
+  switch(p.key){
+    case 'fist':return sh+`<rect x="9" y="23" width="6" height="4.5" rx="1" fill="${t}" stroke="#0b1220" stroke-width=".4"/>`;
+    case 'blade':return sh+`<polygon points="10.3,22 13.7,22 12.6,37.5 9.8,38.5" fill="#e2e8f0" stroke="${t}" stroke-width=".5"/>`;
+    case 'rifle':return sh+`<rect x="9" y="22" width="4.5" height="5" rx=".5" fill="${DARK}"/><rect x="10.2" y="26" width="2" height="9" fill="${MET}"/>`;
+    case 'cannon':return sh+`<rect x="7" y="4" width="5" height="16" rx="1" fill="${DARK}" stroke="${t}" stroke-width=".8"/><rect x="7.8" y="2.6" width="3.4" height="2" fill="#0b1220"/>`;
+    case 'bazooka':return sh+`<rect x="5.5" y="10" width="5" height="19" rx="2" fill="#4d7c0f" stroke="${t}" stroke-width=".8"/><circle cx="8" cy="10.6" r="1.6" fill="#0b1220"/>`;
+    case 'shield':return sh+`<rect x="4" y="15" width="8" height="15" rx="2" fill="#94a3b8" stroke="${t}" stroke-width="1.1"/><line x1="8" y1="17.5" x2="8" y2="27.5" stroke="#475569" stroke-width=".8"/>`;
+  }return sh;}
+function legsSVG(p,c){if(p.hp<=0)return ghost(14,27,12,9);const t=tint(p,c);
+  if(p.key==='treads')return `<rect x="11" y="27.5" width="18" height="10" rx="4.5" fill="${DARK}" stroke="${t}" stroke-width="1.3"/><circle cx="15.5" cy="32.5" r="2.2" fill="${MET}"/><circle cx="20" cy="32.5" r="2.2" fill="${MET}"/><circle cx="24.5" cy="32.5" r="2.2" fill="${MET}"/>`;
+  if(p.key==='thrusters')return `<rect x="15" y="26" width="3.5" height="9" rx="1" fill="${t}"/><rect x="21.5" y="26" width="3.5" height="9" rx="1" fill="${t}"/><polygon points="14.6,35 18.9,35 16.75,39.8" fill="#fb923c"/><polygon points="21.1,35 25.4,35 23.25,39.8" fill="#fb923c"/>`;
+  return `<rect x="14.5" y="26" width="4.5" height="10" rx="1" fill="${t}"/><rect x="21" y="26" width="4.5" height="10" rx="1" fill="${t}"/><rect x="13.5" y="35.2" width="6.5" height="2.6" rx=".6" fill="${DARK}"/><rect x="20" y="35.2" width="6.5" height="2.6" rx=".6" fill="${DARK}"/>`;}
+function mechSVG(m,cls=''){const P=m.parts,c=m.color;
+  return `<svg class="${cls}" viewBox="0 0 40 40"><filter id="gray"><feColorMatrix type="saturate" values="0"/></filter>${legsSVG(P.legs,c)}${coreSVG(P.core,c)}${armSVG(P.larm,c)}<g transform="translate(40 0) scale(-1 1)">${armSVG(P.rarm,c)}</g>${headSVG(P.head,c)}</svg>`;}
+
+// ---------- helpers ----------
+const alive=(m,s)=>m.parts[s].hp>0;
+const weapons=m=>['larm','rarm'].map(s=>m.parts[s]).filter(p=>p.hp>0&&p.dmg&&p.ammo>0);
+const rangeBonus=m=>alive(m,'head')&&m.parts.head.rangeBonus||0;
+const moveOf=m=>alive(m,'legs')?m.parts.legs.move:0;
+const blockOf=m=>['larm','rarm'].reduce((a,s)=>a+(m.parts[s].hp>0&&m.parts[s].block||0),0);
+const cardCost=c=>c.cost;
+const selMech=()=>S.mechs.find(m=>m.id===S.sel&&m.alive)||S.mechs.find(m=>m.alive);
+const unitAt=(x,y)=>S.mechs.find(m=>m.alive&&m.x===x&&m.y===y)||S.kaiju.find(k=>k.x===x&&k.y===y);
+const bldAt=(x,y)=>S.city.find(b=>b.x===x&&b.y===y);
+function occupied(x,y){if(x<0||y<0||x>=W||y>=H)return true;if(unitAt(x,y))return true;const b=bldAt(x,y);return !!(b&&b.hp>0);}
+function nearest(u,list){let best=null,bd=1e9;for(const t of list){const d=dist(u,t)-(t.parts?0.1:0);if(d<bd){bd=d;best=t;}}return best;}
+function stepToward(u,t,steps,stopAt){
+  for(let i=0;i<steps;i++){
+    if(dist(u,t)<=stopAt)return;
+    let best=null,bk=[dist(u,t),(u.x-t.x)**2+(u.y-t.y)**2];
+    for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
+      if(!dx&&!dy)continue;const x=u.x+dx,y=u.y+dy;if(occupied(x,y))continue;
+      const k=[dist({x,y},t),(x-t.x)**2+(y-t.y)**2];
+      if(k[0]<bk[0]||(k[0]===bk[0]&&k[1]<bk[1])){best={x,y};bk=k;}
+    }
+    if(!best)return;u.x=best.x;u.y=best.y;
+  }
+}
+function pickWeighted(w){const e=Object.entries(w);let r=Math.random()*e.reduce((a,[,v])=>a+v,0);for(const [k,v] of e){if((r-=v)<0)return k;}return e[0][0];}
+function reachSet(m){
+  const set=new Set();if(!m||!m.alive||S.phase!=='plan')return set;
+  const steps=moveOf(m)+(m.jets?2:0);m.alive=false;
+  set.add(`${m.ox},${m.oy}`);let fr=[[m.ox,m.oy]];
+  for(let i=0;i<steps;i++){const nf=[];for(const [x,y] of fr)for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){const nx=x+dx,ny=y+dy,k=`${nx},${ny}`;if(set.has(k)||occupied(nx,ny))continue;set.add(k);nf.push([nx,ny]);}fr=nf;}
+  m.alive=true;
+  for(const k of [...set]){const [x,y]=k.split(',').map(Number);const u=unitAt(x,y);if((u&&u!==m)||(x===m.x&&y===m.y))set.delete(k);}
+  return set;
+}
+
+// ---------- kaiju AI ----------
+// At the start of each plan phase every kaiju COMMITS to a tile (stomp) or a direction (breath/charge).
+// The plan is frozen: kaiju do not chase. Whatever stands on the marked tiles when they act gets hit.
+const VERB={stomp:'Stomp',breath:'Fire breath',charge:'Charge'};
+const dirTo=(a,b)=>{const d={dx:Math.sign(b.x-a.x),dy:Math.sign(b.y-a.y)};if(!d.dx&&!d.dy)d.dx=-1;return d;};
+const inB=(x,y)=>x>=0&&y>=0&&x<W&&y<H;
+const thingAt=(x,y)=>S.mechs.find(m=>m.alive&&m.x===x&&m.y===y)||S.city.find(b=>b.hp>0&&b.x===x&&b.y===y)||null;
+function kTarget(k){
+  const ms=S.mechs.filter(m=>m.alive),near=ms.filter(m=>dist(m,k)<=AGGRO);
+  if(near.length)return nearest(k,near);
+  const bs=S.city.filter(b=>b.hp>0);if(bs.length)return nearest(k,bs);
+  return nearest(k,ms);
+}
+function planKaiju(k){
+  const t=kTarget(k);if(!t){k.plan=null;return;}
+  if(k.atk==='charge'){const d=dirTo(k,t);k.plan={type:'charge',dx:d.dx,dy:d.dy,len:k.move+1};kAttack(k);return;}
+  stepToward(k,t,k.move,1);const dest={x:k.x,y:k.y};
+  if(k.atk==='stomp'){const d=dirTo(k,t);const tile=dist(k,t)<=1?{x:t.x,y:t.y}:{x:k.x+d.dx,y:k.y+d.dy};k.plan={type:'stomp',dest,tile};}
+  else{const d=dirTo(k,t);k.plan={type:'breath',dest,dx:d.dx,dy:d.dy};}
+}
+function planAll(){const pos=S.kaiju.map(k=>[k.x,k.y]);[...S.kaiju.filter(k=>k.atk!=='charge'),...S.kaiju.filter(k=>k.atk==='charge')].forEach(planKaiju);S.kaiju.forEach((k,i)=>{k.x=pos[i][0];k.y=pos[i][1];});}
+// Kaiju turn = MOVE phase (walkers step to their committed tile) then ATTACK phase (stomp / breath / charge).
+function kMove(k){const P=k.plan;if(!P||P.type==='charge')return;if(k.x!==P.dest.x||k.y!==P.dest.y)stepToward(k,P.dest,k.move,0);}
+function kAttack(k){
+  const P=k.plan;const r={k,type:P?P.type:null,tiles:[],hits:[],blocked:false,path:[]};if(!P)return r;
+  if(P.type==='charge'){
+    for(let n=0;n<P.len;n++){const nx=k.x+P.dx,ny=k.y+P.dy;if(!inB(nx,ny))break;if(occupied(nx,ny)){const v=thingAt(nx,ny);if(v){r.tiles.push({x:nx,y:ny});r.hits.push(v);}break;}k.x=nx;k.y=ny;r.path.push({x:nx,y:ny});}
+  }else if(P.type==='stomp'){r.tiles.push(P.tile);if(dist(k,P.tile)<=1){const v=thingAt(P.tile.x,P.tile.y);if(v)r.hits.push(v);}else r.blocked=true;}
+  else for(let i=1;i<=2;i++){const x=k.x+P.dx*i,y=k.y+P.dy*i;if(!inB(x,y))break;r.tiles.push({x,y});const v=thingAt(x,y);if(v)r.hits.push(v);}
+  return r;
+}
+function hitInfo(k,v){if(!v.parts)return {dmg:k.dmg};const spill=v.parts[k.slot].hp<=0;return {aimed:k.slot,slot:spill?'core':k.slot,spill,dmg:Math.max(1,k.dmg-blockOf(v))};}
+function applyHitVirtual(v,h){if(v.parts){const p=v.parts[h.slot];p.hp=Math.max(0,p.hp-h.dmg);if(h.slot==='core'&&p.hp<=0)v.alive=false;}else v.hp=Math.max(0,v.hp-h.dmg);}
+function predictKaiju(){
+  // dry-run the whole kaiju phase against the CURRENT mecha positions, then restore everything
+  const kpos=S.kaiju.map(k=>[k.x,k.y]),mst=S.mechs.map(m=>[m.alive,SLOTS.map(s=>m.parts[s].hp)]),bst=S.city.map(b=>b.hp),out=[];
+  const st=new Map(S.kaiju.map(k=>[k,{sx:k.x,sy:k.y}]));
+  S.kaiju.forEach(kMove);
+  for(const k of S.kaiju){const mv={mx:k.x,my:k.y};const r=Object.assign(kAttack(k),st.get(k),mv);r.px=k.x;r.py=k.y;r.info=[];
+    for(const v of r.hits){if(v.parts&&!v.alive)continue;if(!v.parts&&v.hp<=0)continue;const h=hitInfo(k,v);r.info.push({v,h});applyHitVirtual(v,h);}out.push(r);}
+  S.kaiju.forEach((k,i)=>{k.x=kpos[i][0];k.y=kpos[i][1];});
+  S.mechs.forEach((m,i)=>{m.alive=mst[i][0];SLOTS.forEach((s,j)=>m.parts[s].hp=mst[i][1][j]);});
+  S.city.forEach((b,i)=>b.hp=bst[i]);
+  return out;
+}
+function fireList(){
+  const out=[];
+  for(const m of S.mechs){if(!m.alive)continue;const rb=rangeBonus(m);
+    for(const s of ['larm','rarm']){const p=m.parts[s];if(!(p.hp>0&&p.dmg&&p.ammo>0))continue;
+      const inR=S.kaiju.filter(k=>dist(m,k)<=p.range+rb);if(!inR.length)continue;const t=nearest(m,inR);
+      const shots=Math.min(p.ammo,m.od?2:1);out.push({m,s,p,t,shots,dmg:Math.max(1,p.dmg-t.armor)*shots});}}
+  return out;
+}
+function predictFire(){const dm=new Map();fireList().forEach(f=>dm.set(f.t,(dm.get(f.t)||0)+f.dmg));return dm;}
+
+// ---------- fx / log ----------
+function log(t,c=''){S.log.push({t,c});renderLog();}
+function floatAt(u,text,cls){const b=$('#board');const cw=b.clientWidth/W,ch=b.clientHeight/H;const d=document.createElement('div');d.className='fl '+cls;d.textContent=text;d.style.left=((u.x+.5)*cw+2)+'px';d.style.top=((u.y+.35)*ch+2)+'px';$('#fx').appendChild(d);setTimeout(()=>d.remove(),900);}
+function cellPx(u){const b=$('#board');const cw=b.clientWidth/W,ch=b.clientHeight/H;return [(u.x+.5)*cw+2,(u.y+.5)*ch+2,cw];}
+const fxDur=ms=>ms*(S.fast?.45:1);
+function fxEl(cls,x,y){const d=document.createElement('div');d.className=cls;d.style.left=x+'px';d.style.top=y+'px';$('#fx').appendChild(d);return d;}
+function fxBullet(a,b,col,ms=200){if(window.__TEST)return;const [x1,y1]=cellPx(a),[x2,y2]=cellPx(b);const d=fxEl('bul',x1,y1);d.style.background=col;d.style.boxShadow=`0 0 6px 2px ${col}`;
+  const ang=Math.atan2(y2-y1,x2-x1)*180/Math.PI;d.animate([{transform:`translate(0,0) rotate(${ang}deg)`},{transform:`translate(${x2-x1}px,${y2-y1}px) rotate(${ang}deg)`}],{duration:fxDur(ms),easing:'linear'}).onfinish=()=>d.remove();}
+function fxSwipe(u,col,ms=260){if(window.__TEST)return;const [x,y,cw]=cellPx(u);const sz=cw*.9;const d=fxEl('swp',x,y);Object.assign(d.style,{width:sz+'px',height:sz+'px',marginLeft:-sz/2+'px',marginTop:-sz/2+'px',borderTopColor:col,borderRightColor:col,filter:`drop-shadow(0 0 4px ${col})`});
+  d.animate([{transform:'rotate(-100deg) scale(.6)',opacity:1},{transform:'rotate(60deg) scale(1.05)',opacity:0}],{duration:fxDur(ms),easing:'ease-out'}).onfinish=()=>d.remove();}
+function fxRing(u,col,ms=320){if(window.__TEST)return;const [x,y,cw]=cellPx(u);const sz=cw;const d=fxEl('ring',x,y);Object.assign(d.style,{width:sz+'px',height:sz+'px',marginLeft:-sz/2+'px',marginTop:-sz/2+'px',borderColor:col,boxShadow:`0 0 8px ${col}`});
+  d.animate([{transform:'scale(.2)',opacity:1},{transform:'scale(1.3)',opacity:0}],{duration:fxDur(ms),easing:'ease-out'}).onfinish=()=>d.remove();}
+function lunge(u,t,ms=260){if(window.__TEST)return;const c=document.querySelector(`.cell[data-x="${u.x}"][data-y="${u.y}"]`);if(!c)return;const el=c.querySelector('.ms,.g');if(!el)return;
+  const cw=c.clientWidth,dx=Math.sign(t.x-u.x)*cw*.55,dy=Math.sign(t.y-u.y)*cw*.55;c.style.zIndex=8;
+  el.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx}px,${dy-cw*.18}px) scale(1.18)`,offset:.45},{transform:'translate(0,0) scale(1)'}],{duration:fxDur(ms),easing:'ease-in-out'}).onfinish=()=>{c.style.zIndex='';};}
+async function banner(text,col){S.phaseLabel=text;S.phaseCol=col;renderHdr();if(window.__TEST)return;const b=$('#banner');b.textContent=text;b.style.color=col;b.style.border=`2px solid ${col}`;
+  b.animate([{opacity:0,transform:'translate(-50%,-50%) scale(.8)'},{opacity:1,transform:'translate(-50%,-50%) scale(1)',offset:.25},{opacity:1,offset:.7},{opacity:0,transform:'translate(-50%,-50%) scale(1.05)'}],{duration:fxDur(750),fill:'forwards'});await sleep(420);}
+let tt;function toast(t){const e=$('#toast');e.textContent=t;e.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>e.style.opacity=0,1400);}
+
+// ---------- game flow ----------
+function newGame(){
+  S={turn:1,wave:0,energy:MAX_E,fast:S?S.fast:false,phase:'plan',sel:'V',selKaiju:null,card:null,act:null,log:[],kid:0,
+    mechs:MECHA.map(t=>({id:t.id,name:t.name,color:t.color,x:t.x,y:t.y,alive:true,
+      parts:Object.fromEntries(Object.entries(t.parts).map(([s,[k,hp]])=>[s,mkPart(k,hp)]))})),
+    kaiju:[],city:CITY.map(b=>({...b,hp:6,max:6})),
+    deck:shuffle(Object.entries(CARDS).flatMap(([k,c])=>Array(c.n).fill(k))),hand:[],discard:[]};
+  $('#over').style.display='none';$('#fx').innerHTML='';
+  startPlan();
+}
+function startPlan(){
+  if(!S.kaiju.length&&S.wave>=WAVES.length)return endGame(true,`All ${WAVES.length} waves repelled in ${S.turn-1} turns. ${S.city.filter(b=>b.hp>0).length}/${S.city.length} buildings standing.`);
+  while(S.wave<WAVES.length&&WAVES[S.wave].t<=S.turn)spawnWave();
+  if(S.wave<WAVES.length&&WAVES[S.wave].t===S.turn+1)log(`📡 Next wave lands next turn: ${WAVES[S.wave].k.map(k=>KAIJU[k].name).join(', ')}.`,'warn');
+  S.energy=MAX_E;
+  S.mechs.forEach(m=>{m.od=false;m.jets=false;m.ox=m.x;m.oy=m.y;});
+  S.kaiju.forEach(k=>k.slot=pickWeighted(k.aim));planAll();
+  while(S.hand.length<HAND){if(!S.deck.length){if(!S.discard.length)break;S.deck=shuffle(S.discard);S.discard=[];}S.hand.push(S.deck.pop());}
+  S.phase='plan';S.phaseLabel='PLAN';S.phaseCol='#4ade80';S.card=null;S.act=null;render();
+}
+function spawnWave(){
+  const list=WAVES[S.wave++].k;const rows=shuffle([0,1,2,3,4]);
+  list.forEach((k,i)=>{let x=W-1,y=rows[i];while(occupied(x,y)&&x>DIV)x--;S.kaiju.push({uid:++S.kid,k,...KAIJU[k],max:KAIJU[k].hp,x,y});});
+  log(`⚠ WAVE ${S.wave}: ${list.map(k=>KAIJU[k].name).join(', ')} incoming!`,'warn');
+}
+function checkLose(){
+  if(S.phase==='over')return true;
+  if(!S.mechs.some(m=>m.alive)){endGame(false,'All mecha are down.');return true;}
+  if(!S.city.some(b=>b.hp>0)){endGame(false,'Every building has been leveled.');return true;}
+  return false;
+}
+function endGame(win,msg){S.phase='over';render();$('#otitle').textContent=win?'CITY SAVED':'CITY LOST';$('#otitle').style.color=win?'var(--ok)':'var(--bad)';$('#omsg').textContent=msg;$('#over').style.display='flex';}
+
+function damageMecha(m,slot,dmg,src){
+  let s=slot,spill=false;if(m.parts[s].hp<=0){s='core';spill=true;}
+  const p=m.parts[s];const was=p.hp;p.hp=Math.max(0,p.hp-dmg);
+  floatAt(m,`-${dmg} ${SL[s]}`,'dmg');
+  log(`${src} hits ${m.name}'s ${SL[slot]}${spill?' (already gone → CORE)':''} for ${dmg}.`,'bad');
+  if(p.hp<=0&&was>0){if(s==='core'){m.alive=false;log(`☠ ${m.name} is DOWN!`,'bad');}else log(`⚙ ${m.name}'s ${SL[s]} (${p.name}) destroyed!`,'bad');}
+}
+async function mechaPhase(){
+  for(const m of S.mechs){
+    if(!m.alive||!S.kaiju.length)continue;
+    S.act=m;const ws=weapons(m),rb=rangeBonus(m);
+    for(let r=0;r<(m.od?2:1);r++)for(const p of ws){
+      const inR=S.kaiju.filter(k=>dist(m,k)<=p.range+rb);if(!inR.length)continue;
+      if(p.ammo<=0)continue;
+      const tgt=nearest(m,inR);p.ammo--;
+      if(p.range<=1){lunge(m,tgt);setTimeout(()=>fxSwipe(tgt,BLUE),fxDur(110));await sleep(270);}else{fxBullet(m,tgt,BLUE);await sleep(200);}
+      if(Math.random()>=(alive(m,'head')?0.9:0.5)){floatAt(tgt,'miss','miss');log(`${m.name}'s ${p.name} misses ${tgt.name}.`,'dim');}
+      else{const d=Math.max(1,p.dmg-tgt.armor);tgt.hp-=d;floatAt(tgt,'-'+d,'dmg');log(`${m.name}'s ${p.name} hits ${tgt.name} for ${d} (${Math.max(0,tgt.hp)}/${tgt.max}).`);
+        if(tgt.hp<=0){log(`💥 ${tgt.name} destroyed!`,'good');S.kaiju=S.kaiju.filter(k=>k!==tgt);if(S.selKaiju===tgt.uid)S.selKaiju=null;}}
+      if(p.ammo<=0)log(`🔻 ${m.name}'s ${p.name} is out of ammo. Swap in a new arm!`,'warn');
+      render();await sleep(300);
+    }
+    if(m.od){const c=m.parts.core;c.hp=Math.max(0,c.hp-2);floatAt(m,'-2 CORE','dmg');log(`${m.name} takes 2 core strain from Overdrive.`,'bad');if(c.hp<=0){m.alive=false;log(`☠ ${m.name} burned out!`,'bad');}render();}
+  }
+}
+async function kaijuPhase(){
+  // ---- MOVE phase: walkers step one tile at a time to their committed tile
+  const walkers=S.kaiju.filter(k=>k.plan&&k.plan.type!=='charge'&&(k.x!==k.plan.dest.x||k.y!==k.plan.dest.y));
+  if(walkers.length)await banner('KAIJU MOVE','#ff5a5f');
+  for(const k of walkers){S.act=k;const P=k.plan;
+    for(let i=0;i<k.move;i++){if(k.x===P.dest.x&&k.y===P.dest.y)break;const ox=k.x,oy=k.y;stepToward(k,P.dest,1,0);if(k.x===ox&&k.y===oy)break;render();await sleep(150);}
+  }
+  // ---- ATTACK phase
+  if(S.kaiju.some(k=>k.plan))await banner('KAIJU ATTACK','#ff3b3b');
+  for(const k of [...S.kaiju]){
+    if(!S.kaiju.includes(k)||!k.plan)continue;
+    S.act=k;render();
+    const ex=k.x,ey=k.y,r=kAttack(k);
+    if(r.type==='charge'){
+      const fx=k.x,fy=k.y;k.x=ex;k.y=ey;
+      for(const pos of r.path){fxBullet(k,pos,RED,90);k.x=pos.x;k.y=pos.y;S.act=k;render();await sleep(85);}
+      k.x=fx;k.y=fy;render();
+      if(r.tiles[0]){lunge(k,r.tiles[0],200);setTimeout(()=>fxSwipe(r.tiles[0],RED),fxDur(80));await sleep(230);}
+    }else if(r.type==='stomp'){
+      if(!r.blocked)lunge(k,r.tiles[0]);setTimeout(()=>{fxRing(r.tiles[0],RED);fxSwipe(r.tiles[0],RED);},fxDur(110));await sleep(280);
+    }else{
+      r.tiles.forEach((t,i)=>setTimeout(()=>fxBullet(k,t,'#ff5a1f',180+i*60),i*70));if(r.tiles.length)await sleep(240);
+    }
+    const live=r.hits.filter(v=>v.parts?v.alive:v.hp>0);
+    if(r.blocked)log(`${k.glyph} ${k.name}'s ${VERB[r.type]} is blocked. It can't reach the marked tile.`,'good');
+    else if(!live.length)log(`${k.glyph} ${k.name}'s ${VERB[r.type]} hits empty ground.`,'good');
+    for(const v of live){
+      if(v.parts)damageMecha(v,k.slot,Math.max(1,k.dmg-blockOf(v)),`${k.name}'s ${VERB[r.type]}`);
+      else{v.hp=Math.max(0,v.hp-k.dmg);floatAt(v,'-'+k.dmg,'dmg');log(v.hp>0?`${k.name}'s ${VERB[r.type]} hits a building (${v.hp}/${v.max}).`:`🏚 ${k.name} levels a building!`,'bad');}
+    }
+    render();await sleep(300);
+    if(checkLose())return;
+  }
+}
+async function fight(){
+  if(S.phase!=='plan')return;
+  S.phase='resolve';S.card=null;render();log(`— Turn ${S.turn} —`,'dim');
+  if(S.mechs.some(m=>m.alive&&weapons(m).length))await banner('MECHA FIRE',BLUE);
+  await mechaPhase();if(checkLose())return;
+  await kaijuPhase();if(checkLose())return;
+  S.turn++;startPlan();
+}
+
+// ---------- player actions ----------
+function moveMecha(m,x,y){if(!reachSet(m).has(`${x},${y}`))return;m.x=x;m.y=y;render();}
+function spend(cost){S.energy-=cost;S.discard.push(S.hand.splice(S.card,1)[0]);S.card=null;render();}
+function tryApply(slot){
+  if(S.phase!=='plan'||S.card==null)return;
+  const c=CARDS[S.hand[S.card]],m=selMech();if(!m||c.kind==='order')return;
+  const p=m.parts[slot];
+  if(!isValid(c,p,slot))return toast(c.kind==='part'?`${c.name} goes on a ${PARTS[c.part].slot} slot`:'Not a valid target');
+  const cost=cardCost(c,m);if(cost>S.energy)return toast('Not enough energy');
+  if(c.kind==='part'){m.parts[slot]=mkPart(c.part);log(`🔧 ${m.name}: ${SL[slot]} → ${PARTS[c.part].name}`,'good');}
+  else{c.apply(m,slot);log(`🔧 ${m.name}: ${c.name} on ${SL[slot]}.`,'good');}
+  floatAt(m,'+'+SL[slot],'heal');spend(cost);
+}
+function applyOrder(){
+  if(S.phase!=='plan'||S.card==null)return;
+  const key=S.hand[S.card],c=CARDS[key],m=selMech();if(!m)return;
+  if(c.cost>S.energy)return toast('Not enough energy');
+  if(key==='jets'){if(m.jets)return toast('Already boosted');if(!moveOf(m))return toast('Legs destroyed: jets need legs');m.jets=true;}
+  if(key==='overdrive'){if(m.od)return toast('Already overdriven');m.od=true;}
+  log(`📡 ${m.name}: ${c.name}.`,'good');spend(c.cost);
+}
+
+// ---------- render ----------
+const hpColor=r=>r>.6?'var(--ok)':r>.3?'var(--warn)':'#f97316';
+const bar=(hp,max,col)=>`<div class="bar"><i style="width:${Math.max(0,Math.min(1,hp/max))*100}%;background:${col}"></i></div>`;
+function renderHdr(){
+  const cityUp=S.city.filter(b=>b.hp>0).length,nw=S.wave<WAVES.length?WAVES[S.wave].t-S.turn:null,pl=S.phase==='over'?'':S.phaseLabel||'PLAN';
+  $('#hdr').innerHTML=`${pl?`<span class="ph" style="color:#0b1220;background:${S.phaseCol||'#4ade80'}">${pl}</span>`:''}<span>Turn <b>${S.turn}</b></span><span>Wave <b>${S.wave}/${WAVES.length}</b>${nw!=null?` · next in <b style="color:var(--warn)">${nw}</b>`:' · <b>final</b>'}</span><span>Buildings <b>${cityUp}/${S.city.length}</b></span><span>Kaiju <b>${S.kaiju.length}</b></span>`;
+}
+function render(){
+  const plan=S.phase==='plan';
+  const I=plan?predictKaiju():[],FL=plan?fireList():[],F=new Map();FL.forEach(f=>F.set(f.t,(F.get(f.t)||0)+f.dmg));
+  const inc=new Map();I.forEach(r=>r.info.forEach(({v,h})=>inc.set(v,(inc.get(v)||0)+h.dmg)));
+  renderHdr();
+  const m=selMech(),card=S.card!=null?CARDS[S.hand[S.card]]:null,R=plan&&!S.selKaiju?reachSet(m):new Set();
+  let h='';
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    const cls=['cell'];if(x>=DIV)cls.push('kz');if(x===DIV-1)cls.push('div');
+    const b=bldAt(x,y),u=unitAt(x,y);let inner='';
+    if(R.has(`${x},${y}`))cls.push('mv');
+    if(u&&u.parts){inner=mechSVG(u,'ms')+`<span class="badge" style="background:${u.color}">${u.id}</span>`;
+      if(m&&m.id===u.id&&!S.selKaiju)cls.push('sel');
+      if(card&&(card.kind==='order'||SLOTS.some(s=>isValid(card,u.parts[s],s))))cls.push('tgt');}
+    else if(u){inner=`<span class="g">${u.glyph}</span>${bar(u.hp,u.max,'var(--kaiju)')}`;if(S.selKaiju===u.uid)cls.push('sel');
+      const f=F.get(u);if(f)inner+=`<span class="aim">${f>=u.hp?'💀':'🎯'+f}</span>`;}
+    else if(b){inner=b.hp>0?`<span class="g">🏢</span>${bar(b.hp,b.max,'#94a3b8')}`:`<span class="g dim">🧱</span>`;}
+        if(S.act&&S.act.x===x&&S.act.y===y)cls.push('act');
+    h+=`<div class="${cls.join(' ')}" data-x="${x}" data-y="${y}">${inner}</div>`;
+  }
+  $('#board').innerHTML=h;
+  renderIntents(I,F,FL,plan&&!S.selKaiju?m:null,inc);renderPanel(m,card,I,F,FL);renderHand(m);renderLog();
+  $('#energy').textContent=`⚡${S.energy}/${MAX_E}`;
+  $('#fight').disabled=!plan;
+}
+function renderIntents(I,F,FL,sm,inc){
+  let s='<defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#ff3b3b"/></marker><marker id="ac" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#38bdf8"/></marker></defs>';
+  // selected mecha: weapon range boxes
+  if(sm){const rb=rangeBonus(sm);for(const sl of ['larm','rarm']){const p=sm.parts[sl];if(!(p.hp>0&&p.dmg))continue;const r=p.range+rb,x0=Math.max(0,sm.x-r),y0=Math.max(0,sm.y-r),x1=Math.min(W,sm.x+r+1),y1=Math.min(H,sm.y+r+1);
+    const c=SLOTCOL[sl],L=sl==='larm',ins=L?.03:.07,op=p.ammo>0?.85:.3;
+    s+=`<rect x="${x0+ins}" y="${y0+ins}" width="${x1-x0-ins*2}" height="${y1-y0-ins*2}" fill="${c}" fill-opacity=".04" stroke="${c}" stroke-width=".035" stroke-dasharray="${L?'.14 .08':'.04 .07'}" opacity="${op}"/>`;
+    const bw=.62,bx=L?x0+ins+.04:x1-ins-.04-bw,by=y0+ins+.04;
+    s+=`<g opacity="${op}"><rect x="${bx}" y="${by}" width="${bw}" height=".3" rx=".07" fill="#0b1220" stroke="${c}" stroke-width=".03"/><text x="${bx+.04}" y="${by+.235}" font-size=".22">${WICON[p.key]||''}</text><text x="${bx+.36}" y="${by+.23}" font-size=".19" font-weight="800" fill="${c}">${L?'L':'R'}${p.ammo>0?'':'∅'}</text></g>`;}}
+  // mecha weapon targeting (what fires when you press FIGHT)
+  for(const f of FL){const off=f.s==='larm'?-.14:.14,sel=sm&&sm===f.m,x1=f.m.x+.5,y1=f.m.y+.5+off,x2=f.t.x+.5,y2=f.t.y+.5+off*.6,ex=x1+(x2-x1)*.8,ey=y1+(y2-y1)*.8;
+    const c=SLOTCOL[f.s],mx=x1+(x2-x1)*.42,my=y1+(y2-y1)*.42;
+    s+=`<line x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="${c}" stroke-width="${sel?.06:.035}" marker-end="url(#ac)" opacity="${sel?.95:.6}"/>`;
+    if(sel)s+=`<circle cx="${mx}" cy="${my}" r=".17" fill="#0b1220" stroke="${c}" stroke-width=".03"/><text x="${mx}" y="${my+.075}" font-size=".2" text-anchor="middle">${WICON[f.p.key]||''}</text>`;}
+  for(const r of I){
+    if(!r.type)continue;
+    const op=(F.get(r.k)||0)>=r.k.hp?.3:1,hi=S.selKaiju===r.k.uid?1.6:1;
+    const px=r.px+.5,py=r.py+.5;
+    if(r.type!=='charge'&&(r.px!==r.sx||r.py!==r.sy))s+=`<line x1="${r.sx+.5}" y1="${r.sy+.5}" x2="${px}" y2="${py}" stroke="#ff5a5f" stroke-width="${.05*hi}" stroke-dasharray=".14 .1" opacity="${.8*op}"/><circle cx="${px}" cy="${py}" r=".13" fill="none" stroke="#ff5a5f" stroke-width=".04" opacity="${op}"/>`;
+    const col=r.type==='breath'?'#fb923c':'#ff3b3b';
+    for(const t of r.tiles){
+      s+=r.blocked?`<rect x="${t.x+.08}" y="${t.y+.08}" width=".84" height=".84" fill="none" stroke="#94a3b8" stroke-width=".04" stroke-dasharray=".1 .08" opacity="${op}"/>`
+        :`<rect x="${t.x+.06}" y="${t.y+.06}" width=".88" height=".88" rx=".08" fill="${col}" fill-opacity=".22" stroke="${col}" stroke-width="${.05*hi}" opacity="${op}"/>`;
+    }
+    if(!r.blocked&&r.tiles.length){const t=r.tiles[r.tiles.length-1];const tx=t.x+.5,ty=t.y+.5,ex=px+(tx-px)*(r.type==='breath'?.85:.6),ey=py+(ty-py)*(r.type==='breath'?.85:.6);
+      s+=`<line x1="${px}" y1="${py}" x2="${ex}" y2="${ey}" stroke="${col}" stroke-width="${.07*hi}" marker-end="url(#ah)" opacity="${op}"/>`;}
+    if(r.type==='charge'&&(r.px!==r.sx||r.py!==r.sy))s+=`<line x1="${r.sx+.5}" y1="${r.sy+.5}" x2="${px}" y2="${py}" stroke="#ff3b3b" stroke-width="${.06*hi}" marker-end="url(#ah)" opacity="${op}"/>`;
+  }
+  inc.forEach((d,v)=>{s+=`<g><rect x="${v.x+.5}" y="${v.y+.03}" width=".47" height=".28" rx=".06" fill="#dc2626" stroke="#fff" stroke-width=".02"/><text x="${v.x+.735}" y="${v.y+.24}" font-size=".2" font-weight="800" fill="#fff" text-anchor="middle">⚠${d}</text></g>`;});
+  $('#iv').innerHTML=s;
+}
+function intentText(r){
+  if(!r||!r.type)return 'idle';
+  if(r.blocked)return `${VERB[r.type]}: blocked, it can't reach its marked tile`;
+  const parts=r.info.map(({v,h})=>v.parts?`${v.name}'s ${SL[h.aimed]}${h.spill?' (gone → CORE)':''} for ${h.dmg}`:`a building for ${h.dmg}`);
+  return parts.length?`${VERB[r.type]} hits ${parts.join(' and ')}`:`${VERB[r.type]} hits empty ground`;
+}
+function renderPanel(m,card,I,F,FL){
+  const tabs=`<div class="tabs">${S.mechs.map(x=>`<button data-mech="${x.id}" class="${m&&m.id===x.id&&!S.selKaiju?'on':''} ${x.alive?'':'down'}" style="color:${x.color}">${x.id} · ${x.name}</button>`).join('')}</div>`;
+  const k=S.selKaiju&&S.kaiju.find(k=>k.uid===S.selKaiju);
+  if(k){const tot=Object.values(k.aim).reduce((a,b)=>a+b,0);const aim=Object.entries(k.aim).sort((a,b)=>b[1]-a[1]).filter(e=>e[1]).map(([s,v])=>`${SL[s]} ${Math.round(v/tot*100)}%`).join(' · ');
+    const it=I.find(i=>i.k===k),f=F.get(k)||0;
+    $('#panel').innerHTML=tabs+`<div style="font-size:16px;font-weight:700">${k.glyph} ${k.name} <span style="color:var(--kaiju)">${k.hp}/${k.max} HP</span></div><div class="sup">${k.note} Move ${k.move} · ${k.dmg} dmg · armor ${k.armor}</div>`+
+      (it?`<div class="inc"><span class="h">Next turn: ${intentText(it)}.</span></div>`:'')+
+      `<div class="inc">Your mecha will deal: <b>${f}</b>${f>=k.hp?' 💀 (lethal if all hit)':''}</div><div class="inc a">Aim odds: ${aim}</div>`;return;}
+  if(!m){$('#panel').innerHTML=tabs;return;}
+  S.sel=m.id;
+  const hits=[];I.forEach(r=>r.info.forEach(({v,h})=>{if(v===m)hits.push({k:r.k,type:r.type,h});}));
+  const slotHit={};hits.forEach(x=>slotHit[x.h.slot]=(slotHit[x.h.slot]||0)+x.h.dmg);
+  const flags=(m.jets?'<span class="flag">JETS</span>':'')+(m.od?'<span class="flag">OVERDRIVE</span>':'');
+  const incH=hits.map(x=>`<div class="h">⚠ ${x.k.glyph} ${VERB[x.type]} → ${SL[x.h.aimed]}${x.h.spill?' (gone→CORE)':''} ${x.h.dmg}</div>`).join('');
+  const rows=SLOTS.map(s=>{const p=m.parts[s];const v=card&&isValid(card,p,s);const r=p.hp/p.max;
+    const am=p.dmg?` <span class="am">⦿${Math.max(0,p.ammo)}/${p.maxAmmo}</span>`:'';
+    const fx=FL.find(f=>f.m===m&&f.s===s);
+    const tg=p.dmg&&p.hp>0&&S.phase==='plan'?(p.ammo<=0?'':fx?` <span style="color:#38bdf8">→${fx.t.glyph}${fx.dmg}</span>`:' <span style="color:#64748b">→ none</span>'):'';
+    const st=p.dmg?`${p.dmg}dmg r${p.range+rangeBonus(m)}${am}${tg}`:partStats(p);
+    return `<div class="part ${p.hp<=0?'dead':''} ${v?'valid':''}" data-slot="${s}"><span class="sl">${SL[s]}</span><span>${WICON[p.key]?`<span style="color:${SLOTCOL[s]||'inherit'}">${WICON[p.key]}</span> `:''}${p.name}${p.dmg&&p.ammo<=0&&p.hp>0?'<b class="sp">SPENT</b>':''}${slotHit[s]?`<b class="iw">⚠${slotHit[s]}</b>`:''}<small>${st}</small></span>${p.hp<=0?'<span class="x">DESTROYED</span>':`<div class="hpw"><i style="width:${Math.min(1,r)*100}%;background:${hpColor(r)}"></i><span>${p.hp}/${p.max}</span></div>`}</div>`}).join('');
+  const ord=card&&card.kind==='order'?`<button id="apply">Apply ${card.name} to ${m.name}</button>`:'';
+  $('#panel').innerHTML=tabs+`<div class="pv">${mechSVG(m)}<div><div class="sup">Move ${moveOf(m)+(m.jets?2:0)}${S.phase==='plan'&&moveOf(m)?' · tap a blue dot to move. Step off red tiles to dodge':''}${flags}</div><div class="inc">${incH||'<span class="a">Not on any marked tile</span>'}</div></div></div>`+rows+ord;
+}
+function renderHand(m){
+  $('#hand').innerHTML=S.hand.map((key,i)=>{const c=CARDS[key];const cost=cardCost(c,m);
+    return `<div class="card k-${c.kind} ${S.card===i?'on':''} ${cost>S.energy?'poor':''}" data-i="${i}"><div class="ct"><span>${c.part&&WICON[c.part]?WICON[c.part]+' ':''}${c.name}</span><span class="cost">${c.cost}</span></div><div class="cx">${cardText(c)}</div><div class="ck">${c.kind}</div></div>`}).join('');
+  $('#pile').textContent=`Deck ${S.deck.length} · Discard ${S.discard.length}`;
+}
+function renderLog(){$('#log').innerHTML=S.log.slice(-40).reverse().map(l=>`<div class="l-${l.c}">${l.t}</div>`).join('');}
+
+// ---------- input ----------
+$('#board').addEventListener('click',e=>{const c=e.target.closest('.cell');if(!c)return;const x=+c.dataset.x,y=+c.dataset.y,u=unitAt(x,y);
+  if(u&&u.parts){S.sel=u.id;S.selKaiju=null;render();}
+  else if(u){S.selKaiju=S.selKaiju===u.uid?null:u.uid;render();}
+  else{const was=S.selKaiju;S.selKaiju=null;const m=selMech();if(!was&&m&&S.phase==='plan')moveMecha(m,x,y);else render();}});
+$('#panel').addEventListener('click',e=>{const t=e.target.closest('[data-mech],[data-slot],#apply');if(!t)return;
+  if(t.dataset.mech){const m=S.mechs.find(x=>x.id===t.dataset.mech);if(m.alive){S.sel=m.id;S.selKaiju=null;render();}}
+  else if(t.id==='apply')applyOrder();else tryApply(t.dataset.slot);});
+// cards: tap to select (then tap a part), or drag onto a mecha on the board / a part row in the panel
+function autoSlot(c,m){const v=SLOTS.filter(s=>isValid(c,m.parts[s],s));if(!v.length)return null;
+  const sc=s=>{const p=m.parts[s];if(p.hp<=0)return -2;if(p.dmg&&p.ammo<=0)return -1;return p.hp/p.max;};return v.sort((a,b)=>sc(a)-sc(b))[0];}
+function dropTarget(el,i){if(!el)return null;const c=CARDS[S.hand[i]];if(!c)return null;
+  const pr=el.closest('.part');if(pr){const m=selMech();if(!m)return null;if(c.kind==='order')return {el:pr,m};return isValid(c,m.parts[pr.dataset.slot],pr.dataset.slot)?{el:pr,m,slot:pr.dataset.slot}:null;}
+  const pv=el.closest('.pv');if(pv){const m=selMech();if(!m)return null;if(c.kind==='order')return {el:pv,m};const sl=autoSlot(c,m);return sl?{el:pv,m,slot:sl}:null;}
+  const cell=el.closest('.cell');if(cell){const u=unitAt(+cell.dataset.x,+cell.dataset.y);if(u&&u.parts){if(c.kind==='order')return {el:cell,m:u};const sl=autoSlot(c,u);if(sl)return {el:cell,m:u,slot:sl};}}
+  return null;}
+function dropOn(i,t){S.card=i;S.sel=t.m.id;S.selKaiju=null;if(CARDS[S.hand[i]].kind==='order')applyOrder();else tryApply(t.slot);}
+let drag=null;
+$('#hand').addEventListener('pointerdown',e=>{const c=e.target.closest('.card');if(!c||S.phase!=='plan')return;drag={i:+c.dataset.i,x:e.clientX,y:e.clientY,el:c,moved:false,ghost:null,over:null};});
+window.addEventListener('pointermove',e=>{if(!drag)return;
+  if(!drag.moved){if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<8)return;drag.moved=true;
+    const g=drag.el.cloneNode(true);g.classList.add('ghost');g.classList.remove('on');g.style.width=drag.el.offsetWidth+'px';document.body.appendChild(g);drag.ghost=g;
+    S.card=drag.i;S.selKaiju=null;render();const src=$(`#hand .card[data-i="${drag.i}"]`);if(src)src.classList.add('dragging');}
+  e.preventDefault();drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+  const t=dropTarget(document.elementFromPoint(e.clientX,e.clientY),drag.i);
+  if(drag.over&&(!t||t.el!==drag.over))drag.over.classList.remove('drop');
+  if(t){t.el.classList.add('drop');drag.over=t.el;}else drag.over=null;},{passive:false});
+window.addEventListener('pointerup',e=>{if(!drag)return;const d=drag;drag=null;
+  if(!d.moved){S.card=S.card===d.i?null:d.i;S.selKaiju=null;render();return;}
+  d.ghost.remove();const t=dropTarget(document.elementFromPoint(e.clientX,e.clientY),d.i);
+  if(t)dropOn(d.i,t);else{S.card=null;render();}});
+window.addEventListener('pointercancel',()=>{if(!drag)return;if(drag.ghost)drag.ghost.remove();drag=null;S.card=null;render();});
+$('#fight').onclick=fight;
+$('#helpb').onclick=()=>$('#helpov').style.display='flex';$('#helpx').onclick=()=>$('#helpov').style.display='none';
+$('#restart').onclick=()=>newGame();$('#again').onclick=()=>newGame();
+$('#speed').onclick=()=>{S.fast=!S.fast;$('#speed').textContent=S.fast?'⏩ 3x':'⏩ 1x';};
+function fitBoard(){const mn=$('#main');const w=mn.clientWidth,h=mn.clientHeight;if(!h)return;$('#bw').style.width=Math.floor(Math.min(w,h*W/H*0.98))+'px';}
+if(window.ResizeObserver)new ResizeObserver(fitBoard).observe($('#main'));window.addEventListener('resize',fitBoard);
+newGame();fitBoard();
+</script>
+</body>
+</html>
