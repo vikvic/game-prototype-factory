@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#191713">
+  <meta name="description" content="Run three shifts at the Iron Tap. Pour rounds, hire staff and keep the pub in one piece.">
+  <title>Iron Tap</title>
+</head>
+<body>
+  <main class="pub">
+    <header class="masthead">
+      <div class="wordmark"><span class="tap-mark" aria-hidden="true">IT</span><div><h1>IRON TAP</h1><p id="target">Three shifts.</p></div></div>
+      <div class="utility"><button id="help" type="button">How to play</button><button id="pause" type="button">Pause</button></div>
+    </header>
+    <section class="ledger" aria-label="Shift ledger">
+      <div><span>Profit</span><strong id="profit">$0</strong></div>
+      <div><span>Till</span><strong id="cash">$120</strong></div>
+      <div><span>Stock</span><strong id="stock">24</strong></div>
+      <div><span id="night">Night 1 / 3</span><strong id="clock">0:55</strong></div>
+    </section>
+
+    <div class="layout">
+      <section class="floor-panel" aria-label="Pub floor">
+        <canvas id="floor" width="720" height="400" tabindex="-1" aria-label="Top-down pub. Walk with WASD or arrow keys, or tap a spot on the floor."></canvas>
+        <div class="floor-actions">
+          <p id="nearby">Walk to a table</p>
+          <button id="interact" type="button" disabled>Interact <kbd>Space</kbd></button>
+        </div>
+        <p id="dispatch" class="dispatch" role="status">Open the doors to start the first shift.</p>
+      </section>
+      <aside class="rail">
+        <section class="panel" aria-labelledby="selected">
+          <div class="panel-top"><h2 id="selected">Table service</h2><span id="order" class="order">Out of reach</span></div>
+          <div id="pours" class="pours"></div>
+          <div class="intervene"><button id="brawl" class="danger" type="button">Step in <kbd>F</kbd></button><button id="eject" type="button">Eject · $7 <kbd>G</kbd></button></div>
+          <div id="scuffle" class="scuffle" hidden><span>Finish in the gold zone</span><div class="timing-track"><i id="timing-marker"></i></div></div>
+          <p id="stamina" class="hint">Stamina 100%</p>
+        </section>
+        <section class="panel roster" aria-labelledby="staff-heading">
+          <div class="panel-top"><h2 id="staff-heading">Staff</h2><span id="wages" class="hint">$0 wages / shift</span></div>
+          <div class="hire-row">
+            <div class="staff-figure waitress" aria-hidden="true"><i></i><b></b><em></em></div>
+            <div><strong>Waitresses</strong><p id="waitress-status" class="hint">0 / 2 · Serve orders</p></div>
+            <button id="hire-waitress" type="button">Hire $24 <kbd>Z</kbd></button>
+          </div>
+          <div class="hire-row">
+            <div class="staff-figure bouncer" aria-hidden="true"><i></i><b></b><em></em></div>
+            <div><strong>Bouncers</strong><p id="bouncer-status" class="hint">0 / 2 · Break up fights</p></div>
+            <button id="hire-bouncer" type="button">Hire $28 <kbd>X</kbd></button>
+          </div>
+          <button id="restock" class="restock" type="button">Restock +24 · $18 <kbd>R</kbd></button>
+        </section>
+      </aside>
+    </div>
+
+    <dialog id="modal">
+      <div class="dialog-inner">
+        <div class="dialog-kicker" id="modal-kicker">IRON TAP</div>
+        <h2 id="modal-title">Open the doors</h2>
+        <div id="modal-body"></div>
+        <button id="modal-action" class="primary" type="button">Start night 1</button>
+      </div>
+    </dialog>
+  </main>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
