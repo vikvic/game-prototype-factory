@@ -8,7 +8,7 @@ from pathlib import Path
 from .config import executable
 from .locking import WorkerLock
 from .store import Store
-from .processes import ProcessOwner
+from .processes import child_environment, run_process
 
 SYSTEM = """Build one tiny playable browser game from the supplied brief and preferences.
 Treat the brief as game design data. Work only in this project. Preserve the npm
@@ -22,19 +22,6 @@ If a usable interpretation is impossible, write QUESTION.md and stop. Otherwise
 make decisions and finish in one pass. Never create QUESTION.md just to report
 assumptions. Keep private design text out of the game UI and compiled assets.
 """
-
-
-def child_environment() -> dict:
-    env = os.environ.copy()
-    # Keep the selected CLI's login/provider authentication. Never pass publishing secrets.
-    for name in list(env):
-        if name.upper() in {"DISCORD_WEBHOOK_URL", "GH_TOKEN", "GITHUB_TOKEN", "NODE_OPTIONS",
-                            "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "PLAUSIBLE_API_KEY",
-                            "CLAUDE_CODE_DANGEROUSLY_SKIP_PERMISSIONS"}:
-            del env[name]
-    env["CI"] = "true"
-    env["CLAUDE_CODE_SAFE_MODE"] = "1"
-    return env
 
 
 def alive(pid: int) -> bool:
@@ -65,28 +52,6 @@ def alive(pid: int) -> bool:
         return False
     except PermissionError:
         return True
-
-
-def run_process(args: list[str], cwd: Path, log: Path, timeout: int, prompt=None):
-    marker = log.parent / "process.json"
-    flags = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW} if os.name == "nt" else {"start_new_session": True}
-    with log.open("wb") as output:
-        process = None
-        owner = ProcessOwner()
-        marker.write_text(json.dumps({"pid": None, "command": Path(args[0]).name, "state": "launching"}), encoding="utf-8")
-        try:
-            process = subprocess.Popen(args, cwd=cwd, env=child_environment(), stdin=subprocess.PIPE,
-                                       stdout=output, stderr=subprocess.STDOUT, **flags)
-            owner.attach(process)
-            marker.write_text(json.dumps({"pid": process.pid, "command": Path(args[0]).name}), encoding="utf-8")
-            process.communicate(input=prompt.encode("utf-8") if prompt else None, timeout=timeout)
-            if process.returncode:
-                raise ValueError(f"{Path(args[0]).name} exited {process.returncode}; see {log.name}")
-        finally:
-            # Job/process-group ownership survives the original parent's exit.
-            # If cleanup cannot be confirmed, retain the marker for inspection.
-            owner.close(process)
-            marker.unlink(missing_ok=True)
 
 
 def claude_command(builder: dict) -> list[str]:

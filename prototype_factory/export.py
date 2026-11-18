@@ -73,7 +73,7 @@ def game_metadata(folder: Path) -> dict:
 
 
 def build_site(root: Path):
-    from .runner import run_process
+    from .processes import run_process
     root = root.resolve()
     state = root / ".factory"
     state.mkdir(exist_ok=True)
